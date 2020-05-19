@@ -1,9 +1,14 @@
 package com.ssafy.groupbuying.vo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+
 
 import lombok.Data;
 
@@ -15,7 +20,9 @@ public class Board {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private int id;
-	private String userId;
+	@ManyToOne
+	@JoinColumn(name = "id")
+	private User userId;
 	private String title;
 	private String context;
 	private String locationX;
