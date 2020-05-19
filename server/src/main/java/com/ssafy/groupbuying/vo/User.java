@@ -1,8 +1,6 @@
 package com.ssafy.groupbuying.vo;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,10 +8,8 @@ import javax.persistence.Table;
 @Table(name="user")
 public class User {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private String id;
 	
-	private String email;
 	private String password;
 	private String role;
 	private String nickname;
@@ -30,11 +26,10 @@ public class User {
 	
 	
 
-	public User(long id, String email, String password, String role, String nickname, String name, int age,
+	public User(String id, String password, String role, String nickname, String name, int age,
 			String gender, String phone, String locationX, String locationY, double reputation) {
 		super();
 		this.id = id;
-		this.email = email;
 		this.password = password;
 		this.role = role;
 		this.nickname = nickname;
@@ -50,29 +45,18 @@ public class User {
 
 
 
-	public long getId() {
+
+	public String getId() {
 		return id;
 	}
 
 
 
 
-	public String getEmail() {
-		return email;
-	}
 
 
-
-
-	public void setId(long id) {
+	public void setEmail(String id) {
 		this.id = id;
-	}
-
-
-
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 

@@ -18,7 +18,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Participants {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	private int id;
 	
 	@ManyToOne
 	@JoinColumn(name= "board")
@@ -32,7 +32,7 @@ public class Participants {
 	
 	public Participants() {}
 
-	public Participants(long id, Board board, User user) {
+	public Participants(int id, Board board, User user) {
 		super();
 		this.id = id;
 		this.board = board;
@@ -51,7 +51,7 @@ public class Participants {
 		return user;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

@@ -16,7 +16,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Board {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	private int id;
 	
 	@OneToOne
 	@JoinColumn(name = "user")
@@ -29,15 +29,15 @@ public class Board {
 	private String locationY;
 	private String writeDate;
 	private String deadlineDate;
-	private int limit;
+	private int limit_num;
 	private int participants;
 	private int category;
-	private boolean delete;
+	private boolean Isdelete;
 
 	public Board() {}
 
-	public Board(long id, User user, String title, String context, String locationX, String locationY,
-			String writeDate, String deadlineDate, int limit, int participants, int category, boolean delete) {
+	public Board(int id, User user, String title, String context, String locationX, String locationY,
+			String writeDate, String deadlineDate, int limit_num, int participants, int category, boolean Isdelete) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -47,10 +47,10 @@ public class Board {
 		this.locationY = locationY;
 		this.writeDate = writeDate;
 		this.deadlineDate = deadlineDate;
-		this.limit = limit;
+		this.limit_num = limit_num;
 		this.participants = participants;
 		this.category = category;
-		this.delete = delete;
+		this.Isdelete = Isdelete;
 	}
 
 	public long getId() {
@@ -86,7 +86,7 @@ public class Board {
 	}
 
 	public int getLimit() {
-		return limit;
+		return limit_num;
 	}
 
 	public int getParticipants() {
@@ -98,10 +98,10 @@ public class Board {
 	}
 
 	public boolean isDelete() {
-		return delete;
+		return Isdelete;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -133,8 +133,8 @@ public class Board {
 		this.deadlineDate = deadlineDate;
 	}
 
-	public void setLimit(int limit) {
-		this.limit = limit;
+	public void setLimit(int limit_num) {
+		this.limit_num = limit_num;
 	}
 
 	public void setParticipants(int participants) {
@@ -145,8 +145,8 @@ public class Board {
 		this.category = category;
 	}
 
-	public void setDelete(boolean delete) {
-		this.delete = delete;
+	public void setDelete(boolean Isdelete) {
+		this.Isdelete = Isdelete;
 	}
 	
 
