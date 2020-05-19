@@ -22,7 +22,7 @@ public class Board {
 	private int id;
 	@ManyToOne
 	@JoinColumn(name = "id")
-	private User userId;
+	private User writer;
 	private String title;
 	private String context;
 	private String locationX;
