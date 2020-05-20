@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -15,12 +16,15 @@ public @Data class SafeLocation {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
+	@NotNull
 	private int type;
-	private int code;
-	private int line;
+	@NotNull
 	private double latitude;
+	@NotNull
 	private double longitude;
 	private String name;
 	private String address;
+	private int code;
+	private String line;
 	
 }

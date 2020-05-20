@@ -5,6 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -20,7 +21,10 @@ public @Data class Report {
 	@OneToOne
 	@JoinColumn(name= "reported")
 	private User reported;
+	@NotNull
 	private String context;
+	@NotNull
 	private String category;
+	@NotNull
 	private int status;
 }
