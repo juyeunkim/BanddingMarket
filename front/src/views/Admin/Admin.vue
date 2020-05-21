@@ -40,7 +40,7 @@
 
 
 export default {
-  name: 'Sub',
+  name: 'Admin',
   components: {
   },
   data: () => ({message: 'This is Admin page!',
