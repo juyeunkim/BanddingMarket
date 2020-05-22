@@ -12,20 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.groupbuying.service.TestService;
 import com.ssafy.groupbuying.vo.Test;
 
-
 @RestController
-@RequestMapping("test")
-public class TestController {
+@RequestMapping("map")
+public class MapController {
 
-	
+	@Autowired
+	private TestService service;
 
-		@Autowired
-		private TestService service;
-		//의안 검색(,)  //의원이 발의한 의안  // 의안상세//
-		
-		@GetMapping
-		ResponseEntity<List<Test>> getTest(){
-			return new ResponseEntity<List<Test>>(service.testSelect(),HttpStatus.OK);
-		}
-		
+	@GetMapping
+	ResponseEntity<List<Test>> getTest() {
+		return new ResponseEntity<List<Test>>(service.testSelect(), HttpStatus.OK);
+	}
+
 }
