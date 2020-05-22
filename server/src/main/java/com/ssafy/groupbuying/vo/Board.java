@@ -32,12 +32,16 @@ public @Data class Board {
 	private User user;
 	
 	@NotNull
+	@Column(length = 100)
 	private String title;
 	@NotNull
+	@Column(columnDefinition = "TEXT")
 	private String context;
 	@NotNull
+	@Column(length = 20)
 	private String locationX;
 	@NotNull
+	@Column(length = 20)
 	private String locationY;
 	
 	@CreationTimestamp

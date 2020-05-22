@@ -1,5 +1,6 @@
 package com.ssafy.groupbuying.vo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,9 +23,12 @@ public @Data class SafeLocation {
 	private double latitude;
 	@NotNull
 	private double longitude;
+	@Column(length = 30)
 	private String name;
+	@Column(length = 200)
 	private String address;
 	private int code;
+	@Column(length = 5)
 	private String line;
 	
 }

@@ -7,7 +7,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import lombok.Data;
 
@@ -15,21 +14,28 @@ import lombok.Data;
 @Table(name="user")
 public @Data class User {
 	@Id
+	@Column(length = 30)
 	private String id;
 	
 	@NotNull
+	@Column(length = 20)
 	private String password;
 	@NotNull
+	@Column(length = 6)
 	private String role;
 	@NotNull
+	@Column(length = 20)
 	private String nickname;
 	@NotNull
 	private String name;
 	private int age;
+	@Column(length = 1)
 	private String gender;
-	@Column(unique = true)
+	@Column(unique = true, length = 20)
 	private String phone;
+	@Column(length = 20)
 	private String locationX;
+	@Column(length = 20)
 	private String locationY;
 	
 	@ColumnDefault("0")
