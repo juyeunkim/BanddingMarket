@@ -25,12 +25,12 @@ public @Data class Report {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name= "writer") // 실제 DB의 컬럼 이름
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User writer;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name= "reported") 
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User reported;
@@ -43,4 +43,8 @@ public @Data class Report {
 	@NotNull
 	@ColumnDefault("0") // 0 - 미확인 1- 승인 2- 삭제(거절)
 	private int status;
+	
+	public int getId() {
+		return id;
+	}
 }

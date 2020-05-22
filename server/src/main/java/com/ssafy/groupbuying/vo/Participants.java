@@ -32,6 +32,8 @@ public @Data class Participants {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
-	
+	public int getId() {
+		return id;
+	}
 	
 }

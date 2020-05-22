@@ -27,6 +27,7 @@ public @Data class User {
 	@Column(length = 20)
 	private String nickname;
 	@NotNull
+	@Column(length = 20)
 	private String name;
 	private int age;
 	@Column(length = 1)

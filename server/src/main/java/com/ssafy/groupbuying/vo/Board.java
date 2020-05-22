@@ -54,8 +54,9 @@ public @Data class Board {
 	@ColumnDefault("1")
 	private int participants;
 	@NotNull
+	@Column(columnDefinition = "boolean default true")
 	private int category;
-	@Column(name = "isDeleted", columnDefinition = "boolean default true")
+	@Column(columnDefinition = "boolean default true")
 	private boolean isDeleted;
 	
 	// TEST 용
@@ -69,5 +70,10 @@ public @Data class Board {
 		this.category = category;
 	}
 
+	public int getId() {
+		return id;
+	}
+	
+	
 
 }

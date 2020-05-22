@@ -38,4 +38,8 @@ public @Data class Comment {
 	@Column(length = 300)
 	private String context;
 	
+	public int getId() {
+		return id;
+	}
+	
 }

@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ssafy.groupbuying.vo.Board;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
+	public Board findById(int id);
 
 }
