@@ -17,8 +17,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 	private ApiInfo metadata() {
 		return new ApiInfoBuilder()
-				.title("GoupBuying Market")
-				.description("Saffy desc by swagger")
+				.title("Bandding Market")
+				.description("SSAFY desc by swagger")
 				.version("1.0")
 				.build();
 	}
