@@ -1,5 +1,8 @@
 package com.ssafy.groupbuying.vo;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,147 +10,64 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import lombok.Data;
+
 @Entity
 @Table(name="board")
-public class Board {
+public @Data class Board {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	private int id;
 	
 	@OneToOne
 	@JoinColumn(name = "user")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
+	@NotNull
+	@Column(length = 100)
 	private String title;
+	@NotNull
+	@Column(columnDefinition = "TEXT")
 	private String context;
+	@NotNull
+	@Column(length = 20)
 	private String locationX;
+	@NotNull
+	@Column(length = 20)
 	private String locationY;
-	private String writeDate;
-	private String deadlineDate;
-	private int limit;
-	private int participants;
-	private int category;
-	private boolean delete;
-
-	public Board() {}
-
-	public Board(long id, User user, String title, String context, String locationX, String locationY,
-			String writeDate, String deadlineDate, int limit, int participants, int category, boolean delete) {
-		super();
-		this.id = id;
-		this.user = user;
-		this.title = title;
-		this.context = context;
-		this.locationX = locationX;
-		this.locationY = locationY;
-		this.writeDate = writeDate;
-		this.deadlineDate = deadlineDate;
-		this.limit = limit;
-		this.participants = participants;
-		this.category = category;
-		this.delete = delete;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public String getLocationX() {
-		return locationX;
-	}
-
-	public String getLocationY() {
-		return locationY;
-	}
-
-	public String getWriteDate() {
-		return writeDate;
-	}
-
-	public String getDeadlineDate() {
-		return deadlineDate;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public int getParticipants() {
-		return participants;
-	}
-
-	public int getCategory() {
-		return category;
-	}
-
-	public boolean isDelete() {
-		return delete;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setWriter(User user) {
-		this.user = user;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setContext(String context) {
-		this.context = context;
-	}
-
-	public void setLocationX(String locationX) {
-		this.locationX = locationX;
-	}
-
-	public void setLocationY(String locationY) {
-		this.locationY = locationY;
-	}
-
-	public void setWriteDate(String writeDate) {
-		this.writeDate = writeDate;
-	}
-
-	public void setDeadlineDate(String deadlineDate) {
-		this.deadlineDate = deadlineDate;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	public void setParticipants(int participants) {
-		this.participants = participants;
-	}
-
-	public void setCategory(int category) {
-		this.category = category;
-	}
-
-	public void setDelete(boolean delete) {
-		this.delete = delete;
-	}
 	
+	@CreationTimestamp
+	private LocalDateTime  writeDate;
+	// 일단 NOT NULL 제외
+	private LocalDateTime deadlineDate;
+	@NotNull
+	private int limit_num;
+	
+	@ColumnDefault("1")
+	private int participants;
+	@NotNull
+	private int category;
+	@Column(name = "isDeleted", columnDefinition = "boolean default true")
+	private boolean isDeleted;
+	
+	// TEST 용
+	public Board(User user, @NotNull String title, @NotNull String context,
+			@NotNull int limit_num, @NotNull int category) {
+		super();
+		this.user = user;
+		this.title = title;
+		this.context = context;
+		this.limit_num = limit_num;
+		this.category = category;
+	}
+
 
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.groupbuying.service.TestService;
-import com.ssafy.groupbuying.vo.Test;
 
 @RestController
 @RequestMapping("map")
@@ -19,9 +18,5 @@ public class MapController {
 	@Autowired
 	private TestService service;
 
-	@GetMapping
-	ResponseEntity<List<Test>> getTest() {
-		return new ResponseEntity<List<Test>>(service.testSelect(), HttpStatus.OK);
-	}
 
 }
