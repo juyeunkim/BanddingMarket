@@ -23,7 +23,7 @@ import lombok.Data;
 @Table(name="board")
 public @Data class Board {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	@OneToOne
