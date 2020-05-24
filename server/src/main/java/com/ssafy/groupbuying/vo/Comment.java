@@ -21,7 +21,7 @@ import lombok.Data;
 @Table(name="comment")
 public @Data class Comment {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	@ManyToOne

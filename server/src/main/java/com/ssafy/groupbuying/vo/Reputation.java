@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -16,7 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name="reputation")
 public class Reputation {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	@ManyToOne
@@ -29,6 +30,7 @@ public class Reputation {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User rater_id;
 	
+	@ColumnDefault("0")
 	private double rate;
 	
 	public int getId() {

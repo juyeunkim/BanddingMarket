@@ -19,7 +19,7 @@ import lombok.Data;
 @Table(name="participants")
 public @Data class Participants {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	@ManyToOne

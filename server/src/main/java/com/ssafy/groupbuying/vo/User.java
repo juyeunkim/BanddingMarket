@@ -29,6 +29,8 @@ public @Data class User {
 	@NotNull
 	@Column(length = 20)
 	private String name;
+	
+	@ColumnDefault("0")
 	private int age;
 	@Column(length = 1)
 	private String gender;
