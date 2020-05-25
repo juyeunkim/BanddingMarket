@@ -7,6 +7,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.Data;
 
 @Entity
@@ -16,9 +19,11 @@ public @Data class Report {
 	private String id;
 	
 	@OneToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name= "writer") // 실제 DB의 컬럼 이름
 	private User writer;
 	@OneToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name= "reported")
 	private User reported;
 	@NotNull
