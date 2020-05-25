@@ -22,7 +22,7 @@ import lombok.Data;
 @Table(name="report")
 public @Data class Report {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	@ManyToOne
