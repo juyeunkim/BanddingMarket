@@ -6,7 +6,8 @@ export default {
         store.state.test = payload.test;
     },
     [Constant.SET_SEARCHLIST]: (state, payload) => {
-        store.state.searchList = payload.searchList;
+        store.state.searchList = store.state.searchList.concat(payload.searchList);
+        console.log(store.state.searchList)
     },
 
 };

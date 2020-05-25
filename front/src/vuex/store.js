@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 const state = {
     test: "test",
-    searchList: false,
+    // searchList: false,
+    searchList: ["aaaa", "bbbbb", "CCCCCCCC"],
 };
 
 const getters = {
