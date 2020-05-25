@@ -7,12 +7,16 @@ Vue.use(Vuex);
 
 const state = {
     test: "test",
+    searchList: false,
 };
 
 const getters = {
     test: state => {
         return state.test;
     },
+    searchList: state => {
+        return state.searchList
+    }
 };
 
 export default new Vuex.Store({
