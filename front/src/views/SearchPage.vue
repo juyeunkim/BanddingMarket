@@ -14,12 +14,6 @@
         ></v-text-field>
       </v-flex>
 
-      <!-- <v-btn @click="test">
-        test
-      </v-btn> -->
-
-      <!-- {{ searchList }} -->
-
       <!-- 인기 검색어 -->
       <v-flex sm9 xs12 v-if="!searchList">
         <v-card color="" class="my-2">
@@ -60,19 +54,24 @@
               </v-chip>
             </p>
           </v-card-text>
-          <!-- <v-card-subtitle>인기 검색어</v-card-subtitle> -->
 
           <!-- <v-card-actions></v-card-actions> -->
         </v-card>
         <v-divider class="my-2"></v-divider>
       </v-flex>
     </v-layout>
+
+    <!-- filter button -->
     <v-layout justify-center>
       <v-flex sm12 xs12>
-        <v-btn text><v-icon>mdi-filter-variant</v-icon> 검색 필터</v-btn>
+        <v-btn text @click.stop="filterDialog = true"
+          ><v-icon>mdi-filter-variant</v-icon> 검색 필터</v-btn
+        >
         <v-divider class="mb-3"></v-divider>
       </v-flex>
     </v-layout>
+
+    <!-- 스크롤 -->
     <v-layout sm12 xs12 style="position: relative;height:80%;overflow: hidden;">
       <v-flex>
         <scroller
@@ -86,13 +85,77 @@
             v-for="(word, index) in searchList"
             :key="'searchList' + index"
             class="pa-1 ma-2"
-            :class="{'grey-bg': index % 2 == 0}"
+            :class="{ 'grey-bg': index % 2 == 0 }"
           >
             {{ word }}
           </v-card>
         </scroller>
       </v-flex>
     </v-layout>
+
+    <!-- 필터 dialog -->
+    <v-dialog v-model="filterDialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">검색 필터</v-card-title>
+        <v-divider></v-divider>
+
+        <!--카테고리 category-->
+        <v-card-title style="">
+          카테고리
+        </v-card-title>
+        <v-card-title class="py-0">
+          <v-row justify-center>
+            <v-col cols="6" class="selectButtonArea pa-1">
+              <v-btn
+                style="width: -webkit-fill-available;"
+                @click="categoryButtonClicked('food')"
+                :color="categoryButtonColor('food')"
+                >음식</v-btn
+              >
+            </v-col>
+            <v-col cols="6" class="selectButtonArea pa-1">
+              <v-btn
+                style="width: -webkit-fill-available;"
+                @click="categoryButtonClicked('delivery')"
+                :color="categoryButtonColor('delivery')"
+                >택배</v-btn
+              >
+            </v-col>
+          </v-row>
+        </v-card-title>
+        <v-divider></v-divider>
+
+        <!--거리 distance-->
+        <v-card-title style="">
+          거리
+        </v-card-title>
+        <v-card-title class="py-0">
+          <v-row justify-center>
+            <v-col
+              cols="4"
+              class="selectButtonArea pa-1"
+              v-for="(dis, index) in distances"
+              :key="'distance' + index"
+            >
+              <v-btn
+                style="width: -webkit-fill-available;"
+                @click="distanceButtonClicked(dis)"
+                :color="distanceButtonColor(dis)"
+                >{{ dis }}M</v-btn
+              >
+            </v-col>
+          </v-row>
+        </v-card-title>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="primary" text @click="filterDialog = false">
+            닫기
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -112,6 +175,11 @@ export default {
       ['따뜻한저쩌꾸', '해장국'],
     ],
     refreshFlag: false,
+    filterDialog: false,
+    categoryFood: true,
+    categoryDelivery: true,
+    distance: 100,
+    distances: [100, 200, 300],
   }),
   created() {
     //   console.log(this.$store.getters.searchList)
@@ -160,6 +228,35 @@ export default {
         searchList: ['aaa', 'bbbb'],
       })
     },
+    categoryButtonColor(category) {
+      if (category == 'food' && this.categoryFood) {
+        return 'primary'
+      } else if (category == 'delivery' && this.categoryDelivery) {
+        return 'primary'
+      } else {
+        return 'white'
+      }
+    },
+    categoryButtonClicked(category) {
+      if (category == 'food' && this.categoryFood && !this.categoryDelivery)
+        return
+      if (category == 'delivery' && !this.categoryFood && this.categoryDelivery)
+        return
+
+      if (category == 'food') {
+        this.categoryFood = !this.categoryFood
+      } else if (category == 'delivery') {
+        this.categoryDelivery = !this.categoryDelivery
+      }
+    },
+    distanceButtonColor(distance) {
+      // console.log(distance)
+      if (this.distance == distance) return 'primary'
+      else return 'white'
+    },
+    distanceButtonClicked(distance) {
+      this.distance = distance
+    },
   },
   computed: {
     ...mapState(['searchList']),
@@ -184,6 +281,9 @@ export default {
   height: 100%;
 }
 .grey-bg {
-    background: #eee;
+  background: #eee;
+}
+.selectButtonArea {
+  text-align: center;
 }
 </style>
