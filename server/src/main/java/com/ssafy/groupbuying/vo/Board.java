@@ -23,6 +23,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="board")
@@ -32,18 +34,16 @@ public @Data class Board {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
 	@NotNull
 	@Column(length = 100)
-//	@ApiModelProperty(value = "제목")
 	private String title;
 	@NotNull
 	@Column(columnDefinition = "TEXT")
-//	@ApiModelProperty(value = "내용")
 	private String context;
 //	@NotNull
 	@Column(length = 20)
@@ -58,14 +58,12 @@ public @Data class Board {
 	private LocalDateTime deadlineDate;
 	@NotNull
 	@Max(5)
-//	@ApiModelProperty(value = "제한 인원")
 	private int limit_num;
 	
 	@ColumnDefault("1")
 	private int participants;
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
-//	@ApiModelProperty(value = "카테고리")
 	private int category;
 	@Column(columnDefinition = "boolean default false")
 	private boolean isDeleted;
@@ -81,67 +79,6 @@ public @Data class Board {
 		this.limit_num = limit_num;
 		this.category = category;
 	}
-
-	public long getId() {
-		return id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public String getLocationX() {
-		return locationX;
-	}
-
-	public String getLocationY() {
-		return locationY;
-	}
-
-	public LocalDateTime getWriteDate() {
-		return writeDate;
-	}
-
-	public LocalDateTime getDeadlineDate() {
-		return deadlineDate;
-	}
-
-	public int getLimit_num() {
-		return limit_num;
-	}
-
-	public int getCategory() {
-		return category;
-	}
-
-	public boolean isDeleted() {
-		return isDeleted;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setContext(String context) {
-		this.context = context;
-	}
-
-	public void setLimit_num(int limit_num) {
-		this.limit_num = limit_num;
-	}
-	
 
 	
 
