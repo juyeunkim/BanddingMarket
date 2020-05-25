@@ -7,6 +7,7 @@ export default {
         // this.$store.dispatch(Constant.SET_TEST, {
         //     tmp: "tmp",
         //   });
+        payload
         http
             .get("url")
             .then(response => {
@@ -19,4 +20,10 @@ export default {
                 alert("GET_YOUTUBERS_PER_CATEGORY에 실패하였습니다!\n" + exp);
             });
     },
+    [Constant.SET_SEARCHLIST]: (store, payload) => {
+        // console.log(payload.searchList)
+        store.commit(Constant.SET_SEARCHLIST, {
+            searchList: payload.searchList
+        });
+    }
 };

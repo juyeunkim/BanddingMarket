@@ -2,6 +2,7 @@ import Main from './views/Main.vue'
 import Sub from './views/Sub.vue'
 import Admin from './views/Admin/Admin.vue'
 import UserList from './views/Admin/UserList.vue'
+import SearchPage from './views/SearchPage'
 
 
 export default [
@@ -25,5 +26,11 @@ export default [
         path: '/admin/userList',
         name: 'UserList',
         component: UserList
-    }
+    },
+    {
+        path: '/search',
+        name: 'SearchPage',
+        component: SearchPage
+    },
+
 ]
