@@ -9,9 +9,9 @@ import com.ssafy.groupbuying.vo.User;
 
 public interface UserService {
 
-	User findById(String uId);
+	User findByMail(String uMail);
 
-	void deleteById(String uId);
+	void deleteByMail(String uMail);
 
 	List<User> findAll();
 
@@ -19,6 +19,8 @@ public interface UserService {
 
 	User save(User user);
 
-	Boolean checkById(String uId);
+	Boolean checkByMail(String uMail);
+
+	Boolean checkPass(User user);
 
 }

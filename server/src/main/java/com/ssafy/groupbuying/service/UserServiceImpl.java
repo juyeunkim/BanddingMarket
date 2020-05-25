@@ -15,25 +15,25 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Override
-	public User findById(String uId) {
+	public User findByMail(String uMail) {
 		// TODO Auto-generated method stub
 		
 		
-		return userRepository.findById(uId).get();
+		return userRepository.findByMail(uMail);
 	}
 	
 	@Override
-	public Boolean checkById(String uId) {
+	public Boolean checkByMail(String uMail) {
 		// TODO Auto-generated method stub
 		
 		
-		return userRepository.existsById(uId);
+		return userRepository.existsByMail(uMail);
 	}
 
 	@Override
-	public void deleteById(String uId) {
+	public void deleteByMail(String uMail) {
 		// TODO Auto-generated method stub
-		userRepository.deleteById(uId);
+		userRepository.deleteByMail(uMail);
 	}
 
 	@Override
@@ -53,6 +53,12 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		
 		return userRepository.save(user);
+	}
+
+	@Override
+	public Boolean checkPass(User user) {
+		// TODO Auto-generated method stub
+		return userRepository.checkPass(user.getMail(), user.getPassword());
 	}
 	
 	

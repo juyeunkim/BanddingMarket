@@ -1,6 +1,11 @@
 package com.ssafy.groupbuying.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,10 @@ import com.ssafy.groupbuying.service.JwtService;
 import com.ssafy.groupbuying.service.UserService;
 import com.ssafy.groupbuying.vo.User;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -26,113 +35,77 @@ public class UserController {
 	private UserService userService;
 	private JwtService jwtService;
 
-	// 모든 유저 조회
+	@GetMapping(value = "/{uMail}")
+	@ApiOperation(value = "checkMail", notes = "eMail 중복체크")
+	public Boolean checkMail(@PathVariable("uMail") String uMail) {
 
-	@GetMapping
-	public ResponseEntity<List<User>> getAllUser() {
-
-		List<User> userList = userService.findAll();
-
-		return new ResponseEntity<List<User>>(userList, HttpStatus.OK);
+		return userService.checkByMail(uMail);
 
 	}
 
-	// eMail로 한명의 유저 조회 (중복체크)
-	@GetMapping(value = "/{uId}")
+	// 유저 Mail로 아이디 삭제
 
-	public Boolean checkMail(@PathVariable("uId") String uId) {
-		
-		//User user = new ResponseEntity<User>(userService.findById(uId), HttpStatus.OK).;
-		
-		return userService.checkById(uId);
+	@DeleteMapping(value = "/{uMail}")
+	@ApiOperation(value = "deleteUser", notes = "유저 삭제 ")
+	@ApiResponses({ @ApiResponse(code = 200, message = "로그인 성공"), @ApiResponse(code = 409, message = "비밀번호가 틀립니다") })
+	public ResponseEntity<Void> deleteUser(@RequestBody User user) {
 
-	}
+		HttpStatus status = HttpStatus.CONFLICT;
+		if (userService.checkPass(user)) {
+			userService.deleteByMail(user.getMail());
+			status = HttpStatus.OK;
 
-	// 유저 Id로 사원 삭제
+		}
 
-	@DeleteMapping(value = "/{uId}")
-
-	public ResponseEntity<Void> deleteUser(@PathVariable("uId") String uId) {
-
-		userService.deleteById(uId);
-
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Void>(status);
 
 	}
 
-	// userId로 사원 수정
+	@PostMapping(value = "/signUp")
+	@ApiOperation(value = "signUp", notes = "회원가입 ")
+	@ApiResponses({ @ApiResponse(code = 200, message = "회원가입 성공"), @ApiResponse(code = 409, message = "회원가입 실패") })
+	public ResponseEntity<Void> signUp(@RequestBody User user) {
 
-	@PutMapping(value = "/{uId}")
+		HttpStatus status = HttpStatus.OK;
+		try {
+			userService.save(user);
+		} catch (Exception e) {
+			status = HttpStatus.CONFLICT;
+		}
+		return new ResponseEntity<Void>(status);
 
-	public ResponseEntity<User> updateUser(@PathVariable("uId") String uId, @RequestBody User user) {
+	}
 
-		userService.updateById(uId, user);
+	@PostMapping(value = "/signIn")
+	@ApiOperation(value = "signIn", notes = "로그인 ")
+	@ApiResponses({ @ApiResponse(code = 200, message = "로그인 성공"),
+			@ApiResponse(code = 409, message = "아이디 또는 비밀번호가 틀립니다") })
+	public ResponseEntity<Void> signIn(@RequestBody User user, HttpServletResponse res) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.CONFLICT;
 
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+		if (userService.checkPass(user)) {
+			res.setHeader("jwt-auth-token", jwtService.create(userService.findByMail(user.getMail())));
+			status = HttpStatus.OK;
+		}
+
+		return new ResponseEntity<Void>(status);
 
 	}
 
-	// 사원 입력 회원가입 
+	@ApiOperation(value = "checkToken", notes = "토큰 확인용 API ")
+	@PostMapping(value = "/checkToken")
+	public ResponseEntity<Map<String, Object>> checkToken(HttpServletRequest req) {
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			System.out.println(jwtService.get(req.getHeader("jwt-auth-token")));
 
-	@PostMapping(value = "/SignUP")
-
-	public ResponseEntity<User> signUp(@RequestBody User user) {
-
-		return new ResponseEntity<User>(userService.save(user), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.ACCEPTED);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 
 	}
-	/*
-	@PostMapping(value = "/SignIn")
 
-	public Boolean login(@RequestBody User user) {
-		
-		User userr = userService.findById(user.getuMail());
-		
-		if (userr.getuPass().equals(user.getuPass()))
-			return true;
-		
-		else
-			return false;
-	
-		
-		//return new ResponseEntity<User>(userService.save(user), HttpStatus.OK);
-
-	}*/
-
-	/*// 급여를 기준으로 사원 검색 (sal > sal1 and sal < sal2)
-
-	@GetMapping(value = "/{sal1}/{sal2}")
-
-	public ResponseEntity<List<Emp>> getEmpBySalBetween(@PathVariable int sal1, @PathVariable int sal2) {
-
-		List<Emp> emps = empService.findBySalBetween(sal1, sal2);
-
-		return new ResponseEntity<List<Emp>>(emps, HttpStatus.OK);
-
-	}*/
-
-	
-
-	/*@RequestMapping(value = "/user", method = RequestMethod.POST)
-	public String signUpUser() {
-		User user = new User();
-		user.setuId("a");
-		user.setuMail("a");
-		user.setuPass("a");
-		user.setuParty("a");
-		userRepository.save(user);
-		return "Hello world";
-	}
-
-	@RequestMapping(value = "/user", method = RequestMethod.GET)
-	public ResponseEntity<User> signInUser() {
-		User user = new User();
-		user.setuId("a");
-		user.setuMail("a");
-		user.setuPass("a");
-		user.setuParty("a");
-
-		return new ResponseEntity<User>(user, HttpStatus.OK);
-	}
-	*/
 }
