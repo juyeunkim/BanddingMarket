@@ -8,25 +8,29 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.Data;
 
 @Entity
 @Table(name="Safe_Location")
 public @Data class SafeLocation {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	
+
 	@NotNull
 	private int type;
 	@NotNull
 	private double latitude;
 	@NotNull
 	private double longitude;
+	
 	@Column(length = 30)
 	private String name;
 	@Column(length = 200)
 	private String address;
+	@ColumnDefault("0")
 	private int code;
 	@Column(length = 5)
 	private String line;
