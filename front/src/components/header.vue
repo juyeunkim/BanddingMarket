@@ -33,12 +33,27 @@
         <span class="mr-2">Subpage로 가기</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
+      <v-btn
+        :to="{ name: 'Admin'}"
+        text
+      >
+        <span class="mr-2">Admin 가기</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+
+      <v-btn
+        :to="{ name: 'UserList'}"
+        text
+      >
+        <span class="mr-2">사용자 목록 가기</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
     </v-app-bar>
 </template>
 
 <script>
   export default {
-    name: 'header',
+    name: 'Header',
     data: () => ({
     }),
   }
