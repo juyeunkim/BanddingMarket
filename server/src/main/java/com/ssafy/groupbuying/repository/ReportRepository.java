@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.groupbuying.vo.Board;
 
-public interface ReportRepository extends JpaRepository<Board, Integer> {
+public interface ReportRepository extends JpaRepository<Board, Long> {
 
 }

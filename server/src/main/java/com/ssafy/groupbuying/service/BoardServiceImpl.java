@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.groupbuying.repository.BoardRepository;
 import com.ssafy.groupbuying.vo.Board;
+import com.ssafy.groupbuying.vo.User;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -16,6 +17,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public boolean insert(Board board) {
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!board");
 		repo.save(board);
 		return true;
 	}

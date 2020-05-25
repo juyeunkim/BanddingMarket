@@ -17,7 +17,7 @@ import lombok.Data;
 public @Data class SafeLocation {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private long id;
 
 	@NotNull
 	private int type;

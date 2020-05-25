@@ -20,7 +20,7 @@ import lombok.Data;
 public @Data class Participants {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
 	@ManyToOne
 	@JoinColumn(name= "board")
@@ -32,7 +32,7 @@ public @Data class Participants {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	

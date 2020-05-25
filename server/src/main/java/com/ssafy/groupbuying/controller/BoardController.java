@@ -44,6 +44,7 @@ public class BoardController {
 	@GetMapping("/board/getBoards")
 	@ApiOperation(value = "전체 게시판 조회")
 	public Object getBoards() {
+		System.out.println("((((((((((((((((((");
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "전체 게시판 조회"; 
@@ -53,11 +54,12 @@ public class BoardController {
 	
 	@PostMapping("/board/insert")
 	@ApiOperation(value = "게시판 등록")
-	public Object insert(@RequestBody(required = true) Board b) {
+	public Object insert(@RequestBody(required = true) Board board) {
+		System.out.println("&&&&&&&&&&&&&&&&&&&");
 		final BasicResponse result = new BasicResponse();
-    	result.status = service.insert(b);
+    	result.status = service.insert(board);
 		result.data = "게시판 등록"; 
-		result.object = b;
+		result.object = board;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
