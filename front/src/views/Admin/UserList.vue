@@ -75,7 +75,7 @@
         
       </v-tabs>
     </v-flex>
-
+    <br/>
   <!--user search result-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
         <v-icon color='red'>fas fa-search</v-icon> 검색 결과
@@ -87,19 +87,43 @@
        <b style="color:orange">{{result.nickName}}</b>님의 정보입니다.
       </span>
       <v-divider class="mb-5 mt-1"></v-divider>
-      <v-tabs
-        background-color="transparent"
-        center-active
-        height="auto"
-        >
-        <ul>
-          <li>닉네임: {{result.nickName}}</li>
-          <li>이름: {{result.name}}</li>
-          <li>주소: {{result.addr}}</li>
-          <li>평점: {{result.reputation}}</li>
+      <div class="col justify-between row">
+        <v-flex sm6 xs12>
+          <v-tabs
+            background-color="transparent"
+            center-active
+            height="auto"
+            >
+          
+            <ul>
+              <li>닉네임: {{result.nickName}}</li>
+              <li>이름: {{result.name}}</li>
+              <li>주소: {{result.addr}}</li>
+              <li>평점: {{result.reputation}}</li>
 
-        </ul>
-      </v-tabs>
+            </ul>
+          </v-tabs>
+        </v-flex>
+        <v-flex sm6 xs12 style="overflow:auto; height:200px;" >
+          <v-flex v-for = "board in boardList" :key="board.id" style="margin-top:15px; margin-right:20px;">
+
+           <v-card
+            color="#E6E6E6"
+            
+          >
+            <v-card-title class="headline" >{{board.title}}</v-card-title>
+            <v-card-subtitle >{{board.context}}</v-card-subtitle>
+
+            
+          </v-card>
+          </v-flex>
+
+        </v-flex>
+
+
+      </div>
+
+
     </v-flex>
 
 
@@ -140,7 +164,12 @@ export default {
         { nickName: 'taemin', name:'김태민',addr: '역삼역', id: 4, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png"  },
         { nickName: 'hun0202', name:'이훈', addr: '서울시', id: 5, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png"  },
       ],
-      
+      boardList: [
+        { title:'치킨시켜드실분', context:'치킨멤버구함',id:1},
+        { title:'엽떡반반나눠요~', context:'순한맛드실분...?',id:2},
+        { title:'쿠팡에서 감자구매', context:'-',id:3},
+        { title:'피자 반반씩 시킬분있나요', context:'...',id:4},
+      ]
     }),
     methods: {
       customFilter (item, queryText) {
