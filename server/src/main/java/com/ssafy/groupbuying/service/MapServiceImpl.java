@@ -1,11 +1,14 @@
 package com.ssafy.groupbuying.service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.groupbuying.dto.DealInfo;
 import com.ssafy.groupbuying.repository.SafeLocationRepository;
+import com.ssafy.groupbuying.vo.Board;
 import com.ssafy.groupbuying.vo.SafeLocation;
 
 @Service
@@ -17,5 +20,10 @@ public class MapServiceImpl implements MapService {
 	@Override
 	public List<SafeLocation> search() {
 		return repo.findAll();
+	}
+
+	@Override
+	public List<Board> getBoard(DealInfo info) {
+		return repo.getBoard(info);
 	}
 }
