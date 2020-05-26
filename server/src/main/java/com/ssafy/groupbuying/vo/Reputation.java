@@ -18,7 +18,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Reputation {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -33,7 +33,7 @@ public class Reputation {
 	@ColumnDefault("0")
 	private double rate;
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 }
