@@ -3,6 +3,7 @@ import Sub from './views/Sub.vue'
 import Admin from './views/Admin/Admin.vue'
 import UserList from './views/Admin/UserList.vue'
 import SearchPage from './views/SearchPage'
+import MapSearhPage from './views/MapSearchPage'
 
 
 export default [
@@ -31,6 +32,11 @@ export default [
         path: '/search',
         name: 'SearchPage',
         component: SearchPage
+    },
+    {
+        path: '/mapsearch',
+        name: 'MapSearhPage',
+        component: MapSearhPage
     },
 
 ]

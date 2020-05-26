@@ -162,6 +162,7 @@
 <script>
 import Constant from '../vuex/Constant'
 import { mapState } from 'vuex'
+
 // import axios from 'axios'
 
 export default {
@@ -277,8 +278,13 @@ export default {
   color: #eee;
 } */
 .fullpage-container {
-  width: 100%;
-  height: 100%;
+  /* width: 100%; */
+  /* height: 100%; */
+  position: absolute; 
+  top:0; 
+  bottom:0; 
+  left:0; 
+  right:0;
 }
 .grey-bg {
   background: #eee;
