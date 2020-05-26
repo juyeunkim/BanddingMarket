@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.groupbuying.repository.BoardRepository;
-import com.ssafy.groupbuying.repository.CommentRepository;
 import com.ssafy.groupbuying.repository.ParticipantsRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
 import com.ssafy.groupbuying.vo.Board;
@@ -58,13 +57,14 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public boolean apply(long bid, long uid) {
+	public Participants apply(long bid, long uid) {
 		// 기존에 있는 참가자수에 +1 후, UPDATE
 		Board board = getBoard(bid);
 		int attend = board.getParticipants();
 		board.setParticipants(attend+1);
 		update(board);
-//	
+		
+		// Participants 테이블에 저장
 		User user = urepo.findById(uid);
 		Participants newUser =new Participants();
 		newUser.setUser(user);
@@ -72,7 +72,22 @@ public class BoardServiceImpl implements BoardService {
 		
 		prepo.save(newUser);
 		
-		return true;
+		return newUser;
+	}
+
+	@Override
+	public Participants cancel(long bid, long uid) {
+		// 기존에 있는 참가자수에 -1 후, UPDATE
+		Board board = getBoard(bid);
+		int attend = board.getParticipants();
+		board.setParticipants(attend-1);
+		update(board);
+		
+		Participants newUser = prepo.findByUserAndBoard(urepo.findById(uid), repo.findById(bid));
+		System.out.println(newUser);
+		prepo.delete(newUser);
+		
+		return newUser;
 	}
 
 	

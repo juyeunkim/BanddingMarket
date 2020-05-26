@@ -88,9 +88,21 @@ public class BoardController {
 				@RequestParam(required = true) final int uid) {
 		
 		final BasicResponse result = new BasicResponse();
-    	result.status = service.apply(bid, uid);
+    	result.status = true;
 		result.data = "참가 신청"; 
-		result.object = "유저 + 게시판 정보 넣기 !";
+		result.object = service.apply(bid, uid);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/board/cancel/{bid}/{uid}")
+	@ApiOperation(value = "참가 취소")
+	public Object cancel(@RequestParam(required = true) final int bid,
+				@RequestParam(required = true) final int uid) {
+		
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = "참가 취소"; 
+		result.object = service.cancel(bid, uid);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

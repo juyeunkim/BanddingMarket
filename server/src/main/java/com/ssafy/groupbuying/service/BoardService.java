@@ -3,7 +3,7 @@ package com.ssafy.groupbuying.service;
 import java.util.List;
 
 import com.ssafy.groupbuying.vo.Board;
-import com.ssafy.groupbuying.vo.User;
+import com.ssafy.groupbuying.vo.Participants;
 
 public interface BoardService {
 	// CRUD
@@ -14,7 +14,7 @@ public interface BoardService {
 	public List<Board> getBoards();
 	
 	// 신청
-	public boolean apply(long bid, long uid);
+	public Participants apply(long bid, long uid);
 	// 취소
-//	public boolean cancel(long id);
+	public Participants cancel(long bid, long uid);
 }
