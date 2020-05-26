@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.groupbuying.repository.BoardRepository;
+import com.ssafy.groupbuying.repository.CommentRepository;
 import com.ssafy.groupbuying.repository.ParticipantsRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
 import com.ssafy.groupbuying.vo.Board;
+import com.ssafy.groupbuying.vo.Comment;
 import com.ssafy.groupbuying.vo.Participants;
 import com.ssafy.groupbuying.vo.User;
 
@@ -20,9 +22,12 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	ParticipantsRepository prepo;
-	
+
 	@Autowired
 	UserRepository urepo;
+	
+	@Autowired
+	CommentRepository crepo;
 	
 	@Override
 	public boolean insert(Board board) {
@@ -88,6 +93,32 @@ public class BoardServiceImpl implements BoardService {
 		prepo.delete(newUser);
 		
 		return newUser;
+	}
+
+	@Override
+	public boolean insertComment(Comment com) {
+		crepo.save(com);
+		return true;
+	}
+
+	@Override
+	public Comment deleteComment(long cid) {
+		Comment com = crepo.findById(cid);
+		crepo.delete(com);
+		return com;
+	}
+
+	@Override
+	public boolean updateComment(Comment com) {
+		crepo.save(com);
+		return true;
+	}
+
+	@Override
+	public List<Comment> getComments(long bid) {
+		// bid -> board -> CommentList
+		Board board = repo.findById(bid);
+		return crepo.findByBoard(board);
 	}
 
 	
