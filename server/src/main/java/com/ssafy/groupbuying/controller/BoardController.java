@@ -44,7 +44,6 @@ public class BoardController {
 	@GetMapping("/board/getBoards")
 	@ApiOperation(value = "전체 게시판 조회")
 	public Object getBoards() {
-		System.out.println("((((((((((((((((((");
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "전체 게시판 조회"; 
@@ -55,7 +54,6 @@ public class BoardController {
 	@PostMapping("/board/insert")
 	@ApiOperation(value = "게시판 등록")
 	public Object insert(@RequestBody(required = true) Board board) {
-		System.out.println("&&&&&&&&&&&&&&&&&&&");
 		final BasicResponse result = new BasicResponse();
     	result.status = service.insert(board);
 		result.data = "게시판 등록"; 
@@ -77,9 +75,22 @@ public class BoardController {
 	@ApiOperation(value = "게시판 삭제")
 	public Object delete(@RequestParam(required = true) final int id) {
 		final BasicResponse result = new BasicResponse();
-    	result.status = service.delete(id);
+    	Board board= service.getBoard(id);
+		result.status = service.delete(id);
 		result.data = "게시판 삭제"; 
-		result.object = id;
+		result.object = board;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/board/apply/{bid}/{uid}")
+	@ApiOperation(value = "참가 신청")
+	public Object apply(@RequestParam(required = true) final int bid,
+				@RequestParam(required = true) final int uid) {
+		
+		final BasicResponse result = new BasicResponse();
+    	result.status = service.apply(bid, uid);
+		result.data = "참가 신청"; 
+		result.object = "유저 + 게시판 정보 넣기 !";
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

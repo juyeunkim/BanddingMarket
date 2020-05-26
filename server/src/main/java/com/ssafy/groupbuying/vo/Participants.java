@@ -27,13 +27,9 @@ public @Data class Participants {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Board board;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name= "user")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
-	
-	public long getId() {
-		return id;
-	}
-	
+
 }

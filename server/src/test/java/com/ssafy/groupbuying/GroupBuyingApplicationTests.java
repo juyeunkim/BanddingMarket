@@ -14,7 +14,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ssafy.groupbuying.controller.BoardController;
 import com.ssafy.groupbuying.repository.BoardRepository;
+import com.ssafy.groupbuying.repository.ParticipantsRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
+import com.ssafy.groupbuying.vo.Participants;
 import com.ssafy.groupbuying.vo.User;
 
 @SpringBootTest
@@ -24,11 +26,14 @@ class GroupBuyingApplicationTests {
     BoardRepository BoardRepository;
 	@Autowired
     UserRepository UserRepository;
+	@Autowired
+	ParticipantsRepository par;
 	
 	@Autowired
 	BoardController BoardController;
 	
 	private MockMvc mockMvc;
+	
 	
 //	@Test
 //	void insertUser() {

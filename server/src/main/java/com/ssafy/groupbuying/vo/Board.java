@@ -34,7 +34,7 @@ public @Data class Board {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "user")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
