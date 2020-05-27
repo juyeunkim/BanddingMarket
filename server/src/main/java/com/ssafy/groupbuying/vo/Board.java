@@ -2,15 +2,15 @@ package com.ssafy.groupbuying.vo;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -20,22 +20,26 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="board")
 @ApiModel
 public @Data class Board {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private long board_id;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "user")
+	@ManyToOne(fetch = FetchType.LAZY)
+	
+	@JoinColumn(name = "user_id", referencedColumnName="user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name="user_id"))
+//	@ManyToOne(cascade = CascadeType.PERSIST)
+//	@JoinColumn(name = "user")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
@@ -47,10 +51,9 @@ public @Data class Board {
 	private String context;
 //	@NotNull
 	@Column(length = 20)
-	private String locationX;
-//	@NotNull
-	@Column(length = 20)
-	private String locationY;
+	private String board_locationX;
+ 	@Column(length = 20)
+	private String board_locationY;
 	
 	@CreationTimestamp
 	private LocalDateTime  writeDate;
@@ -79,7 +82,24 @@ public @Data class Board {
 		this.limit_num = limit_num;
 		this.category = category;
 	}
-
 	
+	
+	public Board(long board_id, User user, @NotNull String title, @NotNull String context, String board_locationX,
+			String board_locationY, LocalDateTime writeDate, LocalDateTime deadlineDate, @NotNull @Max(5) int limit_num,
+			int participants, @NotNull int category, boolean isDeleted) {
+		super();
+		this.board_id = board_id;
+		this.user = user;
+		this.title = title;
+		this.context = context;
+		this.board_locationX = board_locationX;
+		this.board_locationY = board_locationY;
+		this.writeDate = writeDate;
+		this.deadlineDate = deadlineDate;
+		this.limit_num = limit_num;
+		this.participants = participants;
+		this.category = category;
+		this.isDeleted = isDeleted;
+	}
 
 }
