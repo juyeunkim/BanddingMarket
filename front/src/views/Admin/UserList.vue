@@ -7,7 +7,7 @@
 
     <v-flex sm12 xs12 >
       <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-        <v-icon color='red'>fas fa-search</v-icon> TOP USER
+        <v-icon style="color:black">mdi-trophy-variant</v-icon> TOP USER
     </span>
 
       <v-simple-table class="ma-3" >
@@ -54,7 +54,7 @@
     </v-flex>
     <!--user search-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-        <v-icon color='red'>fas fa-search</v-icon> 회원 이름 검색
+                <v-icon style="color:black">mdi-account-search</v-icon> 회원 이름 검색
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
@@ -78,7 +78,7 @@
     <br/>
   <!--user search result-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-        <v-icon color='red'>fas fa-search</v-icon> 검색 결과
+        <v-icon style="color:black">mdi-information</v-icon> 검색 결과
     </span>
     
     <v-flex sm12 xs12 class="mt-4 outerFlex">
@@ -154,12 +154,12 @@ export default {
       search: null,
       topUserList: [
         { nickName: 'jason07999', name:'이재혁', addr: '용인시', sel: 1, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82810300-0c49ce00-9ec9-11ea-9b1d-114c80a200d4.jpg"},
-        { nickName: 'wjg', name:'김주연',addr: '서울대입구', sel: 2, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png" },
+        { nickName: 'wjg', name:'김주연',addr: '서울대입구', sel: 2, reputation:2.5, img:"https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png" },
         { nickName: 'juheeekim', name:'김주희',addr: '사당', sel: 3, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png" }
       ],
       userList: [
         { nickName: 'jason07999', name:'이재혁', addr: '용인시', id: 1, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82810300-0c49ce00-9ec9-11ea-9b1d-114c80a200d4.jpg"  },
-        { nickName: 'wjg', name:'김주연', addr: '서울대입구', id: 2, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png"  },
+        { nickName: 'wjg', name:'김주연', addr: '서울대입구', id: 2, reputation:2.5, img:"https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png"  },
         { nickName: 'juheeekim', name:'김주희', addr: '사당', id: 3, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png"  },
         { nickName: 'taemin', name:'김태민',addr: '역삼역', id: 4, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png"  },
         { nickName: 'hun0202', name:'이훈', addr: '서울시', id: 5, reputation:4.5, img:"https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png"  },
