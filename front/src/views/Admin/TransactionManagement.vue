@@ -2,7 +2,7 @@
   <v-container>
     <!--user search-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-        <v-icon style="color:black">mdi-account-search</v-icon> 회원 이름 검색
+        <v-icon style="color:black">mdi-align-vertical-bottom</v-icon> 거래현황
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">

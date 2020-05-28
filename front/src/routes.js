@@ -3,6 +3,7 @@ import Sub from './views/Sub.vue'
 import Admin from './views/Admin/Admin.vue'
 import UserList from './views/Admin/UserList.vue'
 import ReportList from './views/Admin/ReportList.vue'
+import TransactionManagement from './views/Admin/TransactionManagement.vue'
 
 
 export default [
@@ -31,5 +32,11 @@ export default [
         path: '/admin/reportList',
         name: 'reportList',
         component: ReportList
+    },
+    {
+        path: '/admin/transactionManagement',
+        name: 'transactionManagement',
+        component: TransactionManagement
+
     },
 ]
