@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import com.ssafy.groupbuying.repository.BoardRepository;
 import com.ssafy.groupbuying.repository.CommentRepository;
 import com.ssafy.groupbuying.repository.ParticipantsRepository;
+import com.ssafy.groupbuying.repository.ReputationRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
 import com.ssafy.groupbuying.vo.Board;
 import com.ssafy.groupbuying.vo.Comment;
 import com.ssafy.groupbuying.vo.Participants;
+import com.ssafy.groupbuying.vo.Reputation;
 import com.ssafy.groupbuying.vo.User;
 
 @Service
@@ -28,6 +30,9 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	CommentRepository crepo;
+	
+	@Autowired
+	ReputationRepository rrepo;
 	
 	@Override
 	public boolean insert(Board board) {
@@ -119,6 +124,12 @@ public class BoardServiceImpl implements BoardService {
 		// bid -> board -> CommentList
 		Board board = repo.findById(bid);
 		return crepo.findByBoard(board);
+	}
+
+	@Override
+	public boolean rate(Reputation rep) {
+		rrepo.save(rep);
+		return true;
 	}
 
 	

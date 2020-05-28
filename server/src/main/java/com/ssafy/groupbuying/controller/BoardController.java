@@ -16,6 +16,7 @@ import com.ssafy.groupbuying.model.BasicResponse;
 import com.ssafy.groupbuying.service.BoardService;
 import com.ssafy.groupbuying.vo.Board;
 import com.ssafy.groupbuying.vo.Comment;
+import com.ssafy.groupbuying.vo.Reputation;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -147,5 +148,18 @@ public class BoardController {
 		result.object = service.deleteComment(bid);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	// 평가하기 ----- USER Controller로 이동해야함 
+	@PostMapping("/user/rating")
+	@ApiOperation(value = "평가하기")
+	public Object rate(@RequestBody(required = true) Reputation rep) {
+		final BasicResponse result = new BasicResponse();
+    	result.status = service.rate(rep);
+		result.data = "평가하기"; 
+		result.object = rep;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	
 	
 }

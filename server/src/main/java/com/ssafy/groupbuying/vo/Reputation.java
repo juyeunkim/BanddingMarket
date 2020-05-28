@@ -6,16 +6,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import io.swagger.annotations.ApiModel;
+import lombok.Data;
+
 @Entity
 @Table(name="reputation")
-public class Reputation {
+@ApiModel
+public @Data class Reputation {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;

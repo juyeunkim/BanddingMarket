@@ -5,6 +5,7 @@ import java.util.List;
 import com.ssafy.groupbuying.vo.Board;
 import com.ssafy.groupbuying.vo.Comment;
 import com.ssafy.groupbuying.vo.Participants;
+import com.ssafy.groupbuying.vo.Reputation;
 
 public interface BoardService {
 	// 게시판 CRUD
@@ -24,4 +25,7 @@ public interface BoardService {
 	public Comment deleteComment(long cid);
 	public boolean updateComment(Comment com);
 	public List<Comment> getComments(long bid);
+	
+	// 평가하기 ----- USER Controller로 이동해야함 
+	public boolean rate(Reputation rep);
 }
