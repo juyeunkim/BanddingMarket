@@ -4,6 +4,7 @@ import Admin from './views/Admin/Admin.vue'
 import UserList from './views/Admin/UserList.vue'
 import ReportList from './views/Admin/ReportList.vue'
 import TransactionManagement from './views/Admin/TransactionManagement.vue'
+import SearchPage from './views/SearchPage'
 
 
 export default [
@@ -39,4 +40,10 @@ export default [
         component: TransactionManagement
 
     },
+    {
+        path: '/search',
+        name: 'SearchPage',
+        component: SearchPage
+    },
+
 ]
