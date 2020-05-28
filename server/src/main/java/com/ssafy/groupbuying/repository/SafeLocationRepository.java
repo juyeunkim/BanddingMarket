@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.groupbuying.vo.Board;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
-	public Board findById(long id);
+public interface SafeLocationRepository extends JpaRepository<Board, Integer> {
 
 }

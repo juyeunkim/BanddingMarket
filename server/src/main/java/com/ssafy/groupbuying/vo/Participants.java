@@ -19,19 +19,17 @@ import lombok.Data;
 @Table(name="participants")
 public @Data class Participants {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private long id;
 	
 	@ManyToOne
 	@JoinColumn(name= "board")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Board board;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name= "user")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
-	
-	
-	
+
 }
