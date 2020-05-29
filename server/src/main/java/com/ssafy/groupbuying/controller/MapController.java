@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,12 +48,14 @@ public class MapController {
 	
 	@PostMapping("/search/boardInDist")
 	@ApiOperation("사용자 거리 기반 게시글 검색")
-	public Object getBoards(@RequestParam(required = false) DealInfo info) {
-		
+	public Object getBoards(double latitude, double longitude, int dist) {
+		System.out.println(">>>>>>>>>");
+		System.out.println(latitude);
+		System.out.println(">>>>>>>>>");
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "사용자 거리 기반 게시글 검색"; 
-		result.object = service.getBoard(info);
+		result.object = service.getBoard(latitude, longitude, dist);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	

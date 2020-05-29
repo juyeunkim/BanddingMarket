@@ -13,6 +13,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	public Board findById(long id);
 
 //	@Query(value = "select new com.ssafy.groupbuying.vo.Board(b.board_id, b.user, b.title, b.context, b.board_locationX, b.board_locationY, b.writeDate, b.deadlineDate, b.limit_num, b.participants, b.category, b.isDeleted) from board b", nativeQuery = true)
-	@Query(value = "select * from board", nativeQuery = true)
-	List<Board> getBoard(@Param("info") DealInfo info);
+//	@Query(value = "select * from board", nativeQuery = true)
+	@Query(value = "select b.board_id, b.user, b.title, b.context, b.board_locationX, b.board_locationY, b.writeDate, b.deadlineDate, b.limit_num, b.participants, b.category, b.isDeleted from board b"
+			+ " join (SELECT board_id, ( 6371 * acos( cos( radians( :latitude) ) * cos( radians( board_locationy ) )"
+			+ " * cos( radians( board_locationx ) - radians(:longitude) )"
+			+ " sin( radians(:latitude) ) * sin( radians( board_locationy ) ) ) ) AS distance"
+			+ " FROM board ORDER BY distance LIMIT 0 , 20) d using (board_id)"
+			+ " where d.distance < :dist"
+			, nativeQuery = true)
+	List<Board> getBoard(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("dist") int dist);
+	
+	
 }
