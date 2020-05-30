@@ -46,15 +46,12 @@ public class MapController {
 	}
 	
 	@PostMapping("/search/boardInDist")
-	@ApiOperation("사용자 거리 기반 게시글 검색")
-	public Object getBoards(double latitude, double longitude, int dist) {
-		System.out.println(">>>>>>>>>");
-		System.out.println(latitude);
-		System.out.println(">>>>>>>>>");
+	@ApiOperation("사용자 거리 기반 게시글 검색 | 위도, 경도, 거리(m단위), 카테고리(0:택배/1:음식) 순으로 입력 | Board 객체 반환")
+	public Object getBoards(double latitude, double longitude, int dist, int category) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "사용자 거리 기반 게시글 검색"; 
-		result.object = service.getBoard(latitude, longitude, dist);
+		result.object = service.getBoard(latitude, longitude, dist, category);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
