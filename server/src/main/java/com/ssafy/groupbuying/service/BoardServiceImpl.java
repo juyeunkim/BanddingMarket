@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.groupbuying.repository.BoardRepository;
 import com.ssafy.groupbuying.repository.ParticipantsRepository;
+import com.ssafy.groupbuying.repository.ReputationRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
 import com.ssafy.groupbuying.vo.Board;
+import com.ssafy.groupbuying.vo.Comment;
 import com.ssafy.groupbuying.vo.Participants;
+import com.ssafy.groupbuying.vo.Reputation;
 import com.ssafy.groupbuying.vo.User;
 
 @Service
@@ -20,9 +23,15 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	ParticipantsRepository prepo;
-	
+
 	@Autowired
 	UserRepository urepo;
+	
+	@Autowired
+	CommentRepository crepo;
+	
+	@Autowired
+	ReputationRepository rrepo;
 	
 	@Override
 	public boolean insert(Board board) {
@@ -57,13 +66,14 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public boolean apply(long bid, long uid) {
+	public Participants apply(long bid, long uid) {
 		// 기존에 있는 참가자수에 +1 후, UPDATE
 		Board board = getBoard(bid);
 		int attend = board.getParticipants();
 		board.setParticipants(attend+1);
 		update(board);
-//	
+		
+		// Participants 테이블에 저장
 		User user = urepo.findById(uid);
 		Participants newUser =new Participants();
 		newUser.setUser(user);
@@ -71,6 +81,53 @@ public class BoardServiceImpl implements BoardService {
 		
 		prepo.save(newUser);
 		
+		return newUser;
+	}
+
+	@Override
+	public Participants cancel(long bid, long uid) {
+		// 기존에 있는 참가자수에 -1 후, UPDATE
+		Board board = getBoard(bid);
+		int attend = board.getParticipants();
+		board.setParticipants(attend-1);
+		update(board);
+		
+		Participants newUser = prepo.findByUserAndBoard(urepo.findById(uid), repo.findById(bid));
+		System.out.println(newUser);
+		prepo.delete(newUser);
+		
+		return newUser;
+	}
+
+	@Override
+	public boolean insertComment(Comment com) {
+		crepo.save(com);
+		return true;
+	}
+
+	@Override
+	public Comment deleteComment(long cid) {
+		Comment com = crepo.findById(cid);
+		crepo.delete(com);
+		return com;
+	}
+
+	@Override
+	public boolean updateComment(Comment com) {
+		crepo.save(com);
+		return true;
+	}
+
+	@Override
+	public List<Comment> getComments(long bid) {
+		// bid -> board -> CommentList
+		Board board = repo.findById(bid);
+		return crepo.findByBoard(board);
+	}
+
+	@Override
+	public boolean rate(Reputation rep) {
+		rrepo.save(rep);
 		return true;
 	}
 
