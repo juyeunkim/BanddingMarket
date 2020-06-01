@@ -10,16 +10,19 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="user")
 public @Data class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private long user_id;
 	
 	@NotNull
 	@Column(length = 30, unique = true)
@@ -45,9 +48,9 @@ public @Data class User {
 	@Column(unique = true, length = 20)
 	private String phone;
 	@Column(length = 20)
-	private String locationX;
+	private String user_locationX;
 	@Column(length = 20)
-	private String locationY;
+	private String user_locationY;
 	
 	@ColumnDefault("0")
 	private double reputation;

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.groupbuying.repository.BoardRepository;
-import com.ssafy.groupbuying.repository.CommentRepository;
 import com.ssafy.groupbuying.repository.ParticipantsRepository;
 import com.ssafy.groupbuying.repository.ReputationRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
