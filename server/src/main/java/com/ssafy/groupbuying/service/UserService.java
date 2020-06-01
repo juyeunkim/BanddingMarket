@@ -17,7 +17,7 @@ public interface UserService {
 
 	void updateById(String uId, User user);
 
-	User save(User user);
+	int save(User user);
 
 	Boolean checkByMail(String uMail);
 

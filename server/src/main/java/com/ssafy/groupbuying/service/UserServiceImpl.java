@@ -2,6 +2,8 @@ package com.ssafy.groupbuying.service;
 
 import java.util.List;
 
+import javax.persistence.Convert;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		
 		
-		return userRepository.existsByMail(uMail);
+		return new Boolean((userRepository.existsByMail(uMail) != 0));
 	}
 
 	@Override
@@ -49,16 +51,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User save(User user) {
+	public int save(User user) {
 		// TODO Auto-generated method stub
-		
-		return userRepository.save(user);
+		System.out.println(user.getMail()+ user.getPassword()+ user.getNickname()+ user.getName());
+		return userRepository.signUp(user.getMail(), user.getPassword(), user.getNickname(), user.getName());
 	}
 
 	@Override
 	public Boolean checkPass(User user) {
 		// TODO Auto-generated method stub
-		return userRepository.checkPass(user.getMail(), user.getPassword());
+		return new Boolean(userRepository.checkPass(user.getMail(), user.getPassword()) != 0) ;
 	}
 	
 	

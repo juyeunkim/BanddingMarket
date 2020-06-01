@@ -17,7 +17,7 @@ import lombok.Data;
 @Table(name="user")
 @Data
 public  class User {
-	@Id @GeneratedValue( strategy =GenerationType.AUTO)
+	@Id @GeneratedValue( strategy =GenerationType.IDENTITY)
 	private Long id;
 	@NotNull
 	@Column(length = 30)
@@ -35,7 +35,6 @@ public  class User {
 	@Column(length = 20)
 	@NotNull
 	private String name;
-	@ColumnDefault("0")
 	private Integer age;
 	@Column(length = 1)
 	private String gender;
@@ -46,8 +45,9 @@ public  class User {
 	@Column(name="location_y",length = 20)
 	private String locationY;
 	
-	@ColumnDefault("0")
-	private Double reputation;
+	@ColumnDefault("0.0")
+	@NotNull
+	private double reputation;
 	
 	// TEST 용
 	
