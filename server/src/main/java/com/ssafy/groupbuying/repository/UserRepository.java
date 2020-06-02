@@ -1,5 +1,7 @@
 package com.ssafy.groupbuying.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,7 +27,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Query(value = "delete from user u where  u.email = :uEmail", nativeQuery = true)
 	User  deleteByMail(@Param("uEmail") String uEmail);
-	//deleted로 수정해야함 
+	
+	
+	@Query(value = "select * from user order by reputation desc limit 3", nativeQuery = true)
+	List<User>  findTopUser();
 	
 	@Query(value = "select EXISTS(select * from user u where  u.email = :uEmail and u.password = :uPass)", nativeQuery = true)
 	int  checkPass(@Param("uEmail") String uEmail, @Param("uPass") String uPass);

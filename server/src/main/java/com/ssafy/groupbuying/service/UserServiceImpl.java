@@ -9,13 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.groupbuying.repository.BoardRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
+import com.ssafy.groupbuying.vo.Board;
 import com.ssafy.groupbuying.vo.User;
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private BoardRepository boardRepository;
 	@Override
 	public User findByMail(String uMail) {
 		// TODO Auto-generated method stub
@@ -61,6 +65,18 @@ public class UserServiceImpl implements UserService {
 	public Boolean checkPass(User user) {
 		// TODO Auto-generated method stub
 		return new Boolean(userRepository.checkPass(user.getEmail(), user.getPassword()) != 0) ;
+	}
+
+	@Override
+	public List<Board> findBoardByUser(User user) {
+		// TODO Auto-generated method stub
+		return boardRepository.findByUser(user);
+	}
+
+	@Override
+	public List<User> findTopUser() {
+		// TODO Auto-generated method stub
+		return userRepository.findTopUser();
 	}
 	
 	

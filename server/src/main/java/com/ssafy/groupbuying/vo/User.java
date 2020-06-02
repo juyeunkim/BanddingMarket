@@ -21,6 +21,7 @@ import lombok.Data;
 @Table(name="user")
 public @Data class User {
 	@Id @GeneratedValue( strategy =GenerationType.IDENTITY)
+	@Column(updatable = false, nullable = false)
 	private long user_id;
 	@NotNull
 	@Column(length = 30)

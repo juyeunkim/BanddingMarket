@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.ssafy.groupbuying.dto.DealInfo;
 import com.ssafy.groupbuying.vo.Board;
+import com.ssafy.groupbuying.vo.User;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 	public Board findById(long id);
@@ -27,4 +28,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	@Query(value = "SELECT * FROM board b WHERE category like %:category1% or category like %:category2% or category like %:category3%", nativeQuery = true)
 	public List<Board> findByCategoryLike(@Param("category1") String category1, @Param("category2") String category2, @Param("category3") String category3);
+	public List<Board> findByUser(User user);
 }

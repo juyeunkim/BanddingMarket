@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.groupbuying.repository.UserRepository;
 import com.ssafy.groupbuying.service.JwtService;
@@ -39,11 +40,8 @@ public class UserController {
 	@GetMapping(value = "/{uMail}")
 	@ApiOperation(value = "이메일 중복체크", notes = "이메일 중복체크 true=중복 이메일 존재 / false=중복 이메일 없음")
 	public ResponseEntity<Boolean> checkMail(@PathVariable("uMail") String uMail) {
-		
-		
-		return new ResponseEntity<Boolean>(userService.checkByMail(uMail),HttpStatus.OK) ;
-		
-		
+
+		return new ResponseEntity<Boolean>(userService.checkByMail(uMail), HttpStatus.OK);
 
 	}
 
@@ -73,7 +71,7 @@ public class UserController {
 		HttpStatus status = HttpStatus.OK;
 		try {
 			System.out.println(user);
-			
+
 			userService.save(user);
 		} catch (Exception e) {
 			status = HttpStatus.CONFLICT;
@@ -87,40 +85,39 @@ public class UserController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "로그인 성공"),
 			@ApiResponse(code = 409, message = "아이디 또는 비밀번호가 틀립니다") })
 	public ResponseEntity<User> signIn(@RequestBody User user, HttpServletResponse res) {
-		
+
 		HttpStatus status = HttpStatus.CONFLICT;
 
 		if (userService.checkPass(user)) {
-			user=userService.findByMail(user.getEmail());
+			user = userService.findByMail(user.getEmail());
 			res.setHeader("jwt-auth-token", jwtService.create(user));
 			status = HttpStatus.OK;
 		}
 
-		return new ResponseEntity<User>(user,status);
+		return new ResponseEntity<User>(user, status);
 
 	}
+
 	@PutMapping()
 	@ApiOperation(value = "회원정보 수정", notes = "")
-	@ApiResponses({ @ApiResponse(code = 200, message = "정보수정 성공"),
-			@ApiResponse(code = 409, message = "실패") })
+	@ApiResponses({ @ApiResponse(code = 200, message = "정보수정 성공"), @ApiResponse(code = 409, message = "실패") })
 	public ResponseEntity<Void> update(@RequestBody User user) {
-		
+
 		HttpStatus status = HttpStatus.CONFLICT;
-		
+
 		if (userService.checkPass(user)) {
 			userService.updateByUser(user);
-			
+
 			status = HttpStatus.OK;
 		}
 
 		return new ResponseEntity<Void>(status);
 
 	}
-	
-	
 
 	@ApiOperation(value = "checkToken", notes = "토큰 확인용 API ")
 	@PostMapping(value = "/checkToken")
+	
 	public ResponseEntity<Map<String, Object>> checkToken(HttpServletRequest req) {
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -131,6 +128,33 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return null;
+
+	}
+	
+	@ApiOperation(value = "유저 검색", notes = "관리자페이지 유저검색 ")
+	@PostMapping(value = "/searchUser")
+	@ApiResponses({ @ApiResponse(code = 200, message = "유저 검색 성공"), @ApiResponse(code = 409, message = "유저가 존재하지 않습니다") })
+	public ResponseEntity<Map<String, Object>> searchUser(@RequestParam("uMail") String uMail ) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		HttpStatus status = HttpStatus.CONFLICT;
+		if(userService.checkByMail(uMail)) {
+			User user= userService.findByMail(uMail);
+			map.put("user", user);
+			map.put("bodList", userService.findBoardByUser(user));
+		}
+		
+		
+		return new ResponseEntity<Map<String,Object>>(map,status);
+		
+
+	}
+	
+	@ApiOperation(value = "top 유저 검색", notes = "")
+	@PostMapping(value = "/topUser")
+	public ResponseEntity<List<User>> topUser() {
+		
+		return new ResponseEntity<List<User>>(userService.findTopUser(),HttpStatus.OK);
 
 	}
 

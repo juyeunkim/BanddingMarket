@@ -23,7 +23,8 @@ import lombok.Data;
 public @Data class Report {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	@Column(name="report_id")
+	private long reportId;
 	
 	@ManyToOne
 	@JoinColumn(name= "writer") // 실제 DB의 컬럼 이름
@@ -44,7 +45,5 @@ public @Data class Report {
 	@ColumnDefault("0") // 0 - 미확인 1- 승인 2- 삭제(거절)
 	private int status;
 	
-	public long getId() {
-		return id;
-	}
+	
 }
