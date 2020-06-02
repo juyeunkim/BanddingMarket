@@ -67,39 +67,44 @@ public @Data class Board {
 	private int participants;
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
-	private int category;
+	private int type;
 	@Column(columnDefinition = "boolean default false")
 	private boolean isDeleted;
+	
+	//카테고리용 컬럼 
+	@Column(length = 50)
+	private String category;
 	
 	// TEST 용
 	public Board() {}
 	public Board(User user, @NotNull String title, @NotNull String context,
-			@NotNull int limit_num, @NotNull int category) {
+			@NotNull int limit_num, @NotNull int type) {
 		super();
 		this.user = user;
 		this.title = title;
 		this.context = context;
 		this.limit_num = limit_num;
-		this.category = category;
+		this.type = type;
 	}
 	
 	
-	public Board(long board_id, User user, @NotNull String title, @NotNull String context, String board_locationX,
-			String board_locationY, LocalDateTime writeDate, LocalDateTime deadlineDate, @NotNull @Max(5) int limit_num,
-			int participants, @NotNull int category, boolean isDeleted) {
-		super();
-		this.board_id = board_id;
-		this.user = user;
-		this.title = title;
-		this.context = context;
-		this.board_locationX = board_locationX;
-		this.board_locationY = board_locationY;
-		this.writeDate = writeDate;
-		this.deadlineDate = deadlineDate;
-		this.limit_num = limit_num;
-		this.participants = participants;
-		this.category = category;
-		this.isDeleted = isDeleted;
-	}
+//	public Board(long board_id, User user, @NotNull String title, @NotNull String context, String board_locationX,
+//			String board_locationY, LocalDateTime writeDate, LocalDateTime deadlineDate, @NotNull @Max(5) int limit_num,
+//			int participants, @NotNull int category, boolean isDeleted, String keyword) {
+//		super();
+//		this.board_id = board_id;
+//		this.user = user;
+//		this.title = title;
+//		this.context = context;
+//		this.board_locationX = board_locationX;
+//		this.board_locationY = board_locationY;
+//		this.writeDate = writeDate;
+//		this.deadlineDate = deadlineDate;
+//		this.limit_num = limit_num;
+//		this.participants = participants;
+//		this.category = category;
+//		this.isDeleted = isDeleted;
+//		this.keyword = board;
+//	}
 
 }
