@@ -160,6 +160,15 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("/board/category/{category}") 
+	@ApiOperation(value = "카테고리별 보기")
+	public Object getCategoryBoard(@RequestParam(required = true) String category) {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = "카테고리별 보기"; 
+		result.object = service.getCategoryBoard(category);
+//		result.object = service.getCategoryBoard(type, category);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 	
 }
