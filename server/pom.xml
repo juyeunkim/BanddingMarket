@@ -12,7 +12,7 @@
 	<groupId>com.ssafy.groupbuying</groupId>
 	<artifactId>GroupBuying</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>GroupBuying</name>
+	<name>GroupBuying</name>`
 	<description>polish information</description>
 
 	<properties>
@@ -47,6 +47,13 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.16.20</version>
+		</dependency>
+		
+		<!-- jwt -->		
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 
 		<!-- JUnit에서 Controller 테스트 -->

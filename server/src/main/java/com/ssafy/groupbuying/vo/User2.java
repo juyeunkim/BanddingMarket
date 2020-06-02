@@ -1,4 +1,4 @@
-package com.ssafy.groupbuying.vo;
+/*package com.ssafy.groupbuying.vo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,11 +15,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
-
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="user")
-public @Data class User {
+@Data
+public  class User {
 	@Id @GeneratedValue( strategy =GenerationType.IDENTITY)
 	private long user_id;
 	@NotNull
@@ -30,7 +30,6 @@ public @Data class User {
 	@Column(length = 20)
 	private String password;
 	@Column(length = 6)
-	@NotNull
 	@ColumnDefault("'user'")
 	private String role;
 	@Column(length = 20, unique=true)
@@ -54,4 +53,8 @@ public @Data class User {
 	private double reputation;
 	
 	
+	
+	
+	
 }
+*/

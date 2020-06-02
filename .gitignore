@@ -1,1 +1,7 @@
 /.metadata/
+application.properties
+*.class
+*.properties
+*.DS_Store
+target/
+
