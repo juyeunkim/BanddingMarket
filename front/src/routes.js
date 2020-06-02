@@ -6,7 +6,7 @@ import ReportList from './views/Admin/ReportList.vue'
 import TransactionManagement from './views/Admin/TransactionManagement.vue'
 import SearchPage from './views/SearchPage'
 import MapSearhPage from './views/MapSearchPage'
-
+import Board from './views/Board'
 
 export default [
 
@@ -50,6 +50,11 @@ export default [
         path: '/mapsearch',
         name: 'MapSearhPage',
         component: MapSearhPage
+    },
+    {
+        path: '/board',
+        name: 'Board',
+        component: Board
     },
 
 ]
