@@ -17,9 +17,9 @@
         <div
           v-if="
             remainTime.day == 0 &&
-            remainTime.hours == 0 &&
-            remainTime.minutes == 0 &&
-            remainTime.seconds == 0
+              remainTime.hours == 0 &&
+              remainTime.minutes == 0 &&
+              remainTime.seconds == 0
           "
         >
           <v-icon color="white" style="font-size: 2rem;">mdi-timer</v-icon>
@@ -164,11 +164,20 @@
           <v-col class="py-1">
             <v-menu offset-y>
               <template v-slot:activator="{ on }">
-                <span class="mr-3" v-on="on" style="cursor: pointer; text-decoration: underline; font-weight: bolder;"
-                  >{{ comment.id }}</span>
+                <span
+                  class="mr-3"
+                  v-on="on"
+                  style="cursor: pointer; text-decoration: underline; font-weight: bolder;"
+                  >{{ comment.id }}</span
+                >
               </template>
               <v-list>
-                <v-list-item @click="test">
+                <v-list-item
+                  @click="
+                    clickUserId = comment.id;
+                    userInfoDailogFlag = !userInfoDailogFlag
+                  "
+                >
                   <v-list-item-title
                     ><v-icon color="primary">mdi-account</v-icon
                     ><span>유저정보보기</span></v-list-item-title
@@ -209,14 +218,28 @@
         </v-row>
       </v-container>
     </v-hover>
+
+    <v-btn @click="userInfoDailogFlag = !userInfoDailogFlag">
+      {{ userInfoDailogFlag }}</v-btn
+    >
+
+    <UserInfoDailog
+      v-if="userInfoDailogFlag"
+      :userId="clickUserId"
+      v-on:updateUserDialogFlag="updateUserDialogFlag"
+    ></UserInfoDailog>
   </v-container>
 </template>
 
 <script>
+import UserInfoDailog from '../components/UserInfoDialog'
 export default {
   name: 'Board',
-  components: {},
+  components: {
+    UserInfoDailog,
+  },
   data: () => ({
+    clickUserId: 1,
     board_id: 55,
     board_locationx: 37.4954257,
     board_locationy: 127.039,
@@ -284,6 +307,7 @@ export default {
       { text: 'context', value: 'context', width: 5 },
       { text: 'controller', value: 'controller', width: 10, align: 'right' },
     ],
+    userInfoDailogFlag: false,
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -398,6 +422,9 @@ export default {
       } else {
         return '#39dfed'
       }
+    },
+    updateUserDialogFlag(flag) {
+      this.userInfoDailogFlag = flag
     },
   },
 }
