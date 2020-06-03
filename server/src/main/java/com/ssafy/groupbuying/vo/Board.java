@@ -37,9 +37,9 @@ public @Data class Board {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	
-	@JoinColumn(name = "user_id", referencedColumnName="user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name="user_id"))
+//	@JoinColumn(name = "user_id", referencedColumnName="user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name="user_id"))
 //	@ManyToOne(cascade = CascadeType.PERSIST)
-//	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
@@ -74,6 +74,11 @@ public @Data class Board {
 	//카테고리용 컬럼 
 	@Column(length = 50)
 	private String category;
+	
+	//키워드용 컬럼 
+	@Column(length = 50)
+	private String keyword;
+	
 	
 	// TEST 용
 	public Board() {}

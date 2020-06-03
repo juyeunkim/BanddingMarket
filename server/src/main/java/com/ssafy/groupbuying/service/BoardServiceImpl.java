@@ -1,6 +1,5 @@
 package com.ssafy.groupbuying.service;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,5 +160,17 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		return repo.findByCategoryLike(str[0], str[1], str[2]);
+	}
+
+	@Override
+	public List<Board> getKeywordSearch(String keyword) {
+		String[] str = new String[3];
+		String[] temp = keyword.split("#");
+		for (int i = 0; i < 3; i++) {
+			if (temp.length > i) str[i] = temp[i];
+			else str[i] = "100";
+		}
+		
+		return repo.findByKeywordLike(str[0], str[1], str[2]);
 	}
 }

@@ -171,4 +171,15 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@GetMapping("/board/keyword/{category}") 
+	@ApiOperation(value = "키워드 검색")
+	public Object getKeywordSearch(@RequestParam(required = true) String keyword) {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = "카테고리별 보기"; 
+		result.object = service.getKeywordSearch(keyword);
+//		result.object = service.getCategoryBoard(type, category);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
 }
