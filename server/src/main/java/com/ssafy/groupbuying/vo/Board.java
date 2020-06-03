@@ -35,11 +35,10 @@ public @Data class Board {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long board_id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	
-	@JoinColumn(name = "user_id", referencedColumnName="user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name="user_id"))
+	@ManyToOne(fetch = FetchType.LAZY)	
+//	@JoinColumn(name = "user_id", referencedColumnName="user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name="user_id"))
 //	@ManyToOne(cascade = CascadeType.PERSIST)
-//	@JoinColumn(name = "user")
+	@JoinColumn(name = "user_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	

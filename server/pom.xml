@@ -12,7 +12,7 @@
 	<groupId>com.ssafy.groupbuying</groupId>
 	<artifactId>GroupBuying</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>GroupBuying</name>`
+	<name>GroupBuying</name>
 	<description>polish information</description>
 
 	<properties>
