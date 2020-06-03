@@ -1,15 +1,14 @@
 <template>
   <v-container>
-    <v-row class="text-center">
-      <v-col cols="12" class="mainFontSize">
-          SubPage
-      </v-col>
-      <v-col>
-        <v-btn @click="gotoMain">
-          메인으로 가기
-        </v-btn>
-      </v-col>
-    </v-row>
+    <v-layout wrap mt-5 class="mx-3" sm12>
+      <!--STORE title-->
+      <v-flex sm12 xs12>
+        <p class="ma-0 Do" style="font-size: 1.8em;">
+          Store
+        </p>
+        <v-divider class="mb-5 mt-1"></v-divider>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 

@@ -7,12 +7,18 @@ Vue.use(Vuex);
 
 const state = {
     test: "test",
+    // searchList: false,
+    // searchList: ["aaaa", "bbbbb", "CCCCCCCC", "dddd"],
+    searchList: ["aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", "aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", ],
 };
 
 const getters = {
     test: state => {
         return state.test;
     },
+    searchList: state => {
+        return state.searchList
+    }
 };
 
 export default new Vuex.Store({
