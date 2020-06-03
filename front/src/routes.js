@@ -52,4 +52,5 @@ export default [
         component: MapSearhPage
     },
 
+
 ]

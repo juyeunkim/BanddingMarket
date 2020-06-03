@@ -184,7 +184,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 var MARKER_WIDTH = 33, // 기본, 클릭 마커의 너비
   MARKER_HEIGHT = 36, // 기본, 클릭 마커의 높이
   OFFSET_X = 12, // 기본, 클릭 마커의 기준 X좌표
@@ -194,18 +194,18 @@ var MARKER_WIDTH = 33, // 기본, 클릭 마커의 너비
   OVER_OFFSET_X = 13, // 오버 마커의 기준 X좌표
   OVER_OFFSET_Y = OVER_MARKER_HEIGHT, // 오버 마커의 기준 Y좌표
   SPRITE_MARKER_URL =
-    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png', // 스프라이트 마커 이미지 URL
+    "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png", // 스프라이트 마커 이미지 URL
   SPRITE_WIDTH = 126, // 스프라이트 이미지 너비
   SPRITE_HEIGHT = 146, // 스프라이트 이미지 높이
-  SPRITE_GAP = 10 // 스프라이트 이미지에서 마커간 간격
+  SPRITE_GAP = 10; // 스프라이트 이미지에서 마커간 간격
 
-var markerSize
-var markerOffset
-var overMarkerSize
-var overMarkerOffset
-var spriteImageSize
+var markerSize;
+var markerOffset;
+var overMarkerSize;
+var overMarkerOffset;
+var spriteImageSize;
 export default {
-  name: 'MapSearchPage',
+  name: "MapSearchPage",
   components: {},
   data: () => ({
     map: null,
@@ -219,48 +219,48 @@ export default {
     filterAreaHeight: 100,
     headerHeight: 64,
     positions: [
-      { name: 'a', latitude: 37.4954257, longitude: 127.039 },
-      { name: 'b', latitude: 37.4954257, longitude: 127.04 },
-      { name: 'c', latitude: 37.4954257, longitude: 127.041 },
+      { name: "a", latitude: 37.4954257, longitude: 127.039 },
+      { name: "b", latitude: 37.4954257, longitude: 127.04 },
+      { name: "c", latitude: 37.4954257, longitude: 127.041 },
     ],
     selectedMarker: null,
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
-      this.addMapScript()
-    if (!window.kakao.services) this.addServiceScript()
+      this.addMapScript();
+    if (!window.kakao.services) this.addServiceScript();
 
     // console.log(window.kakao.services)
 
-    this.windowHeight = window.innerHeight
-    window.addEventListener('resize', () => {
-      this.windowHeight = window.innerHeight
+    this.windowHeight = window.innerHeight;
+    window.addEventListener("resize", () => {
+      this.windowHeight = window.innerHeight;
       // console.log(this.windowHeight)
-    })
+    });
 
-    markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT) // 기본, 클릭 마커의 크기
-    markerOffset = new kakao.maps.Point(OFFSET_X, OFFSET_Y) // 기본, 클릭 마커의 기준좌표
-    overMarkerSize = new kakao.maps.Size(OVER_MARKER_WIDTH, OVER_MARKER_HEIGHT) // 오버 마커의 크기
-    overMarkerOffset = new kakao.maps.Point(OVER_OFFSET_X, OVER_OFFSET_Y) // 오버 마커의 기준 좌표
-    spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT) // 스프라이트 이미지의 크기
+    markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT); // 기본, 클릭 마커의 크기
+    markerOffset = new kakao.maps.Point(OFFSET_X, OFFSET_Y); // 기본, 클릭 마커의 기준좌표
+    overMarkerSize = new kakao.maps.Size(OVER_MARKER_WIDTH, OVER_MARKER_HEIGHT); // 오버 마커의 크기
+    overMarkerOffset = new kakao.maps.Point(OVER_OFFSET_X, OVER_OFFSET_Y); // 오버 마커의 기준 좌표
+    spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT); // 스프라이트 이미지의 크기
   },
   mounted() {
-    this.drawMap()
+    this.drawMap();
     //filterAreaHeight
-    this.filterAreaHeight = document.getElementById('filterArea').offsetHeight
+    this.filterAreaHeight = document.getElementById("filterArea").offsetHeight;
     // console.log(this.filterAreaHeight)
   },
   computed: {
-    ...mapState(['searchList']),
+    ...mapState(["searchList"]),
   },
   methods: {
     addMapScript() {
-      console.log('ddd')
-      const script = document.createElement('script') /* global kakao */
-      script.onload = () => kakao.maps.load(this.initMap)
+      console.log("ddd");
+      const script = document.createElement("script"); /* global kakao */
+      script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=053dd3145f395e73cbb5211bedf3e97f&libraries=services'
-      document.head.appendChild(script)
+        "http://dapi.kakao.com/v2/maps/sdk.js?appkey=053dd3145f395e73cbb5211bedf3e97f&libraries=services";
+      document.head.appendChild(script);
     },
     addServiceScript() {
       // const script = document.createElement('script') /* global kakao */
@@ -270,26 +270,26 @@ export default {
       // document.head.appendChild(script)
     },
     drawMap() {
-      var mapContainer = document.getElementById('map') // 지도를 표시할 div
+      var mapContainer = document.getElementById("map"); // 지도를 표시할 div
       var mapOption = {
         center: new kakao.maps.LatLng(33.450701, 127.1), // 지도의 중심좌표
         level: 4, // 지도의 확대 레벨
-      }
+      };
 
-      this.map = new kakao.maps.Map(mapContainer, mapOption) // 지도를 생성합니다
+      this.map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
       // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
       if (navigator.geolocation) {
         // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-        navigator.geolocation.getCurrentPosition((position) => {
-          var lat = position.coords.latitude // 위도
-          var lon = position.coords.longitude // 경도
+        navigator.geolocation.getCurrentPosition(position => {
+          var lat = position.coords.latitude; // 위도
+          var lon = position.coords.longitude; // 경도
 
-          console.log(lat, lon)
+          console.log(lat, lon);
 
-          var locPosition = new kakao.maps.LatLng(37.493, 127.042) // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+          var locPosition = new kakao.maps.LatLng(37.493, 127.042); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
 
-          var message = '<div style="padding:5px;">여기에 계신가요?!</div>' // 인포윈도우에 표시될 내용입니다
+          var message = '<div style="padding:5px;">여기에 계신가요?!</div>'; // 인포윈도우에 표시될 내용입니다
 
           //현재위치 행정구역명으로 바꾸기
           // var geocoder = new kakao.maps.services.Geocoder()
@@ -315,7 +315,7 @@ export default {
               overOriginY = (OVER_MARKER_HEIGHT + SPRITE_GAP) * i, // 스프라이트 이미지에서 오버 마커로 사용할 Y좌표 값
               normalOrigin = new kakao.maps.Point(0, originY), // 스프라이트 이미지에서 기본 마커로 사용할 영역의 좌상단 좌표
               clickOrigin = new kakao.maps.Point(gapX, originY), // 스프라이트 이미지에서 마우스오버 마커로 사용할 영역의 좌상단 좌표
-              overOrigin = new kakao.maps.Point(gapX * 2, overOriginY) // 스프라이트 이미지에서 클릭 마커로 사용할 영역의 좌상단 좌표
+              overOrigin = new kakao.maps.Point(gapX * 2, overOriginY); // 스프라이트 이미지에서 클릭 마커로 사용할 영역의 좌상단 좌표
 
             // 마커를 생성하고 지도위에 표시합니다
             this.addMarker(
@@ -323,24 +323,24 @@ export default {
               normalOrigin,
               overOrigin,
               clickOrigin
-            )
+            );
           }
 
-          this.displayMarker(locPosition, message)
-        })
+          this.displayMarker(locPosition, message);
+        });
       } else {
         // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-        var locPosition = new kakao.maps.LatLng(33.450701, 126.570667)
-        var message = 'geolocation을 사용할수 없어요..'
+        var locPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+        var message = "geolocation을 사용할수 없어요..";
 
-        this.displayMarker(locPosition, message)
+        this.displayMarker(locPosition, message);
       }
     },
     addMarker(positions, normalOrigin, overOrigin, clickOrigin) {
       var position = new kakao.maps.LatLng(
         positions.latitude,
         positions.longitude
-      )
+      );
       // 기본 마커이미지, 오버 마커이미지, 클릭 마커이미지를 생성합니다
       var normalImage = this.createMarkerImage(
           markerSize,
@@ -356,53 +356,53 @@ export default {
           markerSize,
           markerOffset,
           clickOrigin
-        )
+        );
 
       // 마커를 생성하고 이미지는 기본 마커 이미지를 사용합니다
       var marker = new kakao.maps.Marker({
         map: this.map,
         position: position,
         image: normalImage,
-      })
+      });
 
       // 마커 객체에 마커아이디와 마커의 기본 이미지를 추가합니다
-      marker.normalImage = normalImage
+      marker.normalImage = normalImage;
 
       // 마커에 mouseover 이벤트를 등록합니다
-      kakao.maps.event.addListener(marker, 'mouseover', () => {
+      kakao.maps.event.addListener(marker, "mouseover", () => {
         // 클릭된 마커가 없고, mouseover된 마커가 클릭된 마커가 아니면
         // 마커의 이미지를 오버 이미지로 변경합니다
         if (!this.selectedMarker || this.selectedMarker !== marker) {
-          marker.setImage(overImage)
+          marker.setImage(overImage);
         }
-      })
+      });
 
       // 마커에 mouseout 이벤트를 등록합니다
-      kakao.maps.event.addListener(marker, 'mouseout', () => {
+      kakao.maps.event.addListener(marker, "mouseout", () => {
         // 클릭된 마커가 없고, mouseout된 마커가 클릭된 마커가 아니면
         // 마커의 이미지를 기본 이미지로 변경합니다
         if (!this.selectedMarker || this.selectedMarker !== marker) {
-          marker.setImage(normalImage)
+          marker.setImage(normalImage);
         }
-      })
+      });
 
       // 마커에 click 이벤트를 등록합니다
-      kakao.maps.event.addListener(marker, 'click', () => {
+      kakao.maps.event.addListener(marker, "click", () => {
         // 클릭된 마커가 없고, click 마커가 클릭된 마커가 아니면
         // 마커의 이미지를 클릭 이미지로 변경합니다
         if (!this.selectedMarker || this.selectedMarker !== marker) {
           // 클릭된 마커 객체가 null이 아니면
           // 클릭된 마커의 이미지를 기본 이미지로 변경하고
           !!this.selectedMarker &&
-            this.selectedMarker.setImage(this.selectedMarker.normalImage)
+            this.selectedMarker.setImage(this.selectedMarker.normalImage);
 
           // 현재 클릭된 마커의 이미지는 클릭 이미지로 변경합니다
-          marker.setImage(clickImage)
+          marker.setImage(clickImage);
         }
 
         // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
-        this.selectedMarker = marker
-      })
+        this.selectedMarker = marker;
+      });
     },
     createMarkerImage(markerSize, offset, spriteOrigin) {
       var markerImage = new kakao.maps.MarkerImage(
@@ -413,63 +413,63 @@ export default {
           spriteOrigin: spriteOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
           spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
         }
-      )
+      );
 
-      return markerImage
+      return markerImage;
     },
     displayMarker(locPosition, message) {
       // 마커를 생성합니다
       var marker = new kakao.maps.Marker({
         map: this.map,
         position: locPosition,
-      })
+      });
 
-      var iwContent = message // 인포윈도우에 표시할 내용
-      var iwRemoveable = true
+      var iwContent = message; // 인포윈도우에 표시할 내용
+      var iwRemoveable = true;
 
       // 인포윈도우를 생성합니다
       var infowindow = new kakao.maps.InfoWindow({
         content: iwContent,
         removable: iwRemoveable,
-      })
+      });
 
       // 인포윈도우를 마커위에 표시합니다
-      infowindow.open(this.map, marker)
+      infowindow.open(this.map, marker);
 
       // 지도 중심좌표를 접속위치로 변경합니다
-      this.map.setCenter(locPosition)
+      this.map.setCenter(locPosition);
     },
     categoryButtonColor(category) {
-      if (category == 'food' && this.categoryFood) {
-        return 'primary'
-      } else if (category == 'delivery' && this.categoryDelivery) {
-        return 'primary'
+      if (category == "food" && this.categoryFood) {
+        return "primary";
+      } else if (category == "delivery" && this.categoryDelivery) {
+        return "primary";
       } else {
-        return 'white'
+        return "white";
       }
     },
     categoryButtonClicked(category) {
-      if (category == 'food' && this.categoryFood && !this.categoryDelivery)
-        return
-      if (category == 'delivery' && !this.categoryFood && this.categoryDelivery)
-        return
+      if (category == "food" && this.categoryFood && !this.categoryDelivery)
+        return;
+      if (category == "delivery" && !this.categoryFood && this.categoryDelivery)
+        return;
 
-      if (category == 'food') {
-        this.categoryFood = !this.categoryFood
-      } else if (category == 'delivery') {
-        this.categoryDelivery = !this.categoryDelivery
+      if (category == "food") {
+        this.categoryFood = !this.categoryFood;
+      } else if (category == "delivery") {
+        this.categoryDelivery = !this.categoryDelivery;
       }
     },
     distanceButtonColor(distance) {
       // console.log(distance)
-      if (this.distance == distance) return 'primary'
-      else return 'white'
+      if (this.distance == distance) return "primary";
+      else return "white";
     },
     distanceButtonClicked(distance) {
-      this.distance = distance
+      this.distance = distance;
     },
   },
-}
+};
 </script>
 
 <style scoped>
