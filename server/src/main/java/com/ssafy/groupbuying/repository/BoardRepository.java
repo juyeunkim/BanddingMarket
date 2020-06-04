@@ -28,5 +28,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	@Query(value = "SELECT * FROM board b WHERE category like %:category1% or category like %:category2% or category like %:category3%", nativeQuery = true)
 	public List<Board> findByCategoryLike(@Param("category1") String category1, @Param("category2") String category2, @Param("category3") String category3);
-	public List<Board> findByUser(User user);
+
+	@Query(value = "SELECT * FROM board b WHERE keyword like %:keyword1% or keyword like %:keyword2% or keyword like %:keyword3%", nativeQuery = true)
+	public List<Board> findByKeywordLike(String keyword1, String keyword2, String keyword3);
 }

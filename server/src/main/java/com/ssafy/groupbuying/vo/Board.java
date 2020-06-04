@@ -72,6 +72,23 @@ public @Data class Board {
 	@Column(length = 50)
 	private String category;
 	
+	//키워드용 컬럼 
+	@Column(length = 50)
+	private String keyword;
+	
+	
+	// TEST 용
+	public Board() {}
+	public Board(User user, @NotNull String title, @NotNull String context,
+			@NotNull int limit_num, @NotNull int type) {
+		super();
+		this.user = user;
+		this.title = title;
+		this.context = context;
+		this.limit_num = limit_num;
+		this.type = type;
+	}
+	
 	
 
 }
