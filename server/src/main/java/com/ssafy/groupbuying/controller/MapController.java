@@ -36,7 +36,7 @@ public class MapController {
 	private MapService service;
 
 	@GetMapping("/searchAll")
-	@ApiOperation("전체 리스트 조회")
+	@ApiOperation("전체 안전 거래 장소 리스트 조회(지하철, CCTV")
 	public Object getBoards() {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
@@ -45,13 +45,23 @@ public class MapController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping("/search/boardInDist")
-	@ApiOperation("사용자 거리 기반 게시글 검색 | 위도, 경도, 거리(m단위), 카테고리(0:택배/1:음식) 순으로 입력 | Board 객체 반환")
-	public Object getBoards(double latitude, double longitude, int dist, int category) {
+	@PostMapping("/search/safeLocation")
+	@ApiOperation("위도, 경도, 거리(m단위) | 사용자 거리 기반 00m 이내의 안전 거래 장소 리스트 조회 | SafeLocation List 반환")
+	public Object getSafeLocations(double latitude, double longitude, int dist) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "사용자 거리 기반 게시글 검색"; 
-		result.object = service.getBoard(latitude, longitude, dist, category);
+		result.object = service.getSafeLocations(latitude, longitude, dist);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping("/search/boardInDist")
+	@ApiOperation("위도, 경도, 거리(m단위), 타입(0:택배/1:음식) 순으로 입력 | 사용자 거리 기반 게시글 검색 | Board List 반환")
+	public Object getBoards(double latitude, double longitude, int dist, int type) {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = "사용자 거리 기반 게시글 검색"; 
+		result.object = service.getBoard(latitude, longitude, dist, type);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
