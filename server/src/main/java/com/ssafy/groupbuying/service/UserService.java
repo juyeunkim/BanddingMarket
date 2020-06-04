@@ -23,5 +23,6 @@ public interface UserService {
 	Boolean checkPass(User user);
 	List<Board> findBoardByUser(User user);
 	List<User> findTopUser();
+	List<User> findAlluser();
 
 }
