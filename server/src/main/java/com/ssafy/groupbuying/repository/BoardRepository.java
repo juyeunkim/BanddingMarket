@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.ssafy.groupbuying.dto.DealInfo;
 import com.ssafy.groupbuying.vo.Board;
+import com.ssafy.groupbuying.vo.User;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 	public Board findById(long id);

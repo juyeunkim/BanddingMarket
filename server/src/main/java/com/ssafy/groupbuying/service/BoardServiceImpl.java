@@ -38,6 +38,8 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public boolean insert(Board board) {
 		// 게시판을 작성하고
+		System.out.println("INSERT!!!");
+		System.out.println(board.toString());
 		repo.save(board);
 		return true;
 	}
