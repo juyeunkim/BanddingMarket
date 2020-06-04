@@ -161,24 +161,22 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board/category/{category}") 
-	@ApiOperation(value = "카테고리별 보기")
+	@ApiOperation(value = "검색하려는 카테고리를 입력 ex)11(한식 의미) | 해당 카테고리에 속한 board 리스트를 리턴해줌 | board 객체")
 	public Object getCategoryBoard(@RequestParam(required = true) String category) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "카테고리별 보기"; 
 		result.object = service.getCategoryBoard(category);
-//		result.object = service.getCategoryBoard(type, category);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping("/board/keyword/{category}") 
-	@ApiOperation(value = "키워드 검색")
+	@ApiOperation(value = "검색하려는 키워드를 #로 구분해 입력(최대 3개) #떡볶이#마라탕#치킨 | 하나라도 키워드가 포함되어있으면 그 board 정보를 리턴해줌 | board 객체")
 	public Object getKeywordSearch(@RequestParam(required = true) String keyword) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "카테고리별 보기"; 
 		result.object = service.getKeywordSearch(keyword);
-//		result.object = service.getCategoryBoard(type, category);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
