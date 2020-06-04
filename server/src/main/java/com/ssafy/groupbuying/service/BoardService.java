@@ -25,7 +25,9 @@ public interface BoardService {
 	public Comment deleteComment(long cid);
 	public boolean updateComment(Comment com);
 	public List<Comment> getComments(long bid);
-	
+
+	// 유저가 작성한 게시판
+	public List<Board> search(long user_id);
 	// 평가하기 ----- USER Controller로 이동해야함 
 	public boolean rate(Reputation rep);
 	

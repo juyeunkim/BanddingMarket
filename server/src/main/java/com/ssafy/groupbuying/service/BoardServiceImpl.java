@@ -164,4 +164,24 @@ public class BoardServiceImpl implements BoardService {
 		
 		return repo.findByCategoryLike(str[0], str[1], str[2]);
 	}
+
+	@Override
+	public List<Board> search(long user_id) {
+		// email로 유저 id 찾기
+//		System.out.println(email);
+//		List<User> list = urepo.findAll();
+//		for (User user : list) {
+//			System.out.println(user);
+//		}
+		User user = urepo.findById(user_id);
+//		User user = urepo.findByMail(email);
+		
+		System.out.println("******");
+		System.out.println(user);
+		if(user == null) return null; // 존재하지 않는 유저
+		
+		
+		// 모든 게시판들 가져오기
+		return repo.findByUser(user);
+	}
 }

@@ -45,7 +45,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board")
-	@ApiOperation(value = "전체 게시판 조회 ")
+	@ApiOperation(value = "전체 게시판 조회  | Board List")
 	public Object getBoards() {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
@@ -61,6 +61,16 @@ public class BoardController {
     	result.status = service.insert(board);
 		result.data = "게시판 등록"; 
 		result.object = board;
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping("/board/searchById")
+	@ApiOperation(value = " user_id | 유저가 작성한 게시판 | Board List", notes = "필요한 컬럼 : user:{user_id}")
+	public Object search(@RequestParam(required = true) final long user_id) {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = user_id+"유저가 작성한 게시판"; 
+		result.object = service.search(user_id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
