@@ -151,18 +151,15 @@ public class UserController {
 	}
 	
 	@ApiOperation(value = "top 유저 검색", notes = "")
-	@PostMapping(value = "/topUser")
+	@GetMapping(value = "/topUser")
 	public ResponseEntity<List<User>> topUser() {
-		
 		return new ResponseEntity<List<User>>(userService.findTopUser(),HttpStatus.OK);
-
 	}
 
 	//juheekim 추가 
 	@ApiOperation(value = "전체 유저 검색", notes = "")
-	@PostMapping(value = "/allUser")
+	@GetMapping(value = "/allUser")
 	public ResponseEntity<List<User>> allUser() {
 		return new ResponseEntity<List<User>>(userService.findAll(),HttpStatus.OK);
 	}
-
 }
