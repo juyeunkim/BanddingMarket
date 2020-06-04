@@ -9,43 +9,41 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="user")
 public @Data class User {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue( strategy =GenerationType.IDENTITY)
+	@Column(updatable = false, nullable = false)
 	private long user_id;
-	
 	@NotNull
-	@Column(length = 30, unique = true)
+	@Column(length = 30)
+	@UniqueElements
 	private String email;
-	
 	@NotNull
 	@Column(length = 20)
 	private String password;
-	@NotNull
 	@Column(length = 6)
+	@NotNull
+	@ColumnDefault("'user'")
 	private String role;
+	@Column(length = 20, unique=true)
 	@NotNull
-	@Column(length = 20)
 	private String nickname;
-	@NotNull
 	@Column(length = 20)
+	@NotNull
 	private String name;
-	
-	@ColumnDefault("0")
-	private int age;
+	private Integer age;
 	@Column(length = 1)
 	private String gender;
-	@Column(unique = true, length = 20)
+	@Column(length = 20, unique=true)
 	private String phone;
 	@Column(length = 20)
 	private String user_locationX;
@@ -53,23 +51,8 @@ public @Data class User {
 	private String user_locationY;
 	
 	@ColumnDefault("0")
+	@NotNull
 	private double reputation;
-	
-	public User() {}
-
-	// TEST 용
-	public User(String email, @NotNull String password, @NotNull String role, @NotNull String nickname,
-			@NotNull String name, int age, String gender, String phone) {
-		super();
-		this.email = email;
-		this.password = password;
-		this.role = role;
-		this.nickname = nickname;
-		this.name = name;
-		this.age = age;
-		this.gender = gender;
-		this.phone = phone;
-	}
 	
 	
 }
