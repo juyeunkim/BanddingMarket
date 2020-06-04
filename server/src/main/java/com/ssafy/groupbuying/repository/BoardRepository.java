@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.ssafy.groupbuying.dto.DealInfo;
 import com.ssafy.groupbuying.vo.Board;
+import com.ssafy.groupbuying.vo.User;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 	public Board findById(long id);
@@ -30,4 +30,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	@Query(value = "SELECT * FROM board b WHERE keyword like %:keyword1% or keyword like %:keyword2% or keyword like %:keyword3%", nativeQuery = true)
 	public List<Board> findByKeywordLike(String keyword1, String keyword2, String keyword3);
+	
+	public List<Board> findByUser(User user);
 }
