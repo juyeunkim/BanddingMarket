@@ -66,7 +66,7 @@ public class BoardController {
 	
 	@PostMapping("/board/searchById")
 	@ApiOperation(value = " user_id | 유저가 작성한 게시판 | Board List", notes = "필요한 컬럼 : user:{user_id}")
-	public Object search(@RequestParam(required = true) final long user_id) {
+	public Object search(@RequestBody(required = true) final long user_id) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = user_id+"유저가 작성한 게시판"; 
