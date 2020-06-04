@@ -141,7 +141,7 @@ public class UserController {
 		if(userService.checkByMail(uMail)) {
 			User user= userService.findByMail(uMail);
 			map.put("user", user);
-			map.put("bodList", userService.findBoardByUser(user));
+			//map.put("bodList", userService.findBoardByUser(user));
 		}
 		
 		
