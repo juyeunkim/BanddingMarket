@@ -158,4 +158,11 @@ public class UserController {
 
 	}
 
+	//juheekim 추가 
+	@ApiOperation(value = "전체 유저 검색", notes = "")
+	@PostMapping(value = "/allUser")
+	public ResponseEntity<List<User>> allUser() {
+		return new ResponseEntity<List<User>>(userService.findAll(),HttpStatus.OK);
+	}
+
 }
