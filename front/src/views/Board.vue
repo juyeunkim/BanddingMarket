@@ -104,33 +104,68 @@
         <v-divider class="my-3"></v-divider>
       </v-flex>
 
-      <!-- 인원 -->
-      <v-flex sm12 xs12 class="outerFlex">
-        <div style="font-size: 2rem; text-align: center;" class="fw800">
-          참여하기
-          <v-btn class="mx-2" fab dark large color="pink">
-            <v-icon dark>mdi-heart</v-icon>
-          </v-btn>
-          <v-btn class="mx-2" fab dark large color="grey">
-            <v-icon dark>mdi-heart</v-icon>
-          </v-btn>
-          취소하기
-        </div>
-        <div style="font-size: 1rem; text-align: center;">
-          <span>
-            참여인원
-          </span>
-          <span style="font-size: 2rem;">
-            {{ participants }} / {{ limit_num }}
-          </span>
-          <span>
-            원하는 인원
-          </span>
-        </div>
-        <!-- <v-divider></v-divider>
-        <div class="fw800" style="font-size: 3rem; text-align: center;">
-          {{ participants }} / {{ limit_num }}
-        </div> -->
+      <!-- 인원 sm화면 -->
+      <v-flex sm12 class="outerFlex d-none d-sm-flex">
+        <v-container>
+          <v-row>
+            <v-col>
+              <div style="font-size: 2rem; text-align: center;" class="fw800">
+                참여하기
+                <v-btn class="mx-2 " fab dark large color="pink">
+                  <v-icon dark>mdi-heart</v-icon>
+                </v-btn>
+                <v-btn class="mx-2" fab dark large color="grey">
+                  <v-icon dark>mdi-heart</v-icon>
+                </v-btn>
+                취소하기
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div style="font-size: 1rem; text-align: center;">
+                <span>
+                  참여인원
+                </span>
+                <span style="font-size: 2rem;">{{ participants }} / {{ limit_num }}</span>
+                <span>
+                  제한인원
+                </span>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-flex>
+
+      <!-- 인원 xs화면 -->
+      <v-flex xs12 class="outerFlex d-flex d-sm-none">
+        <v-container class="ma-0">
+          <v-row>
+            <v-col>
+              <div style=" text-align: center;" class="fw800">
+                <v-btn class="mx-2 " fab dark large color="pink">
+                  <v-icon dark>mdi-heart</v-icon>참여
+                </v-btn>
+                <v-btn class="mx-2" fab dark large color="grey">
+                  <v-icon dark>mdi-heart</v-icon>취소
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div style="font-size: 1rem; text-align: center;">
+                <span>
+                  참여인원
+                </span>
+                <span style="font-size: 2rem;">{{ participants }} / {{ limit_num }}</span>
+                <span>
+                  제한인원
+                </span>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-flex>
 
       <!-- 선 -->
@@ -145,7 +180,31 @@
         <span>개</span>
         <v-divider class="my-2"></v-divider>
       </v-flex>
+
+      <v-flex sm11 xs12>
+        <v-textarea
+          clearable
+          outlined
+          clear-icon="mdi-cancel"
+          label="댓글 입력"
+          v-model="contents"
+          hide-details
+        ></v-textarea>
+      </v-flex>
+
+      <v-flex sm1 xs12 style="text-align: right;">
+        <v-btn
+          @click="writeComment"
+          style="height: 100%;width: 100%;background: #82b1ff; color: white;"
+          class="fw700"
+          >댓글입력</v-btn
+        >
+      </v-flex>
     </v-layout>
+
+    <v-flex sm12 xs12>
+      <v-divider class="my-2"></v-divider>
+    </v-flex>
 
     <!-- 댓글리스트 -->
     <v-hover
@@ -174,7 +233,7 @@
               <v-list>
                 <v-list-item
                   @click="
-                    clickUserId = comment.id;
+                    clickUserId = comment.id
                     userInfoDailogFlag = !userInfoDailogFlag
                   "
                 >
@@ -212,9 +271,7 @@
           <v-col> {{ comment.context }} </v-col>
         </v-row>
         <v-row style="background: white;">
-          <v-col>
-            <v-divider> </v-divider>
-          </v-col>
+          <v-col> <v-divider> </v-divider></v-col>
         </v-row>
       </v-container>
     </v-hover>
@@ -250,7 +307,7 @@ export default {
     limit_num: '5',
     participants: '2',
     title: '떡볶이 대환영! 저랑 같이 먹어여',
-    deadline_date: '2020-06-03 20:00:30',
+    deadline_date: '2020-06-06 20:00:30',
     user_id: '1',
     nick_name: 'nickname',
     tmp_date: '2020-06-02 23:00:00',
@@ -308,6 +365,7 @@ export default {
       { text: 'controller', value: 'controller', width: 10, align: 'right' },
     ],
     userInfoDailogFlag: false,
+    contents: '',
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -426,6 +484,9 @@ export default {
     updateUserDialogFlag(flag) {
       this.userInfoDailogFlag = flag
     },
+    writeComment() {
+      alert(this.contents)
+    },
   },
 }
 </script>
@@ -461,5 +522,12 @@ export default {
   padding: 10px;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.insertCommentButton {
+  height: 100%;
+  width: 100%;
+  background: orange;
+  color: white;
 }
 </style>
