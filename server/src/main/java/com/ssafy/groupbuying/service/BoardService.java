@@ -37,4 +37,10 @@ public interface BoardService {
 
 	//키워드별 검색 (최대 3개까지 가능)
 	public List<Board> getKeywordSearch(String keyword);
+	
+	
+	// 관리자 페이지 - 년/월/주간 게시물 리스트
+	public List<Board> searchByYear();
+	public List<Board> searchByMonth();
+	public List<Board> searchByWeek();
 }

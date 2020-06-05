@@ -32,4 +32,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	public List<Board> findByKeywordLike(String keyword1, String keyword2, String keyword3);
 	
 	public List<Board> findByUser(User user);
+	
+	@Query(value = "select * from bandding.board where year(now()) = year(write_date) ", nativeQuery = true)
+	public List<Board> findByYear();
+	@Query(value = "select * from bandding.board where month(now()) = month(write_date) ", nativeQuery = true)
+	public List<Board> findByMonth();
+	@Query(value = "select * from bandding.board where day(write_date) between day(now())-7 and day(now()) ", nativeQuery = true)
+	public List<Board> findByWeek();
 }

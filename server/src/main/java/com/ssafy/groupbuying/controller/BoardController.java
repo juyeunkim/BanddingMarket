@@ -55,7 +55,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/board")
-	@ApiOperation(value = " | 게시판 등록 | Board", notes = "필요한 컬럼 : category, context, limit_num, deadline_date, title, user:{user_id}")
+	@ApiOperation(value = " | 게시판 등록 | Board", notes = "필요한 컬럼 : category, context, limit_num, deadline_date, title, user:{user_id} , (생략 가능 - board_locationX, board_locationY)")
 	public Object insert(@RequestBody(required = true) Board board) {
 		final BasicResponse result = new BasicResponse();
     	result.status = service.insert(board);
@@ -66,11 +66,41 @@ public class BoardController {
 	
 	@PostMapping("/board/searchById")
 	@ApiOperation(value = " user_id | 유저가 작성한 게시판 | Board List", notes = "필요한 컬럼 : user:{user_id}")
-	public Object search(@RequestBody(required = true) final long user_id) {
+	public Object searchById(@RequestBody(required = true) final long user_id) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = user_id+"유저가 작성한 게시판"; 
 		result.object = service.search(user_id);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/board/searchByYear")
+	@ApiOperation(value = " | 년도별 게시판 | Board List")
+	public Object searchByYear() {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = "년도별 게시판"; 
+		result.object = service.searchByYear();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/board/searchByMonth")
+	@ApiOperation(value = " | 월별 게시판 | Board List")
+	public Object searchByMonth() {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = "월별 게시판"; 
+		result.object = service.searchByMonth();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping("/board/searchByWeek")
+	@ApiOperation(value = " | 주간별 게시판 | Board List")
+	public Object searchByWeek() {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = "주간별 게시판"; 
+		result.object = service.searchByWeek();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
@@ -189,5 +219,6 @@ public class BoardController {
 		result.object = service.getKeywordSearch(keyword);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
 	
 }

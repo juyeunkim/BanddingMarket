@@ -195,4 +195,19 @@ public class BoardServiceImpl implements BoardService {
 		return repo.findByKeywordLike(str[0], str[1], str[2]);
 
 	}
+
+	@Override
+	public List<Board> searchByYear() {
+		return repo.findByYear();
+	}
+
+	@Override
+	public List<Board> searchByMonth() {
+		return repo.findByMonth();
+	}
+
+	@Override
+	public List<Board> searchByWeek() {
+		return repo.findByWeek();
+	}
 }
