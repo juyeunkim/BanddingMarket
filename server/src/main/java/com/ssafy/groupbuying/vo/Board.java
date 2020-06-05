@@ -1,153 +1,92 @@
 package com.ssafy.groupbuying.vo;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import io.swagger.annotations.ApiModel;
+import lombok.Data;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="board")
-public class Board {
+@ApiModel
+public @Data class Board {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private long board_id;
 	
-	@OneToOne
-	@JoinColumn(name = "user")
+	@ManyToOne(fetch = FetchType.LAZY)	
+	@JoinColumn(name = "user_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
+	@NotNull
+	@Column(length = 100)
 	private String title;
+	@NotNull
+	@Column(columnDefinition = "TEXT")
 	private String context;
-	private String locationX;
-	private String locationY;
-	private String writeDate;
-	private String deadlineDate;
-	private int limit;
+//	@NotNull
+	@Column(length = 20)
+	private String board_locationX;
+ 	@Column(length = 20)
+	private String board_locationY;
+	
+	@CreationTimestamp
+	private LocalDateTime  writeDate;
+	// 일단 NOT NULL 제외
+	private LocalDateTime deadlineDate;
+	@Max(5)
+	@Column(columnDefinition = "integer default 5")
+	private int limit_num;
+	
+	@Column(columnDefinition = "integer default 1")
 	private int participants;
+	@NotNull
+	@Column(columnDefinition = "boolean default true")
 	private int category;
-	private boolean delete;
-
+	@Column(columnDefinition = "boolean default false")
+	private boolean isDeleted;
+	
+//	//카테고리용 컬럼 
+//	@Column(length = 50)
+//	private String category;
+	
+	//키워드용 컬럼 
+	@Column(length = 50)
+	private String keyword;
+	
+	
+	// TEST 용
 	public Board() {}
-
-	public Board(long id, User user, String title, String context, String locationX, String locationY,
-			String writeDate, String deadlineDate, int limit, int participants, int category, boolean delete) {
+	public Board(User user, @NotNull String title, @NotNull String context,
+			@NotNull int limit_num, @NotNull int category) {
 		super();
-		this.id = id;
 		this.user = user;
 		this.title = title;
 		this.context = context;
-		this.locationX = locationX;
-		this.locationY = locationY;
-		this.writeDate = writeDate;
-		this.deadlineDate = deadlineDate;
-		this.limit = limit;
-		this.participants = participants;
-		this.category = category;
-		this.delete = delete;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public String getLocationX() {
-		return locationX;
-	}
-
-	public String getLocationY() {
-		return locationY;
-	}
-
-	public String getWriteDate() {
-		return writeDate;
-	}
-
-	public String getDeadlineDate() {
-		return deadlineDate;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public int getParticipants() {
-		return participants;
-	}
-
-	public int getCategory() {
-		return category;
-	}
-
-	public boolean isDelete() {
-		return delete;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setWriter(User user) {
-		this.user = user;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setContext(String context) {
-		this.context = context;
-	}
-
-	public void setLocationX(String locationX) {
-		this.locationX = locationX;
-	}
-
-	public void setLocationY(String locationY) {
-		this.locationY = locationY;
-	}
-
-	public void setWriteDate(String writeDate) {
-		this.writeDate = writeDate;
-	}
-
-	public void setDeadlineDate(String deadlineDate) {
-		this.deadlineDate = deadlineDate;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	public void setParticipants(int participants) {
-		this.participants = participants;
-	}
-
-	public void setCategory(int category) {
+		this.limit_num = limit_num;
 		this.category = category;
 	}
-
-	public void setDelete(boolean delete) {
-		this.delete = delete;
-	}
+	
 	
 
 }

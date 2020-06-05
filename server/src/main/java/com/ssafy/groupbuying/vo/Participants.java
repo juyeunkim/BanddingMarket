@@ -12,12 +12,14 @@ import javax.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import lombok.Data;
+
 
 @Entity
 @Table(name="participants")
-public class Participants {
+public @Data class Participants {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
 	@ManyToOne
@@ -25,49 +27,9 @@ public class Participants {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Board board;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name= "user")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
-	
-	public Participants() {}
 
-	public Participants(long id, Board board, User user) {
-		super();
-		this.id = id;
-		this.board = board;
-		this.user = user;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public Board getBoard() {
-		return board;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setBoard(Board board) {
-		this.board = board;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
