@@ -78,7 +78,7 @@ public class ReportController {
 
 	@PostMapping(value = "/searchReport")
 	@ApiOperation(value = "특정유저 신고 목록 ", notes = "")
-	public ResponseEntity<List<Report>> reportByWriter(@RequestParam String writer) {
+	public ResponseEntity<List<Report>> reportByWriter(@RequestParam long writer) {
 
 		return new ResponseEntity<List<Report>>(reportService.findByWriter(writer), HttpStatus.OK);
 
