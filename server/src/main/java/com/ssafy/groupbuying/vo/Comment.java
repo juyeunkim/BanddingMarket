@@ -22,7 +22,7 @@ import lombok.Data;
 public @Data class Comment {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private long comment_id;
 	
 	@ManyToOne
 	@JoinColumn(name= "board")
@@ -37,9 +37,5 @@ public @Data class Comment {
 	@NotNull
 	@Column(length = 300)
 	private String context;
-	
-	public long getId() {
-		return id;
-	}
 	
 }

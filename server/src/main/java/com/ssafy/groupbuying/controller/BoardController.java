@@ -35,7 +35,7 @@ public class BoardController {
 	private BoardService service;
 	
 	@GetMapping("/board/{id}")
-	@ApiOperation(value = "게시판 조회")
+	@ApiOperation(value = " 게시판 ID | 게시판 조회 | Board ")
 	public Object getBoard(@RequestParam(required = true) final int id) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
@@ -45,7 +45,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board")
-	@ApiOperation(value = "전체 게시판 조회")
+	@ApiOperation(value = "전체 게시판 조회  | Board List")
 	public Object getBoards() {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
@@ -55,7 +55,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/board")
-	@ApiOperation(value = "게시판 등록")
+	@ApiOperation(value = " | 게시판 등록 | Board", notes = "필요한 컬럼 : category, context, limit_num, deadline_date, title, user:{user_id}")
 	public Object insert(@RequestBody(required = true) Board board) {
 		final BasicResponse result = new BasicResponse();
     	result.status = service.insert(board);
@@ -64,8 +64,18 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@PostMapping("/board/searchById")
+	@ApiOperation(value = " user_id | 유저가 작성한 게시판 | Board List", notes = "필요한 컬럼 : user:{user_id}")
+	public Object search(@RequestBody(required = true) final long user_id) {
+		final BasicResponse result = new BasicResponse();
+    	result.status = true;
+		result.data = user_id+"유저가 작성한 게시판"; 
+		result.object = service.search(user_id);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
 	@PutMapping("/board")
-	@ApiOperation(value = "게시판 수정")
+	@ApiOperation(value = "게시판 수정 | 수정된 Board", notes = "필요한 컬럼 : board_id, category, context, limit_num, deadline_date, title, user:{user_id}")
 	public Object update(@RequestBody(required = true) Board b) {
 		final BasicResponse result = new BasicResponse();
     	result.status = service.insert(b);
@@ -75,7 +85,7 @@ public class BoardController {
 	}
 	
 	@DeleteMapping("/board/{id}")
-	@ApiOperation(value = "게시판 삭제")
+	@ApiOperation(value = "params = board_id | 게시판 삭제 | 삭제된 Board")
 	public Object delete(@RequestParam(required = true) final int id) {
 		final BasicResponse result = new BasicResponse();
     	Board board= service.getBoard(id);
@@ -86,7 +96,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board/{bid}/{uid}")
-	@ApiOperation(value = "참가 신청")
+	@ApiOperation(value = "params = board_id, user_id  | 참가 신청 | Participants (board_id,user_id)")
 	public Object apply(@RequestParam(required = true) final int bid,
 				@RequestParam(required = true) final int uid) {
 		
@@ -98,7 +108,7 @@ public class BoardController {
 	}
 	
 	@DeleteMapping("/board/{bid}/{uid}")
-	@ApiOperation(value = "참가 취소")
+	@ApiOperation(value = "params = board_id, user_id  | 참가 취소 | Participants (board_id,user_id)")
 	public Object cancel(@RequestParam(required = true) final int bid,
 				@RequestParam(required = true) final int uid) {
 		
@@ -110,7 +120,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board/comment/{id}")
-	@ApiOperation(value = "댓글 조회")
+	@ApiOperation(value = " board_id | 댓글 조회 | Board에 달린 댓글들 조회")
 	public Object getComment(@RequestParam(required = true) final int bid) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
@@ -120,7 +130,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/board/comment")
-	@ApiOperation(value = "댓글 등록")
+	@ApiOperation(value = "댓글 등록 | 등록한 Comment", notes = "필요한 컬럼 : board_id, context, user:{user_id}")
 	public Object insertComment(@RequestBody(required = true) Comment c) {
 		final BasicResponse result = new BasicResponse();
     	result.status = service.insertComment(c);
@@ -130,7 +140,7 @@ public class BoardController {
 	}
 	
 	@PutMapping("/board/comment")
-	@ApiOperation(value = "댓글 수정")
+	@ApiOperation(value = "댓글 수정 | 수정된 Comment", notes = "필요한 컬럼 : comment_id, board_id, context, user:{user_id}")
 	public Object updateComment(@RequestBody(required = true) Comment c) {
 		final BasicResponse result = new BasicResponse();
     	result.status = service.updateComment(c);
@@ -140,12 +150,12 @@ public class BoardController {
 	}
 	
 	@DeleteMapping("/board/comment/{id}")
-	@ApiOperation(value = "댓글 삭제")
-	public Object deleteComment(@RequestParam(required = true) final int bid) {
+	@ApiOperation(value = "comment_id | 댓글 삭제 | 삭제된 Comment")
+	public Object deleteComment(@RequestParam(required = true) final int cid) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "댓글 삭제"; 
-		result.object = service.deleteComment(bid);
+		result.object = service.deleteComment(cid);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
@@ -160,14 +170,23 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/board/category/{category}") 
-	@ApiOperation(value = "카테고리별 보기")
-	public Object getCategoryBoard(@RequestParam(required = true) String category) {
+//	@GetMapping("/board/category/{category}") 
+//	@ApiOperation(value = "검색하려는 카테고리를 입력 ex)11(한식 의미) | 해당 카테고리에 속한 board 리스트를 리턴해줌 | board 객체")
+//	public Object getCategoryBoard(@RequestParam(required = true) String category) {
+//		final BasicResponse result = new BasicResponse();
+//    	result.status = true;
+//		result.data = "카테고리별 보기"; 
+//		result.object = service.getCategoryBoard(category);
+//		return new ResponseEntity<>(result, HttpStatus.OK);
+//	}
+	
+	@GetMapping("/board/keyword/{keyword}") 
+	@ApiOperation(value = "검색하려는 키워드를 #로 구분해 입력(최대 3개) #떡볶이#마라탕#치킨 | 하나라도 키워드가 포함되어있으면 그 board 정보를 리턴해줌 | board 객체")
+	public Object getKeywordSearch(@RequestParam(required = true) String keyword) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
-		result.data = "카테고리별 보기"; 
-		result.object = service.getCategoryBoard(category);
-//		result.object = service.getCategoryBoard(type, category);
+		result.data = "키워드별 보기"; 
+		result.object = service.getKeywordSearch(keyword);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	

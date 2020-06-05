@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +14,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -35,11 +33,8 @@ public @Data class Board {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long board_id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	
-	@JoinColumn(name = "user_id", referencedColumnName="user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name="user_id"))
-//	@ManyToOne(cascade = CascadeType.PERSIST)
-//	@JoinColumn(name = "user")
+	@ManyToOne(fetch = FetchType.LAZY)	
+	@JoinColumn(name = "user_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
@@ -59,52 +54,39 @@ public @Data class Board {
 	private LocalDateTime  writeDate;
 	// 일단 NOT NULL 제외
 	private LocalDateTime deadlineDate;
-	@NotNull
 	@Max(5)
+	@Column(columnDefinition = "integer default 5")
 	private int limit_num;
 	
-	@ColumnDefault("1")
+	@Column(columnDefinition = "integer default 1")
 	private int participants;
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
-	private int type;
+	private int category;
 	@Column(columnDefinition = "boolean default false")
 	private boolean isDeleted;
 	
-	//카테고리용 컬럼 
+//	//카테고리용 컬럼 
+//	@Column(length = 50)
+//	private String category;
+	
+	//키워드용 컬럼 
 	@Column(length = 50)
-	private String category;
+	private String keyword;
+	
 	
 	// TEST 용
 	public Board() {}
 	public Board(User user, @NotNull String title, @NotNull String context,
-			@NotNull int limit_num, @NotNull int type) {
+			@NotNull int limit_num, @NotNull int category) {
 		super();
 		this.user = user;
 		this.title = title;
 		this.context = context;
 		this.limit_num = limit_num;
-		this.type = type;
+		this.category = category;
 	}
 	
 	
-//	public Board(long board_id, User user, @NotNull String title, @NotNull String context, String board_locationX,
-//			String board_locationY, LocalDateTime writeDate, LocalDateTime deadlineDate, @NotNull @Max(5) int limit_num,
-//			int participants, @NotNull int category, boolean isDeleted, String keyword) {
-//		super();
-//		this.board_id = board_id;
-//		this.user = user;
-//		this.title = title;
-//		this.context = context;
-//		this.board_locationX = board_locationX;
-//		this.board_locationY = board_locationY;
-//		this.writeDate = writeDate;
-//		this.deadlineDate = deadlineDate;
-//		this.limit_num = limit_num;
-//		this.participants = participants;
-//		this.category = category;
-//		this.isDeleted = isDeleted;
-//		this.keyword = board;
-//	}
 
 }

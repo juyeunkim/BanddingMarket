@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -152,11 +154,9 @@ public class UserController {
 	}
 	
 	@ApiOperation(value = "top 유저 검색", notes = "")
-	@PostMapping(value = "/topUser")
+	@GetMapping(value = "/topUser")
 	public ResponseEntity<List<User>> topUser() {
-		
 		return new ResponseEntity<List<User>>(userService.findTopUser(),HttpStatus.OK);
-
 	}
 	
 	@ApiOperation(value = "모든 유저 검색", notes = "")
@@ -167,4 +167,10 @@ public class UserController {
 
 	}
 
+	//juheekim 추가 
+	@ApiOperation(value = "전체 유저 검색", notes = "")
+	@GetMapping(value = "/allUser")
+	public ResponseEntity<List<User>> allUser() {
+		return new ResponseEntity<List<User>>(userService.findAll(),HttpStatus.OK);
+	}
 }

@@ -1,6 +1,5 @@
 package com.ssafy.groupbuying.service;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,33 +134,64 @@ public class BoardServiceImpl implements BoardService {
 		return true;
 	}
 
-	@Override
-	public List<Board> getCategoryBoard(String category) {
-//	public List<Board> getCategoryBoard(int type, String category) {
-//		if (category.equals("")) {
-//			return repo.findByType(type);
-//		} else {
-//			String[] str = category.split(",");
-//			String temp = "%";
-//			for (int i = 0, size = str.length; i < size; i++) {
-//				temp += str[i];
-//				if (i != size - 1)
-//					temp += "% or category like %";
-//			}
-//			temp += "%";
-//			System.out.println(temp);
-//			return repo.findByCategoryLike(temp);
+//	@Override
+//	public List<Board> getCategoryBoard(String category) {
+////	public List<Board> getCategoryBoard(int type, String category) {
+////		if (category.equals("")) {
+////			return repo.findByType(type);
+////		} else {
+////			String[] str = category.split(",");
+////			String temp = "%";
+////			for (int i = 0, size = str.length; i < size; i++) {
+////				temp += str[i];
+////				if (i != size - 1)
+////					temp += "% or category like %";
+////			}
+////			temp += "%";
+////			System.out.println(temp);
+////			return repo.findByCategoryLike(temp);
+////		}
+////		String[] categoryList = category.split(",");
+////		return findByCategoryLike(categoryList);
+//		
+//		String[] str = new String[3];
+//		String[] temp = category.split(",");
+//		for (int i = 0; i < 3; i++) {
+//			if (temp.length > i) str[i] = temp[i];
+//			else str[i] = "100";
 //		}
-//		String[] categoryList = category.split(",");
-//		return findByCategoryLike(categoryList);
+//		return repo.findByCategoryLike(str[0], str[1], str[2]);
+//	}
+
+	@Override
+
+	public List<Board> search(long user_id) {
+		// email로 유저 id 찾기
+//		System.out.println(email);
+//		List<User> list = urepo.findAll();
+//		for (User user : list) {
+//			System.out.println(user);
+//		}
+		User user = urepo.findById(user_id);
+//		User user = urepo.findByMail(email);
 		
+		System.out.println("******");
+		System.out.println(user);
+		if(user == null) return null; // 존재하지 않는 유저
+		
+		
+		// 모든 게시판들 가져오기
+		return repo.findByUser(user);
+	}
+
+	public List<Board> getKeywordSearch(String keyword) {
 		String[] str = new String[3];
-		String[] temp = category.split(",");
+		String[] temp = keyword.substring(1).split("#");
 		for (int i = 0; i < 3; i++) {
 			if (temp.length > i) str[i] = temp[i];
-			else str[i] = "100";
+			else str[i] = "검색불가";
 		}
-		
-		return repo.findByCategoryLike(str[0], str[1], str[2]);
+		return repo.findByKeywordLike(str[0], str[1], str[2]);
+
 	}
 }

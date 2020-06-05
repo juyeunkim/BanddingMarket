@@ -12,7 +12,7 @@
 	<groupId>com.ssafy.groupbuying</groupId>
 	<artifactId>GroupBuying</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>GroupBuying</name>`
+	<name>GroupBuying</name>
 	<description>polish information</description>
 
 	<properties>
@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.20</version>
+			<version>1.18.12</version>
 		</dependency>
 		
 		<!-- jwt -->		
