@@ -33,6 +33,14 @@ public class ReportServiceImpl  implements ReportService{
 		report.setStatus(2);
 		reportRepository.save(report);
 	}
+	
+	@Override
+	public void cancleById(long id) {
+		// TODO Auto-generated method stub
+		Report report = reportRepository.findById(id).get();
+		report.setStatus(0);
+		reportRepository.save(report);
+	}
 
 	@Override
 	public void insertReport(Report report) {
@@ -52,6 +60,31 @@ public class ReportServiceImpl  implements ReportService{
 		Report report = reportRepository.findById(id).get();
 		report.setStatus(1);
 		reportRepository.save(report);
+	}
+
+	@Override
+	public List<Report> findByYear() {
+		return reportRepository.findByYear();
+	}
+
+	@Override
+	public List<Report> findByMonth() {
+		// TODO Auto-generated method stub
+		return reportRepository.findByMonth();
+	}
+
+	@Override
+	public List<Report> findByWeek() {
+		// TODO Auto-generated method stub
+		return reportRepository.findByWeek();
+	}
+
+	@Override
+	public List<Report> findByCategory(String category) {
+		// TODO Auto-generated method stub
+		System.out.println("service: "+category);
+
+		return reportRepository.findByCategory(category);
 	}
 
 }

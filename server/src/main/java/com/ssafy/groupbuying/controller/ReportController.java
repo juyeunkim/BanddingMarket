@@ -2,12 +2,10 @@ package com.ssafy.groupbuying.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.groupbuying.service.ReportService;
 import com.ssafy.groupbuying.vo.Report;
-import com.ssafy.groupbuying.vo.User;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -27,6 +24,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("report")
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 public class ReportController {
 
 	@Autowired
@@ -47,6 +45,15 @@ public class ReportController {
 	@ApiOperation(value = "신고 승인", notes = "param=report_id ")
 	public ResponseEntity<Void> approveReport(@RequestBody Report report) {
 		reportService.approveById(report.getReportId());
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
+
+	}
+	
+	@PutMapping(value = "/cancle")
+	@ApiOperation(value = "승인된 신고를 취소", notes = "param=report_id ")
+	public ResponseEntity<Void> cancleReport(@RequestBody Report report) {
+		reportService.cancleById(report.getReportId());
 
 		return new ResponseEntity<Void>(HttpStatus.OK);
 
@@ -83,4 +90,37 @@ public class ReportController {
 		return new ResponseEntity<List<Report>>(reportService.findByWriter(writer), HttpStatus.OK);
 
 	}
+	
+	@GetMapping(value = "/findByYear")
+	@ApiOperation(value = "년도별 검색 ", notes = "")
+	public ResponseEntity<List<Report>> findByYear() {
+
+		return new ResponseEntity<List<Report>>(reportService.findByYear(), HttpStatus.OK);
+
+	}
+	
+	@GetMapping(value = "/findByMonth")
+	@ApiOperation(value = "월별 검색 ", notes = "")
+	public ResponseEntity<List<Report>> findByMonth() {
+
+		return new ResponseEntity<List<Report>>(reportService.findByMonth(), HttpStatus.OK);
+
+	}
+	
+	@GetMapping(value = "/findByWeek")
+	@ApiOperation(value = "주간 검색 ", notes = "")
+	public ResponseEntity<List<Report>> findByWeek() {
+
+		return new ResponseEntity<List<Report>>(reportService.findByWeek(), HttpStatus.OK);
+
+	}
+	
+	@GetMapping(value = "/findByCategory")
+	@ApiOperation(value = "카테고리별 검색 ", notes = "")
+	public ResponseEntity<List<Report>> findByCategory(@RequestParam String category) {
+		System.out.println("컨트롤러: "+category);
+		return new ResponseEntity<List<Report>>(reportService.findByCategory(category), HttpStatus.OK);
+
+	}
+	
 }

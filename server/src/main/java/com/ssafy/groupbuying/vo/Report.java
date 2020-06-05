@@ -1,5 +1,7 @@
 package com.ssafy.groupbuying.vo;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -44,6 +47,9 @@ public @Data class Report {
 	@NotNull
 	@ColumnDefault("0") // 0 - 미확인 1- 승인 2- 삭제(거절)
 	private int status;
+
+	@CreationTimestamp
+	private LocalDateTime  writeDate;
 	
 	
 }

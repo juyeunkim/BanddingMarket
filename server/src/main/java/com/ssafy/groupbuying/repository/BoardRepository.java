@@ -38,6 +38,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	public List<Board> findByYear();
 	@Query(value = "select * from bandding.board where month(now()) = month(write_date) ", nativeQuery = true)
 	public List<Board> findByMonth();
-	@Query(value = "select * from bandding.board where day(write_date) between day(now())-7 and day(now()) ", nativeQuery = true)
+	@Query(value = "SELECT * FROM board \r\n" + 
+			"\r\n" + 
+			"WHERE date(write_date) BETWEEN subdate(curdate(),date_format(curdate(),'%w')-1) \r\n" + 
+			"\r\n" + 
+			"AND subdate(curdate(),date_format(curdate(),'%w')-7);", nativeQuery = true)
 	public List<Board> findByWeek();
 }
