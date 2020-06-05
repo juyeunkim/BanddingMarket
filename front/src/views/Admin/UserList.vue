@@ -14,7 +14,7 @@
               sm3
               xs9
               v-for="user in topUserList"
-              :key="user.nickName"
+              :key="user.nickname"
               style="margin-left:50px;"
             >
               <!-- <img src={{ episode.thumbnail }}> 실제할땐 요런식으로  -->
@@ -28,7 +28,7 @@
                 <tbody sm4 xs4 class="col">
                   <tr>
                     <td colspan="2" style="font-size: 1.3em;">
-                      {{ user.nickName }}
+                      {{ user.nickname }}
                     </td>
                   </tr>
                   <tr>
@@ -49,7 +49,7 @@
     </v-flex>
     <!--user search-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-      <v-icon style="color:black">mdi-account-search</v-icon> 회원 이름 검색
+      <v-icon style="color:black">mdi-account-search</v-icon> 회원 이메일 검색
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
@@ -58,7 +58,7 @@
           :items="userList"
           :filter="customFilter"
           color="white"
-          item-text="nickName"
+          item-text="email"
           label="User"
           :search-input.sync="search"
         ></v-autocomplete>
@@ -72,7 +72,7 @@
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
       <span>
-        <b style="color:orange">{{ result.nickName }}</b
+        <b style="color:orange">{{ result.email }}</b
         >님의 정보입니다.
       </span>
       <v-divider class="mb-5 mt-1"></v-divider>
@@ -80,7 +80,7 @@
         <v-flex sm6 xs12>
           <v-tabs background-color="transparent" center-active height="auto">
             <ul>
-              <li>닉네임: {{ result.nickName }}</li>
+              <li>닉네임: {{ result.nickname }}</li>
               <li>이름: {{ result.name }}</li>
               <li>주소: {{ result.addr }}</li>
               <li>평점: {{ result.reputation }}</li>
@@ -106,7 +106,7 @@
 
 <script>
 // import HelloWorld from '../../components/HelloWorld.vue';
-
+import axios from '../../vuex/http-common';
 export default {
   name: "Main",
 
@@ -121,96 +121,46 @@ export default {
     model: null,
     search: null,
     topUserList: [
-      {
-        nickName: "jason07999",
-        name: "이재혁",
-        addr: "용인시",
-        sel: 1,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82810300-0c49ce00-9ec9-11ea-9b1d-114c80a200d4.jpg",
-      },
-      {
-        nickName: "wjg",
-        name: "김주연",
-        addr: "서울대입구",
-        sel: 2,
-        reputation: 2.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png",
-      },
-      {
-        nickName: "juheeekim",
-        name: "김주희",
-        addr: "사당",
-        sel: 3,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
+     
     ],
     userList: [
-      {
-        nickName: "jason07999",
-        name: "이재혁",
-        addr: "용인시",
-        id: 1,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82810300-0c49ce00-9ec9-11ea-9b1d-114c80a200d4.jpg",
-      },
-      {
-        nickName: "wjg",
-        name: "김주연",
-        addr: "서울대입구",
-        id: 2,
-        reputation: 2.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png",
-      },
-      {
-        nickName: "juheeekim",
-        name: "김주희",
-        addr: "사당",
-        id: 3,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
-      {
-        nickName: "taemin",
-        name: "김태민",
-        addr: "역삼역",
-        id: 4,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
-      {
-        nickName: "hun0202",
-        name: "이훈",
-        addr: "서울시",
-        id: 5,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
+      
     ],
     boardList: [
-      { title: "치킨시켜드실분", context: "치킨멤버구함", id: 1 },
-      { title: "엽떡반반나눠요~", context: "순한맛드실분...?", id: 2 },
-      { title: "쿠팡에서 감자구매", context: "-", id: 3 },
-      { title: "피자 반반씩 시킬분있나요", context: "...", id: 4 },
+      
     ],
   }),
+  created() {
+    this.loadData();
+    
+  },
+
   methods: {
     customFilter(item, queryText) {
-      const textOne = item.nickName.toLowerCase();
+      const textOne = item.nickname.toLowerCase();
       const textTwo = item.addr.toLowerCase();
       const searchText = queryText.toLowerCase();
       return (
         textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
       );
+    },
+    loadData() {
+      console.log("Loading....");
+
+      axios.get('/user/topUser').then((response) =>{
+        // console.log(response);
+        this.topUserList=response.data;
+
+      })
+
+      
+
+
+      axios.get('/user/allUser').then((response) =>{
+        // console.log(response);
+        this.userList=response.data;
+
+      })
     },
   },
   watch: {
@@ -218,10 +168,16 @@ export default {
       // console.log(this.states)
       for (var user of this.userList) {
         //  console.log(state)
-        if (user.nickName == val) {
+        if (user.email == val) {
           this.result = user;
         }
       }
+      console.log(this.result.user_id)
+      axios.post('/board/searchById',this.result.user_id).then((response) =>{
+        console.log(response);
+        this.boardList=response.data.object;
+
+      })
     },
   },
 };
