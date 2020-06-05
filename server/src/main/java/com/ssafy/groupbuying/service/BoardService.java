@@ -32,7 +32,7 @@ public interface BoardService {
 	public boolean rate(Reputation rep);
 	
 	//카테고리별 검색 (최대 3개까지 가능)
-	public List<Board> getCategoryBoard(String category);
+//	public List<Board> getCategoryBoard(String category);
 //	public List<Board> getCategoryBoard(int type, String category);
 
 	//키워드별 검색 (최대 3개까지 가능)

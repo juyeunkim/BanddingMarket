@@ -62,13 +62,13 @@ public @Data class Board {
 	private int participants;
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
-	private int type;
+	private int category;
 	@Column(columnDefinition = "boolean default false")
 	private boolean isDeleted;
 	
-	//카테고리용 컬럼 
-	@Column(length = 50)
-	private String category;
+//	//카테고리용 컬럼 
+//	@Column(length = 50)
+//	private String category;
 	
 	//키워드용 컬럼 
 	@Column(length = 50)
@@ -78,13 +78,13 @@ public @Data class Board {
 	// TEST 용
 	public Board() {}
 	public Board(User user, @NotNull String title, @NotNull String context,
-			@NotNull int limit_num, @NotNull int type) {
+			@NotNull int limit_num, @NotNull int category) {
 		super();
 		this.user = user;
 		this.title = title;
 		this.context = context;
 		this.limit_num = limit_num;
-		this.type = type;
+		this.category = category;
 	}
 	
 	

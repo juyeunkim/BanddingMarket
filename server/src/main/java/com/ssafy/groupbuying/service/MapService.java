@@ -10,6 +10,6 @@ public interface MapService {
 
 	List<SafeLocation> search();
 	List<SafeLocation> getSafeLocations(double latitude, double longitude, int dist);
-	List<Board> getBoard(double latitude, double longitude, int dist, int type);
+	List<Board> getBoard(double latitude, double longitude, int dist, int category);
 
 }
