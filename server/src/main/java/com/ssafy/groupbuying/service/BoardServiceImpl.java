@@ -1,6 +1,5 @@
 package com.ssafy.groupbuying.service;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,34 +134,34 @@ public class BoardServiceImpl implements BoardService {
 		return true;
 	}
 
-	@Override
-	public List<Board> getCategoryBoard(String category) {
-//	public List<Board> getCategoryBoard(int type, String category) {
-//		if (category.equals("")) {
-//			return repo.findByType(type);
-//		} else {
-//			String[] str = category.split(",");
-//			String temp = "%";
-//			for (int i = 0, size = str.length; i < size; i++) {
-//				temp += str[i];
-//				if (i != size - 1)
-//					temp += "% or category like %";
-//			}
-//			temp += "%";
-//			System.out.println(temp);
-//			return repo.findByCategoryLike(temp);
+//	@Override
+//	public List<Board> getCategoryBoard(String category) {
+////	public List<Board> getCategoryBoard(int type, String category) {
+////		if (category.equals("")) {
+////			return repo.findByType(type);
+////		} else {
+////			String[] str = category.split(",");
+////			String temp = "%";
+////			for (int i = 0, size = str.length; i < size; i++) {
+////				temp += str[i];
+////				if (i != size - 1)
+////					temp += "% or category like %";
+////			}
+////			temp += "%";
+////			System.out.println(temp);
+////			return repo.findByCategoryLike(temp);
+////		}
+////		String[] categoryList = category.split(",");
+////		return findByCategoryLike(categoryList);
+//		
+//		String[] str = new String[3];
+//		String[] temp = category.split(",");
+//		for (int i = 0; i < 3; i++) {
+//			if (temp.length > i) str[i] = temp[i];
+//			else str[i] = "100";
 //		}
-//		String[] categoryList = category.split(",");
-//		return findByCategoryLike(categoryList);
-		
-		String[] str = new String[3];
-		String[] temp = category.split(",");
-		for (int i = 0; i < 3; i++) {
-			if (temp.length > i) str[i] = temp[i];
-			else str[i] = "100";
-		}
-		return repo.findByCategoryLike(str[0], str[1], str[2]);
-	}
+//		return repo.findByCategoryLike(str[0], str[1], str[2]);
+//	}
 
 	@Override
 	public List<Board> getKeywordSearch(String keyword) {

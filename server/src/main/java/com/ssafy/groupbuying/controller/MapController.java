@@ -47,21 +47,23 @@ public class MapController {
 	
 	@PostMapping("/search/safeLocation")
 	@ApiOperation("위도, 경도, 거리(m단위) | 사용자 거리 기반 00m 이내의 안전 거래 장소 리스트 조회 | SafeLocation List 반환")
-	public Object getSafeLocations(double latitude, double longitude, int dist) {
+	public Object getSafeLocations(@RequestBody(required = true) DealInfo info) {
+//		public Object getSafeLocations(@RequestBody(required = true) double latitude, @RequestBody(required = true) double longitude, @RequestBody(required = true) int dist) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "사용자 거리 기반 게시글 검색"; 
-		result.object = service.getSafeLocations(latitude, longitude, dist);
+		result.object = service.getSafeLocations(info.getLatitude(), info.getLongitude(), info.getDist());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping("/search/boardInDist")
-	@ApiOperation("위도, 경도, 거리(m단위), 타입(0:택배/1:음식) 순으로 입력 | 사용자 거리 기반 게시글 검색 | Board List 반환")
-	public Object getBoards(double latitude, double longitude, int dist, int type) {
+	@ApiOperation("위도, 경도, 거리(m단위), 카테고리(0:택배/1:음식) 순으로 입력 | 사용자 거리 기반 게시글 검색 (현재 거래 가능한 게시물만) | Board List 반환")
+	public Object getBoards(@RequestBody(required = true) DealInfo info) {
+//		public Object getBoards(@RequestBody(required = true) double latitude, @RequestBody(required = true) double longitude, @RequestBody(required = true) int dist, @RequestBody(required = true) int category) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
-		result.data = "사용자 거리 기반 게시글 검색"; 
-		result.object = service.getBoard(latitude, longitude, dist, type);
+		result.data = "사용자 거리 기반 게시글 검색";
+		result.object = service.getBoard(info.getLatitude(), info.getLongitude(), info.getDist(), info.getCategory());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
