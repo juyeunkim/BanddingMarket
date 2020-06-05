@@ -141,9 +141,10 @@ public class UserController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.CONFLICT;
 		if(userService.checkByMail(uMail)) {
+			status = HttpStatus.OK;
 			User user= userService.findByMail(uMail);
 			map.put("user", user);
-			map.put("bodList", userService.findBoardByUser(user));
+			//map.put("bodList", userService.findBoardByUser(user));
 		}
 		
 		
@@ -156,6 +157,14 @@ public class UserController {
 	@GetMapping(value = "/topUser")
 	public ResponseEntity<List<User>> topUser() {
 		return new ResponseEntity<List<User>>(userService.findTopUser(),HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "모든 유저 검색", notes = "")
+	@PostMapping(value = "/allUser")
+	public ResponseEntity<List<User>> AllUser() {
+		
+		return new ResponseEntity<List<User>>(userService.findTopUser(),HttpStatus.OK);
+
 	}
 
 	//juheekim 추가 

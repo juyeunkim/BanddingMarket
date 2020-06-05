@@ -78,6 +78,12 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return userRepository.findTopUser();
 	}
+
+	@Override
+	public List<User> findAlluser() {
+		// TODO Auto-generated method stub
+		return userRepository.findAll();
+	}
 	
 	
 }
