@@ -7,6 +7,8 @@ import TransactionManagement from './views/Admin/TransactionManagement.vue'
 import SearchPage from './views/SearchPage'
 import MapSearhPage from './views/MapSearchPage'
 import Board from './views/Board'
+import BoardWrite from './views/BoardWrite'
+
 
 export default [
 
@@ -55,6 +57,11 @@ export default [
         path: '/board',
         name: 'Board',
         component: Board
+    },
+    {
+        path: '/boardwrite',
+        name: 'BoardWrite',
+        component: BoardWrite
     },
 
 ]
