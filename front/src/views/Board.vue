@@ -378,8 +378,8 @@ export default {
       console.log('draws')
       var mapContainer = document.getElementById('map') // 지도를 표시할 div
       var position = new kakao.maps.LatLng(
-        this.board.board_locationX,
-        this.board.board_locationY
+        this.board.board_locationY,
+        this.board.board_locationX
       )
       var mapOption = {
         center: position, // 지도의 중심좌표
