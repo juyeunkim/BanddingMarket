@@ -11,7 +11,10 @@ import com.ssafy.groupbuying.vo.User;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 	public Board findById(long id);
-
+	
+	@Query(value = "select * from bandding.board where is_deleted = false", nativeQuery = true)
+	public List<Board> findbyIsDeleted();
+	
 	@Query(value = "SELECT b.board_id, b.user_id, b.title, b.context, b.board_locationX, b.board_locationY, b.write_date, b.deadline_date, b.limit_num, b.participants, b.is_Deleted, b.category, b.keyword FROM board b"
 			+ " JOIN (SELECT board_id, ( 6371 * acos( cos( radians( :latitude) ) * cos( radians( board_locationy ) )"
 			+ " * cos( radians( board_locationx ) - radians(:longitude) )"

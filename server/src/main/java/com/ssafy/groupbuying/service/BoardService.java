@@ -16,9 +16,9 @@ public interface BoardService {
 	public List<Board> getBoards();
 	
 	// 신청
-	public Participants apply(long bid, long uid);
+	public int apply(long bid, long uid);
 	// 취소
-	public Participants cancel(long bid, long uid);
+	public int cancel(long bid, long uid);
 	
 	// 댓글 CRUD
 	public boolean insertComment(Comment com);

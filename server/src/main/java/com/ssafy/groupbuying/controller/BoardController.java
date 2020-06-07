@@ -45,7 +45,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board")
-	@ApiOperation(value = "전체 게시판 조회  | Board List")
+	@ApiOperation(value = "유효한 게시판 조회(삭제된거 제외)  | Board List")
 	public Object getBoards() {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
@@ -105,7 +105,7 @@ public class BoardController {
 	}
 	
 	@PutMapping("/board")
-	@ApiOperation(value = "게시판 수정 | 수정된 Board", notes = "필요한 컬럼 : board_id, category, context, limit_num, deadline_date, title, user:{user_id}")
+	@ApiOperation(value = "게시판 수정 | 수정된 Board", notes = "필요한 컬럼 : board_id, category, context, limit_num, deadline_date, title, user:{user_id} | status가 false이면 제한인원 초과로 수정 불가")
 	public Object update(@RequestBody(required = true) Board b) {
 		final BasicResponse result = new BasicResponse();
     	result.status = service.insert(b);
@@ -126,26 +126,32 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board/{bid}/{uid}")
-	@ApiOperation(value = "params = board_id, user_id  | 참가 신청 | Participants (board_id,user_id)")
+	@ApiOperation(value = "params = board_id, user_id  | 참가 신청 | 0 - 참가성공, 1 - 마감, 2 - 중복된유저 신청, 3 - 제한인원 초과 ")
 	public Object apply(@RequestParam(required = true) final int bid,
 				@RequestParam(required = true) final int uid) {
 		
 		final BasicResponse result = new BasicResponse();
-    	result.status = true;
+		int val = service.apply(bid, uid);
+
+		if(val == 0) result.status = true;
+		else result.status = false;
 		result.data = "참가 신청"; 
-		result.object = service.apply(bid, uid);
+		result.object = val; 
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/board/{bid}/{uid}")
-	@ApiOperation(value = "params = board_id, user_id  | 참가 취소 | Participants (board_id,user_id)")
+	@ApiOperation(value = "params = board_id, user_id  | 참가 취소 | 0 - 취소 성공, 1 - 마감, 2 - 없는 유저 취소, 3 - 호스트가 취소")
 	public Object cancel(@RequestParam(required = true) final int bid,
 				@RequestParam(required = true) final int uid) {
 		
 		final BasicResponse result = new BasicResponse();
-    	result.status = true;
+		int val = service.cancel(bid, uid);
+		
+		if(val == 0) result.status = true;
+		else result.status = false;
 		result.data = "참가 취소"; 
-		result.object = service.cancel(bid, uid);
+		result.object = val;
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	

@@ -36,16 +36,23 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public boolean insert(Board board) {
-		// 게시판을 작성하고
-		System.out.println("INSERT!!!");
-		System.out.println(board.toString());
+		// 게시판을 작성하고, 작성한 유저를 참가신청에 넣는다
 		repo.save(board);
+		
+		long uid = board.getUser().getUser_id();
+		long bid = board.getBoard_id();
+		
+		apply(bid, uid);
+		
 		return true;
 	}
 
 	@Override
 	public boolean update(Board board) {
-		repo.save(board);
+		// limit 넘는지 확인
+		if(board.getLimit_num() < board.getParticipants()) return false;
+		else repo.save(board);
+		
 		return true;
 	}
 
@@ -55,6 +62,12 @@ public class BoardServiceImpl implements BoardService {
 		Board board = repo.findById(id);
 		board.setDeleted(true);
 		repo.save(board);
+		
+		// Participants DB에서 board_id에 있는 값 모두 삭제
+		List<Participants> delete = prepo.findByBoard(board);
+		for (int i = 0; i < delete.size(); i++) {
+			prepo.delete(delete.get(i));
+		}
 		return true;
 	}
 
@@ -65,41 +78,71 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<Board> getBoards() {
-		return repo.findAll();
+		// delete된거는 제외하고 불러온다
+		return repo.findbyIsDeleted();
 	}
 
 	@Override
-	public Participants apply(long bid, long uid) {
-		// 기존에 있는 참가자수에 +1 후, UPDATE
+	public int apply(long bid, long uid) {
 		Board board = getBoard(bid);
+		User user = urepo.findById(uid);
+
+		// 마감됐는지 체크
+		if(board.isDeleted()) return 1;
+		
+		// 중복 체크
+		Participants dul = prepo.findByUserAndBoard(user, board);
+		if(dul != null) {
+			// 이미 참가 신청한거이므로 false
+			return 2;
+		}
+
+		// 기존에 있는 참가자수에 +1 후, UPDATE
 		int attend = board.getParticipants();
 		board.setParticipants(attend+1);
+		if(attend > board.getLimit_num()) return 3;
 		update(board);
 		
 		// Participants 테이블에 저장
-		User user = urepo.findById(uid);
 		Participants newUser =new Participants();
 		newUser.setUser(user);
 		newUser.setBoard(board);
 		
 		prepo.save(newUser);
 		
-		return newUser;
+		return 0;
 	}
 
 	@Override
-	public Participants cancel(long bid, long uid) {
+	public int cancel(long bid, long uid) {
 		// 기존에 있는 참가자수에 -1 후, UPDATE
 		Board board = getBoard(bid);
+		User user = urepo.findById(uid);
+		
+		// 마감됐는지 체크
+		if(board.isDeleted()) return 1;
+				
+		// 중복 체크
+		Participants dul = prepo.findByUserAndBoard(user, board);
+		if(dul == null) {
+			// DB에 없는 참가신청
+			return 2;
+		}
+		
+		// 호스트가 참가 신청한 경우
+		if(user == board.getUser()) return 3;
+		
 		int attend = board.getParticipants();
 		board.setParticipants(attend-1);
 		update(board);
 		
-		Participants newUser = prepo.findByUserAndBoard(urepo.findById(uid), repo.findById(bid));
-		System.out.println(newUser);
+		Participants newUser = new Participants();
+		newUser.setUser(user);
+		newUser.setBoard(board);
+		
 		prepo.delete(newUser);
 		
-		return newUser;
+		return 0;
 	}
 
 	@Override
