@@ -70,11 +70,11 @@ export default {
 
     },
     [Constant.SEARCH_BYDISTANCE]: (store, payload) => {
-        console.log(payload.latitude)
-        console.log(payload.longitude)
-        console.log(payload.distance)
-        console.log(payload.category)
-        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        // console.log(payload.latitude)
+        // console.log(payload.longitude)
+        // console.log(payload.distance)
+        // console.log(payload.category)
+        // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
         http.post('/map/search/boardInDist', {
                 "category": payload.category,

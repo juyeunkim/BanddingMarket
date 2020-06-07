@@ -22,6 +22,10 @@
             <v-card-title class="headline">검색 필터</v-card-title>
             <v-divider></v-divider>
 
+            <v-btn @click="deleteMarkers">
+              deleteMarkers
+            </v-btn>
+
             <!--카테고리 category-->
             <v-card-title class="pb-0">
               카테고리
@@ -81,11 +85,11 @@
           >
             <v-list style="width:100%">
               <v-list-item
-                v-for="(search, index) in searchList"
+                v-for="(board, index) in searchList"
                 :key="index + 'store'"
                 class="pa-0"
               >
-                <v-hover v-slot:default="{ hover }" open-delay="50">
+                <!-- <v-hover v-slot:default="{ hover }" open-delay="50">
                   <v-card
                     flat
                     :color="hover ? '#B2CCFF' : '#EAEAEA'"
@@ -96,6 +100,73 @@
                       {{ search }}
                     </v-card-text>
                   </v-card>
+                </v-hover> -->
+                <v-hover v-slot:default="{ hover }">
+                  <v-container
+                    class="my-1 boardCard"
+                    v-bind:style="{
+                      background: index % 2 == 0 ? '#e4e4e4' : '#f7f7f7',
+                      'box-shadow': hover ? '3px 3px #5a5a5a' : 'none',
+                      cursor: 'pointer',
+                    }"
+                    @click="goToBoardDetail(board.board_id)"
+                    @mouseenter="enterBoardCard(index)"
+                    @mouseleave="leaveBoardCard(index)"
+                  >
+                    <v-row>
+                      <v-col class="py-0">
+                        <v-icon>mdi-map-marker</v-icon>
+                        {{
+                          calDistance(
+                            board.board_locationY,
+                            board.board_locationX
+                          )
+                        }}
+                        / 평점
+                        {{
+                          board.user == undefined ? '' : board.user.reputation
+                        }}
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col
+                        v-bind:style="{
+                          color:
+                            calDate(board.deadlineDate) == '마감'
+                              ? '#999999'
+                              : '#ff0000',
+                        }"
+                        style="font-size:15px"
+                        class="py-0"
+                      >
+                        {{ calDate(board.deadlineDate) }}
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0">
+                        <v-chip
+                          v-for="(keyword, index) in board.keyword
+                            .split('#')
+                            .slice(1)"
+                          :key="board.board_id + ' ' + index + ' ' + keyword"
+                          color="#f076b6"
+                          style="color:white ; font-size:0.8rem ; margin-left:1px"
+                          small
+                        >
+                          #{{ keyword }}
+                        </v-chip>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col class="py-0">
+                        <b style="font-size:1rem;">{{ board.title }}</b>
+                      </v-col>
+                    </v-row>
+                    <v-row> </v-row>
+
+                    <!-- <v-card-actions></v-card-actions> -->
+                    <!-- <v-divider></v-divider> -->
+                  </v-container>
                 </v-hover>
               </v-list-item>
             </v-list>
@@ -186,25 +257,14 @@
 <script>
 import Constant from '../vuex/Constant'
 import { mapState } from 'vuex'
-var MARKER_WIDTH = 33, // 기본, 클릭 마커의 너비
-  MARKER_HEIGHT = 36, // 기본, 클릭 마커의 높이
-  OFFSET_X = 12, // 기본, 클릭 마커의 기준 X좌표
-  OFFSET_Y = MARKER_HEIGHT, // 기본, 클릭 마커의 기준 Y좌표
-  OVER_MARKER_WIDTH = 40, // 오버 마커의 너비
-  OVER_MARKER_HEIGHT = 42, // 오버 마커의 높이
-  OVER_OFFSET_X = 13, // 오버 마커의 기준 X좌표
-  OVER_OFFSET_Y = OVER_MARKER_HEIGHT, // 오버 마커의 기준 Y좌표
-  SPRITE_MARKER_URL =
-    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png', // 스프라이트 마커 이미지 URL
-  SPRITE_WIDTH = 126, // 스프라이트 이미지 너비
-  SPRITE_HEIGHT = 146, // 스프라이트 이미지 높이
-  SPRITE_GAP = 10 // 스프라이트 이미지에서 마커간 간격
 
-var markerSize
-var markerOffset
-var overMarkerSize
-var overMarkerOffset
-var spriteImageSize
+var imageSrcStar =
+  'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'
+var imageSrc = 'https://i1.daumcdn.net/dmaps/apis/n_local_blit_04.png'
+var imageSize = new kakao.maps.Size(31, 35)
+var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
+var imageSizeStar = new kakao.maps.Size(25, 35)
+var markerClickImage = new kakao.maps.MarkerImage(imageSrcStar, imageSizeStar)
 export default {
   name: 'MapSearchPage',
   components: {},
@@ -218,12 +278,8 @@ export default {
     windowHeight: 100,
     filterAreaHeight: 100,
     headerHeight: 64,
-    positions: [
-      { name: 'a', latitude: 37.4954257, longitude: 127.039 },
-      { name: 'b', latitude: 37.4954257, longitude: 127.04 },
-      { name: 'c', latitude: 37.4954257, longitude: 127.041 },
-    ],
-    selectedMarker: null,
+    curPosition: [0, 0],
+    markers: [],
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -237,12 +293,6 @@ export default {
       this.windowHeight = window.innerHeight
       // console.log(this.windowHeight)
     })
-
-    markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT) // 기본, 클릭 마커의 크기
-    markerOffset = new kakao.maps.Point(OFFSET_X, OFFSET_Y) // 기본, 클릭 마커의 기준좌표
-    overMarkerSize = new kakao.maps.Size(OVER_MARKER_WIDTH, OVER_MARKER_HEIGHT) // 오버 마커의 크기
-    overMarkerOffset = new kakao.maps.Point(OVER_OFFSET_X, OVER_OFFSET_Y) // 오버 마커의 기준 좌표
-    spriteImageSize = new kakao.maps.Size(SPRITE_WIDTH, SPRITE_HEIGHT) // 스프라이트 이미지의 크기
   },
   mounted() {
     this.drawMap()
@@ -286,12 +336,13 @@ export default {
           var lon = position.coords.longitude // 경도
 
           console.log(lat, lon)
+          this.curPosition = [lat, lon]
           var locPosition = new kakao.maps.LatLng(lat, lon) // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
 
           var message = '<div style="padding:5px;">여기에 계신가요?!</div>' // 인포윈도우에 표시될 내용입니다
 
           this.displayMarker(locPosition, message)
-          this.loadBoardList(lat,lon)
+          this.loadBoardList(lat, lon)
         })
       } else {
         // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
@@ -302,98 +353,86 @@ export default {
       }
     },
     createMarkers() {
-      for (var i = 0, len = this.positions.length; i < len; i++) {
-        var gapX = MARKER_WIDTH + SPRITE_GAP, // 스프라이트 이미지에서 마커로 사용할 이미지 X좌표 간격 값
-          originY = (MARKER_HEIGHT + SPRITE_GAP) * i, // 스프라이트 이미지에서 기본, 클릭 마커로 사용할 Y좌표 값
-          overOriginY = (OVER_MARKER_HEIGHT + SPRITE_GAP) * i, // 스프라이트 이미지에서 오버 마커로 사용할 Y좌표 값
-          normalOrigin = new kakao.maps.Point(0, originY), // 스프라이트 이미지에서 기본 마커로 사용할 영역의 좌상단 좌표
-          clickOrigin = new kakao.maps.Point(gapX, originY), // 스프라이트 이미지에서 마우스오버 마커로 사용할 영역의 좌상단 좌표
-          overOrigin = new kakao.maps.Point(gapX * 2, overOriginY) // 스프라이트 이미지에서 클릭 마커로 사용할 영역의 좌상단 좌표
-
+      this.deleteMarkers()
+      for (var i = 0, len = this.searchList.length; i < len; i++) {
+        console.log(i)
         // 마커를 생성하고 지도위에 표시합니다
-        this.addMarker(this.positions[i], normalOrigin, overOrigin, clickOrigin)
-      }
-    },
-    addMarker(positions, normalOrigin, overOrigin, clickOrigin) {
-      var position = new kakao.maps.LatLng(
-        positions.latitude,
-        positions.longitude
-      )
-      // 기본 마커이미지, 오버 마커이미지, 클릭 마커이미지를 생성합니다
-      var normalImage = this.createMarkerImage(
-          markerSize,
-          markerOffset,
-          normalOrigin
-        ),
-        overImage = this.createMarkerImage(
-          overMarkerSize,
-          overMarkerOffset,
-          overOrigin
-        ),
-        clickImage = this.createMarkerImage(
-          markerSize,
-          markerOffset,
-          clickOrigin
+        this.addMarker(
+          this.searchList[i].board_locationY,
+          this.searchList[i].board_locationX,
+          this.searchList[i]
         )
+      }
+      console.log('3333')
+      console.log(this.markers)
+    },
+    addMarker(lat, lon, board) {
+      var position = new kakao.maps.LatLng(lat, lon)
+      // 기본 마커이미지, 오버 마커이미지, 클릭 마커이미지를 생성합니다
 
       // 마커를 생성하고 이미지는 기본 마커 이미지를 사용합니다
       var marker = new kakao.maps.Marker({
         map: this.map,
         position: position,
-        image: normalImage,
+        clickable: true,
       })
 
-      // 마커 객체에 마커아이디와 마커의 기본 이미지를 추가합니다
-      marker.normalImage = normalImage
+      marker.setImage(markerImage)
+
+      // var remainTime = this.calDate(board.deadlineDate)
+
+      var iwContent =
+        '<div style="width:200px;" @click="this.test">' +
+        '<span style="font-size:1.5rem">' +
+        board.title +
+        '</span>' +
+        '<span style="color:yellow">' +
+        '★' +
+        '</span>' +
+        '<span>' +
+        board.user.reputation +
+        '</span>' +        
+        '<hr>' +
+        '<div style="text-align: right;">' +        
+        '</div>' +
+        '</div>'
+      // var iwContent =
+      //   '<v-card> ' +
+      //   ' <v-icon> ' +
+      //   'mdi-map-marker' +
+      //   ' </v-icon> ' +
+      //   ' </v-card> '
+      board
+      var iwRemoveable = true // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+      // 인포윈도우를 생성합니다
+      var infowindow = new kakao.maps.InfoWindow({
+        content: iwContent,
+        removable: iwRemoveable,
+        clickable: true
+      })
 
       // 마커에 mouseover 이벤트를 등록합니다
       kakao.maps.event.addListener(marker, 'mouseover', () => {
-        // 클릭된 마커가 없고, mouseover된 마커가 클릭된 마커가 아니면
-        // 마커의 이미지를 오버 이미지로 변경합니다
-        if (!this.selectedMarker || this.selectedMarker !== marker) {
-          marker.setImage(overImage)
-        }
+        marker.setImage(markerClickImage)
+        // infowindow.open(this.map, marker)
       })
 
       // 마커에 mouseout 이벤트를 등록합니다
       kakao.maps.event.addListener(marker, 'mouseout', () => {
-        // 클릭된 마커가 없고, mouseout된 마커가 클릭된 마커가 아니면
-        // 마커의 이미지를 기본 이미지로 변경합니다
-        if (!this.selectedMarker || this.selectedMarker !== marker) {
-          marker.setImage(normalImage)
-        }
+        marker.setImage(markerImage)
+        // infowindow.open(null, marker)
       })
 
-      // 마커에 click 이벤트를 등록합니다
+      // 마커에 클릭이벤트를 등록합니다
       kakao.maps.event.addListener(marker, 'click', () => {
-        // 클릭된 마커가 없고, click 마커가 클릭된 마커가 아니면
-        // 마커의 이미지를 클릭 이미지로 변경합니다
-        if (!this.selectedMarker || this.selectedMarker !== marker) {
-          // 클릭된 마커 객체가 null이 아니면
-          // 클릭된 마커의 이미지를 기본 이미지로 변경하고
-          !!this.selectedMarker &&
-            this.selectedMarker.setImage(this.selectedMarker.normalImage)
-
-          // 현재 클릭된 마커의 이미지는 클릭 이미지로 변경합니다
-          marker.setImage(clickImage)
-        }
-
-        // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
-        this.selectedMarker = marker
+        // alert('dd')
+        // 마커 위에 인포윈도우를 표시합니다
+        // console.log(infowindow)
+        infowindow.open(this.map, marker)
       })
-    },
-    createMarkerImage(markerSize, offset, spriteOrigin) {
-      var markerImage = new kakao.maps.MarkerImage(
-        SPRITE_MARKER_URL, // 스프라이트 마커 이미지 URL
-        markerSize, // 마커의 크기
-        {
-          offset: offset, // 마커 이미지에서의 기준 좌표
-          spriteOrigin: spriteOrigin, // 스트라이프 이미지 중 사용할 영역의 좌상단 좌표
-          spriteSize: spriteImageSize, // 스프라이트 이미지의 크기
-        }
-      )
 
-      return markerImage
+      this.markers.push(marker)
     },
     displayMarker(locPosition, message) {
       // 마커를 생성합니다
@@ -427,6 +466,7 @@ export default {
     categoryButtonClicked(categoryClicked) {
       if (categoryClicked != this.category) {
         this.category = categoryClicked
+        this.loadBoardList(this.curPosition[0], this.curPosition[1])
       }
     },
     distanceButtonColor(distance) {
@@ -436,17 +476,91 @@ export default {
     },
     distanceButtonClicked(distance) {
       this.distance = distance
+      this.loadBoardList(this.curPosition[0], this.curPosition[1])
     },
     loadBoardList(lat, lon) {
       this.$store.dispatch(Constant.SEARCH_BYDISTANCE, {
         latitude: lat,
         longitude: lon,
         distance: this.distance,
-        // category: this.category == 'food'? 1:0,
-        category: 0,
+        category: this.category == 'food' ? 1 : 0,
+        // category: 0,
         callback: this.createMarkers,
       })
     },
+    deleteMarkers() {
+      for (var i = 0; i < this.markers.length; i++) {
+        this.markers[i].setMap(null)
+      }
+      this.markers = []
+    },
+    calDate(date) {
+      let today = new Date()
+
+      var diff = Math.floor((Date.parse(date) - Date.parse(today)) / 1000)
+
+      if (diff <= 0) {
+        this.remainTime = {
+          day: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        }
+
+        clearInterval(this.remainTimeFunction)
+        return '마감'
+      } else {
+        var day = Math.floor(diff / (3600 * 24))
+        var hours = Math.floor((diff - day * 3600 * 24) / 3600)
+        var minutes = Math.floor((diff - day * 3600 * 24 - hours * 3600) / 60)
+        var seconds = diff - day * 3600 * 24 - hours * 3600 - minutes * 60
+
+        // console.log(day + ' ' + hours + ' ' + minutes + ' ' + seconds)
+        if (day > 0) {
+          return day + '일 남음'
+        } else if (hours > 0) {
+          return hours + '시간 남음'
+        } else if (minutes > 0) {
+          return minutes + '분 남음'
+        } else {
+          return seconds + '초 남은'
+        }
+      }
+    },
+    calDistance(lat, lon) {
+      var curLat = this.curPosition[0]
+      var curLon = this.curPosition[1]
+      console.log('calDistance ' + curLat + ' ' + curLon)
+      if (curLat == 0) {
+        return '현재위치를 설정해주세요.'
+      }
+      var X =
+        ((Math.cos(curLat) * 6400 * 2 * 3.14) / 360) * Math.abs(curLon - lon)
+      var Y = 111 * Math.abs(curLat - lat)
+      var D = Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2))
+
+      // console.log(Math.floor(D))
+
+      if (Math.floor(D) == 0) {
+        //m단위일때
+        return D.toFixed(3) * 1000 + 'm'
+      } else {
+        //km 일때
+        return Math.floor(D) + 'km'
+      }
+    },
+    goToBoardDetail(id) {
+      this.$router.push({ path: '/board', query: { id: id } })
+    },
+    enterBoardCard(index) {
+      this.markers[index].setImage(markerClickImage)
+    },
+    leaveBoardCard(index) {
+      this.markers[index].setImage(markerImage)
+    },
+    test(){
+      console.log("ddd")
+    }
   },
 }
 </script>
@@ -462,5 +576,8 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+.taemin {
+  color: red;
 }
 </style>
