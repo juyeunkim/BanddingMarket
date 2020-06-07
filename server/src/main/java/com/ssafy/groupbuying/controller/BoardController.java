@@ -210,9 +210,9 @@ public class BoardController {
 //		return new ResponseEntity<>(result, HttpStatus.OK);
 //	}
 	
-	@GetMapping("/board/keyword/{keyword}") 
+	@PostMapping("/board/keyword/{keyword}") 
 	@ApiOperation(value = "검색하려는 키워드를 #로 구분해 입력(최대 3개) #떡볶이#마라탕#치킨 | 하나라도 키워드가 포함되어있으면 그 board 정보를 리턴해줌 | board 객체")
-	public Object getKeywordSearch(@RequestParam(required = true) String keyword) {
+	public Object getKeywordSearch(@RequestBody(required = true) String keyword) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "키워드별 보기"; 
