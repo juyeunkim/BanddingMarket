@@ -38,16 +38,16 @@
       <!--태그-->
       <v-flex sm12 xs12>
         <span>
-          <u>#{{ category }}</u>
+          <u>#{{ board.category == 0 ? '배달' : '상품' }}</u>
         </span>
       </v-flex>
 
       <!--제목-->
       <v-flex sm10 xs12 class="fw700">
         <!-- 크기가 큰 화면 -->
-        <span class="titleSize d-none d-sm-flex">{{ title }}</span>
+        <span class="titleSize d-none d-sm-flex">{{ board.title }}</span>
         <!-- xs -->
-        <span class="titleMobileSize d-flex d-sm-none">{{ title }}</span>
+        <span class="titleMobileSize d-flex d-sm-none">{{ board.title }}</span>
       </v-flex>
 
       <!-- 작성자와 작성일 수정 삭제-->
@@ -55,11 +55,16 @@
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <span class="mr-3" v-on="on" style="cursor: pointer;"
-              ><u>{{ nick_name }}</u></span
+              ><u>{{ board.user.nickname }}</u></span
             >
           </template>
           <v-list>
-            <v-list-item @click="test">
+            <v-list-item
+              @click="
+                clickUser = board.user
+                userInfoDailogFlag = !userInfoDailogFlag
+              "
+            >
               <v-list-item-title
                 ><v-icon color="primary">mdi-account</v-icon
                 ><span>유저정보보기</span></v-list-item-title
@@ -73,8 +78,25 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <span class="mx-2">{{ write_date }}</span>
+        <span class="mx-2"
+          >{{ board.writeDate.substring(0, 10) }}
+          {{ board.writeDate.substring(11, 19) }}</span
+        >
+        <!-- <span class="mx-2"></span> -->
         <v-divider vertical></v-divider>
+        <span>
+        <v-chip
+          v-for="(keyword, index) in board.keyword.split('#').slice(1)"
+          :key="board.board_id + ' ' + index + ' ' + keyword"
+          color="#f076b6"
+          class="mx-1"
+          style="color:white"
+          small
+        >
+          #{{ keyword }}
+        </v-chip>
+        </span>
+
         <!-- <span class="mx-3 d-none d-sm-flex" style="cursor: pointer;" @click="test"
           ><u>수정</u></span
         >
@@ -91,7 +113,7 @@
 
       <!-- content -->
       <v-flex sm8 xs12>
-        {{ context }}
+        {{ board.context }}
       </v-flex>
 
       <!-- map -->
@@ -127,7 +149,9 @@
                 <span>
                   참여인원
                 </span>
-                <span style="font-size: 2rem;">{{ participants }} / {{ limit_num }}</span>
+                <span style="font-size: 2rem;"
+                  >{{ board.participants }} / {{ board.limit_num }}</span
+                >
                 <span>
                   제한인원
                 </span>
@@ -158,7 +182,9 @@
                 <span>
                   참여인원
                 </span>
-                <span style="font-size: 2rem;">{{ participants }} / {{ limit_num }}</span>
+                <span style="font-size: 2rem;"
+                  >{{ participants }} / {{ limit_num }}</span
+                >
                 <span>
                   제한인원
                 </span>
@@ -282,7 +308,7 @@
 
     <UserInfoDailog
       v-if="userInfoDailogFlag"
-      :userId="clickUserId"
+      :user="clickUser"
       v-on:updateUserDialogFlag="updateUserDialogFlag"
     ></UserInfoDailog>
   </v-container>
@@ -290,27 +316,16 @@
 
 <script>
 import UserInfoDailog from '../components/UserInfoDialog'
+import Constant from '../vuex/Constant'
+import { mapState } from 'vuex'
+
 export default {
   name: 'Board',
   components: {
     UserInfoDailog,
   },
   data: () => ({
-    clickUserId: 1,
-    board_id: 55,
-    board_locationx: 37.4954257,
-    board_locationy: 127.039,
-    category: '배달',
-    context:
-      '떡볶이 같이 드실 분 찾아요! 장소는 역삼동이고요. 저희 뭐에서 만들어먹어요!?',
-    write_date: '2020-06-02 16:05:00',
-    limit_num: '5',
-    participants: '2',
-    title: '떡볶이 대환영! 저랑 같이 먹어여',
-    deadline_date: '2020-06-06 20:00:30',
-    user_id: '1',
-    nick_name: 'nickname',
-    tmp_date: '2020-06-02 23:00:00',
+    clickUser: {},
     remainTime: {},
     remainTimeFunction: null,
     map: null,
@@ -371,11 +386,15 @@ export default {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
       this.addMapScript()
     this.remainTimeFunction = setInterval(this.calRemainingTime, 1000)
+    this.$store.dispatch(Constant.SEARCH_BOARD, {
+      id: this.$route.query.id,
+      callback: this.drawMap,
+    })
   },
-  mounted() {
-    this.drawMap()
+  mounted() {},
+  computed: {
+    ...mapState(['board']),
   },
-  computed: {},
   beforeDestroy() {
     clearInterval(this.remainTimeFunction)
   },
@@ -397,8 +416,8 @@ export default {
       console.log('draws')
       var mapContainer = document.getElementById('map') // 지도를 표시할 div
       var position = new kakao.maps.LatLng(
-        this.board_locationx,
-        this.board_locationy
+        this.board.board_locationX,
+        this.board.board_locationY
       )
       var mapOption = {
         center: position, // 지도의 중심좌표
@@ -414,23 +433,10 @@ export default {
     },
     calRemainingTime() {
       let today = new Date()
-      // console.log('calRemainingTime')
-      //현재시간 계산
-      let curDate =
-        today.getFullYear() +
-        '-' +
-        (today.getMonth() + 1) +
-        '-' +
-        today.getDate() +
-        ' ' +
-        today.getHours() +
-        ':' +
-        today.getMinutes() +
-        ':' +
-        today.getSeconds()
+
       //현재시간과 마감날짜 계산
       var diff = Math.floor(
-        (Date.parse(this.deadline_date) - Date.parse(curDate)) / 1000
+        (Date.parse(this.board.deadlineDate) - Date.parse(today)) / 1000
       )
       //마감시간이면 멈춘다.
       if (diff <= 0) {

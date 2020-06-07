@@ -50,9 +50,12 @@ export default {
         console.log(escape(payload.id))
 
         http.get('/board/{id}?id=' + payload.id).then((response) => {
+            // payload.callback()
+
             store.commit(Constant.SET_BOARD, {
                 board: response.data.object
             });
+            payload.callback()
         })
 
     },

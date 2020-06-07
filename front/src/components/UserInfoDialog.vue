@@ -67,24 +67,26 @@
 <script>
 export default {
   name: 'UserInfoDialog',
-  props: ['userId', 'flag'],
+  props: ['user', 'flag'],
   data: () => ({
-    user: {
-      user_id: '1',
-      age: 25,
-      email: 'taeminkim23@gmail.com',
-      gender: '여자',
-      name: '김태민',
-      nickname: '탬탬',
-      phone: '010-1234-1234',
-      reputation: 4.8,
-      role: '유저',
-      user_locationx: '??',
-      user_locationy: '??',
-    },
+    // user: {
+    //   user_id: '1',
+    //   age: 25,
+    //   email: 'taeminkim23@gmail.com',
+    //   gender: '여자',
+    //   name: '김태민',
+    //   nickname: '탬탬',
+    //   phone: '010-1234-1234',
+    //   reputation: 4.8,
+    //   role: '유저',
+    //   user_locationX: '??',
+    //   user_locationY: '??',
+    // },
     tmpFlag: true,
   }),
-  created() {},
+  created() {
+    console.log("created")
+  },
   methods: {
     cancelDialog() {
       this.$emit('updateUserDialogFlag', false)
