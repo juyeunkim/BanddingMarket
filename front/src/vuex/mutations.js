@@ -20,6 +20,13 @@ export default {
         store.state.commentList = payload.commentList
         console.log(store.state.commentList)
     },
+    setDrawer: (state, payload) => {
+        // store.state.searchList = store.state.searchList.concat(payload.searchList);
+        // store.state.commentList = payload.commentList
+        // console.log(store.state.commentList)
+        store.state.drawer = payload
+        console.log(payload)
+    },
 
 
 
