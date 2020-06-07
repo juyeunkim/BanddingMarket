@@ -8,8 +8,9 @@ Vue.use(Vuex);
 const state = {
     test: "test",
     // searchList: false,
-    // searchList: ["aaaa", "bbbbb", "CCCCCCCC", "dddd"],
-    searchList: ["aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", "aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", ],
+    searchList: [],
+    board: {},
+    // searchList: ["aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", "aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", ],
 };
 
 const getters = {
@@ -18,6 +19,9 @@ const getters = {
     },
     searchList: state => {
         return state.searchList
+    },
+    board: state => {
+        return state.board
     }
 };
 
