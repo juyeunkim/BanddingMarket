@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +37,7 @@ public class BoardController {
 	
 	@GetMapping("/board/{id}")
 	@ApiOperation(value = " 게시판 ID | 게시판 조회 | Board ")
-	public Object getBoard(@RequestParam(required = true) final int id) {
+	public Object getBoard(@PathVariable(required = true) final int id) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "게시판 조회"; 
@@ -116,7 +117,7 @@ public class BoardController {
 	
 	@DeleteMapping("/board/{id}")
 	@ApiOperation(value = "params = board_id | 게시판 삭제 | 삭제된 Board")
-	public Object delete(@RequestParam(required = true) final int id) {
+	public Object delete(@PathVariable(required = true) final int id) {
 		final BasicResponse result = new BasicResponse();
     	Board board= service.getBoard(id);
 		result.status = service.delete(id);
@@ -127,8 +128,8 @@ public class BoardController {
 	
 	@GetMapping("/board/{bid}/{uid}")
 	@ApiOperation(value = "params = board_id, user_id  | 참가 신청 | 0 - 참가성공, 1 - 마감, 2 - 중복된유저 신청, 3 - 제한인원 초과 ")
-	public Object apply(@RequestParam(required = true) final int bid,
-				@RequestParam(required = true) final int uid) {
+	public Object apply(@PathVariable(required = true) final int bid,
+			@PathVariable(required = true) final int uid) {
 		
 		final BasicResponse result = new BasicResponse();
 		int val = service.apply(bid, uid);
@@ -142,8 +143,8 @@ public class BoardController {
 	
 	@DeleteMapping("/board/{bid}/{uid}")
 	@ApiOperation(value = "params = board_id, user_id  | 참가 취소 | 0 - 취소 성공, 1 - 마감, 2 - 없는 유저 취소, 3 - 호스트가 취소")
-	public Object cancel(@RequestParam(required = true) final int bid,
-				@RequestParam(required = true) final int uid) {
+	public Object cancel(@PathVariable(required = true) final int bid,
+			@PathVariable(required = true) final int uid) {
 		
 		final BasicResponse result = new BasicResponse();
 		int val = service.cancel(bid, uid);
@@ -157,7 +158,7 @@ public class BoardController {
 	
 	@GetMapping("/board/comment/{id}")
 	@ApiOperation(value = " board_id | 댓글 조회 | Board에 달린 댓글들 조회")
-	public Object getComment(@RequestParam(required = true) final int bid) {
+	public Object getComment(@PathVariable(required = true) final int bid) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "댓글 조회"; 
@@ -187,7 +188,7 @@ public class BoardController {
 	
 	@DeleteMapping("/board/comment/{id}")
 	@ApiOperation(value = "comment_id | 댓글 삭제 | 삭제된 Comment")
-	public Object deleteComment(@RequestParam(required = true) final int cid) {
+	public Object deleteComment(@PathVariable(required = true) final int cid) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "댓글 삭제"; 
@@ -216,7 +217,7 @@ public class BoardController {
 //		return new ResponseEntity<>(result, HttpStatus.OK);
 //	}
 	
-	@PostMapping("/board/keyword/{keyword}") 
+	@PostMapping("/board/keyword") 
 	@ApiOperation(value = "검색하려는 키워드를 #로 구분해 입력(최대 3개) #떡볶이#마라탕#치킨 | 하나라도 키워드가 포함되어있으면 그 board 정보를 리턴해줌 | board 객체")
 	public Object getKeywordSearch(@RequestBody(required = true) String keyword) {
 		final BasicResponse result = new BasicResponse();
