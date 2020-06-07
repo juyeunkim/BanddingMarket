@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.groupbuying.dto.ReportCard;
 import com.ssafy.groupbuying.service.ReportService;
 import com.ssafy.groupbuying.vo.Report;
 
@@ -76,9 +77,9 @@ public class ReportController {
 
 	@PostMapping()
 	@ApiOperation(value = "모든 신고 ", notes = "")
-	public ResponseEntity<List<Report>> reportAll() {
+	public ResponseEntity<List<ReportCard>> reportAll() {
 
-		return new ResponseEntity<List<Report>>(reportService.findAll(), HttpStatus.OK);
+		return new ResponseEntity<List<ReportCard>>(reportService.findAll(), HttpStatus.OK);
 
 	}
 

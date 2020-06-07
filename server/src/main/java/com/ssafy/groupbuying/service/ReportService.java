@@ -2,12 +2,13 @@ package com.ssafy.groupbuying.service;
 
 import java.util.List;
 
+import com.ssafy.groupbuying.dto.ReportCard;
 import com.ssafy.groupbuying.vo.Report;
 
 public interface ReportService {
 
 	
-	List<Report> findAll();
+	List<ReportCard> findAll();
 	List<Report> findByWriter(long writer);
 	void denyById(long id);
 	void approveById(long id);
