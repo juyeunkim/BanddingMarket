@@ -69,8 +69,28 @@ export default {
         })
 
     },
+    [Constant.SEARCH_BYDISTANCE]: (store, payload) => {
+        console.log(payload.latitude)
+        console.log(payload.longitude)
+        console.log(payload.distance)
+        console.log(payload.category)
+        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
+        http.post('/map/search/boardInDist', {
+                "category": payload.category,
+                "dist": payload.distance,
+                "latitude": payload.latitude,
+                "longitude": payload.longitude
+            })
+            .then((response) => {
+                store.commit(Constant.SET_SEARCHLIST, {
+                    searchList: response.data.object
+                });
+                payload.callback()
+            })
+            .catch(err => {
+                console.log(err)
+            })
 
-
-
+    },
 };
