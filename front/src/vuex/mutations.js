@@ -15,6 +15,13 @@ export default {
         store.state.board = payload.board
         console.log(store.state.board)
     },
+    [Constant.SET_COMMENTLIST]: (state, payload) => {
+        // store.state.searchList = store.state.searchList.concat(payload.searchList);
+        store.state.commentList = payload.commentList
+        console.log(store.state.commentList)
+    },
+
+
 
 
 };

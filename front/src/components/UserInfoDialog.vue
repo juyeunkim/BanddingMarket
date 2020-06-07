@@ -1,11 +1,12 @@
 <template>
   <v-dialog v-model="tmpFlag" max-width="290" class="noShadow" persistent>
     <v-card>
-      <v-card-title>
+      <v-card-title style="font-size:2rem">
         <span> 회원정보보기 </span>
       </v-card-title>
+      <v-divider></v-divider>
       <v-container>
-        <v-row>
+        <v-row class="outer">
           <v-col cols="5">
             <v-icon v-if="user.gender == '여자'" style="font-size:100px">
               mdi-face-woman-outline
@@ -16,8 +17,15 @@
           </v-col>
           <v-col cols="7">
             <div>
-              <span>{{ user.nickname }} ({{user.age}}살)</span>
+              <span>{{ user.nickname }} ({{ user.age }}살)</span>
             </div>
+          </v-col>
+        </v-row>
+
+        <v-row class="outer">
+          <v-col>
+            <div>평판</div>
+            <v-divider> </v-divider>
             <v-rating
               v-model="user.reputation"
               length="5"
@@ -26,29 +34,11 @@
               half-icon="mdi-heart-half-full"
               half-increments
               readonly
-              size="25"
+              size="45"
               dense
               color="red lighten-3"
               background-color="grey lighten-1"
             ></v-rating>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col>
-            1
-          </v-col>
-          <v-col>
-            2
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col>
-            1
-          </v-col>
-          <v-col>
-            2
           </v-col>
         </v-row>
       </v-container>
@@ -85,7 +75,7 @@ export default {
     tmpFlag: true,
   }),
   created() {
-    console.log("created")
+    console.log('created')
   },
   methods: {
     cancelDialog() {
@@ -94,3 +84,13 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.outer {
+  margin-left: 1px;
+  margin-right: 1px;
+  background: #e7f0ff;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+</style>

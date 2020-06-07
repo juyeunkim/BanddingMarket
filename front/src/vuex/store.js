@@ -18,7 +18,7 @@ const state = {
         deadlineDate: "2020-06-06T12:59:32.798207",
         deleted: "",
         keyword: "",
-        limit_num: 5,
+        limit_num: 0,
         participants: 0,
         title: "",
         user: {
@@ -37,6 +37,8 @@ const state = {
         },
         writeDate: "2020-06-06T12:59:32.798207"
     },
+    commentList: {}
+
     // searchList: ["aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", "aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", ],
 };
 

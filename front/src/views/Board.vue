@@ -183,7 +183,7 @@
                   참여인원
                 </span>
                 <span style="font-size: 2rem;"
-                  >{{ participants }} / {{ limit_num }}</span
+                  >{{ board.participants }} / {{ board.limit_num }}</span
                 >
                 <span>
                   제한인원
@@ -253,13 +253,13 @@
                   class="mr-3"
                   v-on="on"
                   style="cursor: pointer; text-decoration: underline; font-weight: bolder;"
-                  >{{ comment.id }}</span
+                  >{{ comment.user.nickname }}</span
                 >
               </template>
               <v-list>
                 <v-list-item
                   @click="
-                    clickUserId = comment.id
+                    clickUser = comment.user
                     userInfoDailogFlag = !userInfoDailogFlag
                   "
                 >
@@ -281,13 +281,13 @@
           <v-col class="py-1" style="text-align: right;">
             <span
               style="cursor: pointer; text-decoration: underline;"
-              v-on:click="test2(item.id)"
+              v-on:click="test2(comment.comment_id)"
               class="mx-1"
               >수정</span
             >
             <span
               style="cursor: pointer; text-decoration: underline;"
-              @click="test2(item.id)"
+              @click="test2(comment.comment_id)"
               class="mx-1"
               >삭제</span
             >
@@ -329,51 +329,6 @@ export default {
     remainTime: {},
     remainTimeFunction: null,
     map: null,
-    commentList: [
-      {
-        id: 'nickname',
-        context:
-          '떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ 떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ 떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ',
-        board: '?',
-        user: '??',
-      },
-      {
-        id: 'nickname2',
-        context: '떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ',
-        board: '?',
-        user: '??',
-      },
-      {
-        id: 'nickname3',
-        context: '떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ',
-        board: '?',
-        user: '??',
-      },
-      {
-        id: 'nickname4',
-        context: '떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ',
-        board: '?',
-        user: '??',
-      },
-      {
-        id: 'nickname5',
-        context: '떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ',
-        board: '?',
-        user: '??',
-      },
-      {
-        id: 'nickname6',
-        context: '떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ',
-        board: '?',
-        user: '??',
-      },
-      {
-        id: 'nickname7',
-        context: '떡볶이 먹고 싶은데 너무 멀어요!!! 일단 참여해여ㅋ',
-        board: '?',
-        user: '??',
-      },
-    ],
     headers: [
       { text: 'id', value: 'id', width: 10 },
       { text: 'context', value: 'context', width: 5 },
@@ -386,14 +341,21 @@ export default {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
       this.addMapScript()
     this.remainTimeFunction = setInterval(this.calRemainingTime, 1000)
+
+    this.$store.dispatch(Constant.LOAD_COMMENTLIST, {
+      bid: this.$route.query.id
+    })
+    
     this.$store.dispatch(Constant.SEARCH_BOARD, {
       id: this.$route.query.id,
       callback: this.drawMap,
     })
+
+
   },
   mounted() {},
   computed: {
-    ...mapState(['board']),
+    ...mapState(['board','commentList']),
   },
   beforeDestroy() {
     clearInterval(this.remainTimeFunction)
