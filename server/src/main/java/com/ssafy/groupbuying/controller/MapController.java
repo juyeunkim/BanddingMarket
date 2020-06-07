@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.groupbuying.dto.DealInfo;
@@ -36,8 +35,8 @@ public class MapController {
 	private MapService service;
 
 	@GetMapping("/searchAll")
-	@ApiOperation("전체 안전 거래 장소 리스트 조회(지하철, CCTV")
-	public Object getBoards() {
+	@ApiOperation("파라미터 없음 | 전체 안전 거래 장소 리스트 조회(지하철, CCTV) | SafeLocation List 반환")
+	public Object getAllSafeLocations() {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "전체 리스트 조회"; 
@@ -65,20 +64,5 @@ public class MapController {
 		result.data = "사용자 거리 기반 게시글 검색";
 		result.object = service.getBoard(info.getLatitude(), info.getLongitude(), info.getDist(), info.getCategory());
 		return new ResponseEntity<>(result, HttpStatus.OK);
-	}
-	
-	// Exception Handle
-	public ResponseEntity<Map<String, Object>> handleFail(Object data, HttpStatus state) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("state", "fail");
-		resultMap.put("data", data);
-		return new ResponseEntity<Map<String, Object>>(resultMap, state);
-	}
-
-	public ResponseEntity<Map<String, Object>> handleSuccess(Object data) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("state", "ok");
-		resultMap.put("data", data);
-		return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 	}
 }
