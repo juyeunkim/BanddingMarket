@@ -5,33 +5,54 @@
     <v-btn dark icon @click.stop="onClickDrawer">
       <v-icon>mdi-view-list</v-icon>
     </v-btn>
+
+    <v-spacer></v-spacer>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        <v-icon large v-on="on" style="cursor: pointer;">mdi-account</v-icon>
+      </template>
+      <v-list>
+        <v-list-item >
+          <v-list-item-title style="text-align: center">
+            <loginDialog></loginDialog>
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item>
+          <div
+            style="color: #1976d2; text-decoration: underline; font-size:13px"
+          >
+            아이디가 없으세요? 회원가입하러 가기
+          </div>
+        </v-list-item>
+      </v-list>
+    </v-menu>
     
   </v-app-bar>
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState } from 'vuex'
+import loginDialog from './LoginDialog'
 
 export default {
   components: {
+    loginDialog,
   },
-  data: () => ({
-  }),
+  data: () => ({}),
   computed: {
     ...mapState(['drawer']),
   },
-  mounted() {
-    
-  },
-  beforeDestroy() {
-  },
+  mounted() {},
+  beforeDestroy() {},
   methods: {
-    ...mapMutations(["setDrawer"]),
+    ...mapMutations(['setDrawer']),
     onClickDrawer() {
-      this.setDrawer(!this.drawer);
+      this.setDrawer(!this.drawer)
     },
-  }
-};
+    test() {
+      alert('dd')
+    },
+  },
+}
 </script>
-<style scoped>
-</style>
+<style scoped></style>
