@@ -137,7 +137,7 @@
                     :color="positionTypeButtonColor(0)"
                     style="width:100%"
                   >
-                    사용자 위치 사용하기
+                    사용자 위치
                   </v-btn>
                 </v-col>
                 <v-col cols="4">
@@ -146,7 +146,7 @@
                     :color="positionTypeButtonColor(1)"
                     style="width:100%"
                   >
-                    현재 위치 사용하기
+                    현재 위치
                   </v-btn>
                 </v-col>
                 <v-col cols="4">
@@ -155,12 +155,12 @@
                     :color="positionTypeButtonColor(2)"
                     style="width:100%"
                   >
-                    추천 위치 사용하기
+                    추천 위치
                   </v-btn>
                 </v-col>
               </v-row>
               <v-row v-show="positionType != 0">
-                <v-col cols="6">
+                <v-col sm="6" xs="12">
                   <div
                     id="taeminMap"
                     style="height: 300px; width: 100%;"
@@ -168,7 +168,7 @@
                   ></div>
                 </v-col>
                 <!-- 지도 행정명 -->
-                <v-col cols="6" v-if="positionType == 1">
+                <v-col sm="6" xs="12" v-if="positionType == 1">
                   <!-- {{ map != null ? map.getCenter().getLat() : '' }} -->
                   {{ centerMapName }}
                 </v-col>

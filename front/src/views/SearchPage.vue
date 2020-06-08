@@ -1,7 +1,7 @@
 <template>
   <v-container class="fullpage-container">
     <v-layout>
-      <v-flex sm11 xs11 class="my-3">
+      <v-flex sm10 xs10 class="my-3 mr-1">
         <vue-tags-input
           v-model="tag"
           :tags="tags"
@@ -10,7 +10,7 @@
           @before-adding-tag="checkTag"
         />
       </v-flex>
-      <v-flex sm1 xs1 class="my-3">
+      <v-flex sm2 xs2 class="my-4">
         <v-btn @click="searchByKeyword" style="width:100%;height:100%">
           검색
         </v-btn>
@@ -31,7 +31,7 @@
           <v-container
             class="my-3 boardCard"
             v-bind:style="{
-              background: index % 2 == 0 ? '#e4e4e4' : '#f7f7f7',
+              background: index % 2 == 0 ? '#e7e7e7' : '#f7f7f7',
               'box-shadow':hover ? '3px 3px #5a5a5a':'none',
               cursor:'pointer'
             }"
@@ -39,12 +39,13 @@
             
           >
             <v-row>
-              <v-col cols="9" class="pr-0">
-                <v-icon>mdi-map-marker</v-icon>내위치로부터
+              <v-col cols="8" class="pr-0">
+                <v-icon>mdi-map-marker-radius-outline</v-icon>나로부터
                 {{
                   calDistance(board.board_locationX, board.board_locationY)
                 }}
-                / 평점 {{ board.user == undefined ? "" : board.user.reputation }}
+                |
+                <v-icon color="orange">mdi-star</v-icon> {{ board.user == undefined ? "" : board.user.reputation }}점
               </v-col>
               <v-col
                 v-bind:style="{
@@ -54,7 +55,7 @@
                       : '#ff0000',
                 }"
                 style="text-align: right; font-size:15px"
-                cols="3"
+                cols="4"
                 class="pl-0"
               >
                 {{ calDate(board.deadlineDate) }}
@@ -65,9 +66,9 @@
                 <v-chip
                   v-for="(keyword, index) in board.keyword.split('#').slice(1)"
                   :key="board.board_id + ' ' + index + ' ' + keyword"
-                  color="#f076b6"
+                  color="#14d3ff"
                   class="mx-1"
-                  style="color:white"
+                  style="color:white; font-weight: bold; border-radius: 6px !important"
                 >
                   #{{ keyword }}
                 </v-chip>
@@ -201,7 +202,7 @@ export default {
         if (day > 0) {
           return '마감 ' + day + '일전'
         } else if (hours > 0) {
-          return '마감 ' + hours + '시전'
+          return '마감 ' + hours + '시간전'
         } else if (minutes > 0) {
           return '마감 ' + minutes + '분전'
         } else {
