@@ -23,8 +23,6 @@
 import fb from '../firebase/init'
 import moment from "moment";
 
-// import ChatList from '../components/chat/UserList'
-// import Chatting from '../components/chat/Chatting'
 export default {
     // component:{
     //     ChatList,Chatting
