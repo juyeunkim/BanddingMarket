@@ -10,6 +10,7 @@ import Board from './views/Board'
 import BoardWrite from './views/BoardWrite'
 import BoardUpdate from './views/BoardUpdate'
 import Test from './views/Test'
+import Chat from './views/Chat'
 
 
 export default [
@@ -75,5 +76,9 @@ export default [
         name: 'BoardUpdate',
         component: BoardUpdate
     },
-
+    {
+        path: '/chat',
+        name: 'Chat',
+        component: Chat
+    },
 ]

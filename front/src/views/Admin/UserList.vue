@@ -38,7 +38,7 @@
                     <td>평점: {{ user.reputation }}</td>
                   </tr>
                   <tr>
-                    <td>누적 게시글: {{ user.sel }}</td>
+                    <td>누적 게시글: {{ user.boardCnt }}</td>
                   </tr>
                 </tbody>
               </v-flex>
@@ -56,7 +56,6 @@
       <v-tabs background-color="transparent" center-active height="auto">
         <v-autocomplete
           :items="userList"
-          :filter="customFilter"
           color="white"
           item-text="email"
           label="User"
@@ -82,7 +81,6 @@
             <ul>
               <li>닉네임: {{ result.nickname }}</li>
               <li>이름: {{ result.name }}</li>
-              <li>주소: {{ result.addr }}</li>
               <li>평점: {{ result.reputation }}</li>
             </ul>
           </v-tabs>

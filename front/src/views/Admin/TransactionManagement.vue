@@ -2,7 +2,7 @@
   <v-container>
     <!--user search-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-      <v-icon style="color:black">mdi-align-vertical-bottom</v-icon> 거래현황
+      <v-icon style="color: black;">mdi-align-vertical-bottom</v-icon> 거래현황
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
@@ -10,20 +10,22 @@
         지역별 거래현황 입니다.
       </span>
       <v-divider class="mb-5 mt-1"></v-divider>
-      <v-col sm="4" xs="5" style="margin-left:5px;">
+      <v-col sm="4" xs="5" style="margin-left: 5px;">
         <v-select
           :items="dropdown_date"
           menu-props="auto"
           label="기간별로 보기"
           hide-details
+          v-model="mapTermOpt"
+          @change="dateChangeMap()"
         ></v-select>
       </v-col>
-      <div id="map" style="max-width: 100%; height:400px;"></div>
+      <div id="map" style="max-width: 100%; height: 400px;"></div>
     </v-flex>
     <br />
     <!--user search result-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-      <v-icon style="color:black">mdi-information</v-icon> 신고현황
+      <v-icon style="color: black;">mdi-information</v-icon> 신고현황
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
@@ -33,7 +35,7 @@
       <v-divider class="mb-5 mt-1"></v-divider>
 
       <div class="col justify-between row">
-        <v-col sm="3" xs="4" style="margin-left:5px;">
+        <v-col sm="3" xs="4" style="margin-left: 5px;">
           <v-select
             :items="dropdown_date2"
             menu-props="auto"
@@ -43,28 +45,12 @@
             @change="dateChange()"
           ></v-select>
         </v-col>
-        <v-col sm="3" xs="4" style="margin-left:5px;">
-          <v-select
-            :items="dropdown_edit"
-            menu-props="auto"
-            label="카테고리별로 보기"
-            hide-details
-            v-model="categoryopt"
-          ></v-select>
-        </v-col>
+        <v-col sm="3" xs="4" style="margin-left: 5px;"> </v-col>
       </div>
 
-      <div sm="10" xs="10" style="height:400px">
+      <div sm="10" xs="10" style="height: 400px;">
         <template v-if="rendering">
-          <template v-if="propmsg == 'default'">
-            <line-chart :ds="defaultlabels"></line-chart>
-          </template>
-          <template v-if="propmsg == 'month'">
-            <line-chart :ds="monthLabels"></line-chart>
-          </template>
-          <template v-if="propmsg == 'week'">
-            <line-chart :ds="weekLabels"></line-chart>
-          </template>
+          <line-chart :ds="propResult"></line-chart>
         </template>
       </div>
     </v-flex>
@@ -74,6 +60,12 @@
 <script>
 import LineChart from "../../views/Chart/BarChart";
 import axios from "../../vuex/http-common";
+
+import Vue from "vue";
+import moment from "moment";
+import VueMomentJS from "vue-momentjs";
+
+Vue.use(VueMomentJS, moment);
 
 // import * as kakao from require( 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=053dd3145f395e73cbb5211bedf3e97f&libraries=services,clusterer')
 export default {
@@ -85,15 +77,20 @@ export default {
 
   data: () => ({
     termopt: "",
-    categoryopt: "",
+    mapTermOpt: "",
     result: "",
     hasSaved: false,
     isEditing: null,
     model: null,
     search: null,
-    rendering: true,
+    rendering: false,
     map: "",
     propmsg: "default",
+    propdata: "",
+    reportList: [],
+    reportDict: {},
+    reportCnt: [],
+    propResult: { label: "", data: "" },
     defaultlabels: [
       "January",
       "February",
@@ -108,8 +105,8 @@ export default {
       "November",
       "December",
     ],
-    monthLabels: ["1st week", "2nd week", "3rd week", "4th week", "5th week"],
-    weekLabels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    monthLabels: [],
+    weekLabels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     positions: [],
     dropdown_date: [
       { text: "전체보기" },
@@ -118,24 +115,12 @@ export default {
       { text: "주간" },
     ],
     dropdown_date2: [{ text: "연간" }, { text: "월간" }, { text: "주간" }],
-    dropdown_edit: [
-      { text: "전체보기" },
-      { text: "욕설" },
-      { text: "광고" },
-      { text: "미참석" },
-      { text: "기타" },
-    ],
   }),
   created() {
     this.loadData();
   },
   mounted() {
     if (!(window.kakao && window.kakao.maps)) this.addMapScript();
-
-    // this.propmsg=this.defaultlabels;
-    //filterAreaHeight
-    // this.filterAreaHeight = document.getElementById('filterArea').offsetHeight
-    // console.log(this.filterAreaHeight)
   },
 
   methods: {
@@ -146,14 +131,54 @@ export default {
         console.log(response);
         this.positions = response.data.object;
         this.drawMap();
+        this.initGraph();
       });
     },
+    initGraph() {
+      this.propResult = { label: "", data: "" };
+      this.propmsg = "default";
+      this.reportCnt = [];
+      this.reportDict = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+      };
+      axios
+        .get("http://k02a3031.p.ssafy.io:8080/report/findByYear")
+        .then(response => {
+          this.reportList = response.data;
+          for (var report of this.reportList) {
+            var x = this.$moment(report.writeDate).format("MM");
+            x = Number(x);
+            this.reportDict[x] += 1;
+          }
 
+          for (var key in this.reportDict) {
+            this.reportCnt.push(this.reportDict[key]);
+          }
+          console.log("dict: " + this.reportCnt);
+          this.propResult["label"] = this.defaultlabels;
+          this.propResult["data"] = this.reportCnt;
+
+          // setTimeout(() => {
+          this.rendering = true;
+          // }, 10);
+        });
+    },
     drawMap() {
       var mapContainer = document.getElementById("map"); // 지도를 표시할 div
       var mapOption = {
-        center: new kakao.maps.LatLng(37.5642135, 127.0016985), // 지도의 중심좌표 북위 37.5642135° 동경 127.0016985°
-        level: 9, // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(37.5542135, 127.0016985), // 지도의 중심좌표 북위 37.5642135° 동경 127.0016985°
+        level: 10, // 지도의 확대 레벨
       };
 
       this.map = new kakao.maps.Map(mapContainer, mapOption);
@@ -185,6 +210,37 @@ export default {
       }
       clusterer.addMarkers(markers);
     },
+    dateChangeMap() {
+      if (this.mapTermOpt == "연간") {
+        console.log("map 연간");
+        axios.get("/board/searchByYear").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      } else if (this.mapTermOpt == "월간") {
+        console.log("map 월");
+        axios.get("/board/searchByMonth").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      } else if (this.mapTermOpt == "주간") {
+        console.log("map 주간");
+        axios.get("/board/searchByWeek").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      }else if(this.mapTermOpt=="전체보기"){
+        console.log("map 전체보기");
+        axios.get("/board").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      }
+    },
     addMapScript() {
       const script = document.createElement("script"); /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
@@ -200,6 +256,7 @@ export default {
         textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
       );
     },
+
     dateChange() {
       console.log("check event - dateChange() ");
       console.log(this.termopt);
@@ -207,16 +264,159 @@ export default {
       console.log("check: " + this.rendering);
 
       if (this.termopt == "연간") {
+        this.propResult = { label: "", data: "" };
         this.propmsg = "default";
+        this.reportCnt = [];
+        this.reportDict = {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+          8: 0,
+          9: 0,
+          10: 0,
+          11: 0,
+          12: 0,
+        };
+        axios
+          .get("http://k02a3031.p.ssafy.io:8080/report/findByYear")
+          .then(response => {
+            this.reportList = response.data;
+            for (var report of this.reportList) {
+              var x = this.$moment(report.writeDate).format("MM");
+              x = Number(x);
+              this.reportDict[x] += 1;
+            }
+
+            for (var key in this.reportDict) {
+              this.reportCnt.push(this.reportDict[key]);
+            }
+            this.propResult["label"] = this.defaultlabels;
+            this.propResult["data"] = this.reportCnt;
+
+            // setTimeout(() => {
+            this.rendering = true;
+            // }, 10);
+          });
       } else if (this.termopt == "월간") {
         this.propmsg = "month";
+        this.propResult = { label: "", data: "" };
+        this.monthLabels = [];
+        for (var i = 1; i <= 31; i++) {
+          this.monthLabels.push(i);
+        }
+
+        this.reportCnt = [];
+        this.reportDict = {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+          8: 0,
+          9: 0,
+          10: 0,
+          11: 0,
+          12: 0,
+          13: 0,
+          14: 0,
+          15: 0,
+          16: 0,
+          17: 0,
+          18: 0,
+          19: 0,
+          20: 0,
+          21: 0,
+          22: 0,
+          23: 0,
+          24: 0,
+          25: 0,
+          26: 0,
+          27: 0,
+          28: 0,
+          29: 0,
+          30: 0,
+          31: 0,
+        };
+        axios
+          .get("http://k02a3031.p.ssafy.io:8080/report/findByMonth")
+          .then(response => {
+            // console.log(response);
+            this.reportList = response.data;
+            // console.log(this.reportList);
+            for (var report of this.reportList) {
+              var x = this.$moment(report.writeDate).format("DD");
+              x = Number(x);
+              this.reportDict[x] += 1;
+            }
+
+            console.log("dict: " + this.reportDict);
+            for (var key in this.reportDict) {
+              this.reportCnt.push(this.reportDict[key]);
+            }
+            console.log("dict: " + this.reportCnt);
+            this.propResult["label"] = this.monthLabels;
+            this.propResult["data"] = this.reportCnt;
+            console.log(this.propResult);
+
+            // setTimeout(() => {
+            this.rendering = true;
+            // }, 10);
+          });
       } else if (this.termopt == "주간") {
         this.propmsg = "week";
-      }
+        this.propResult = { label: "", data: "" };
+        this.reportCnt = [];
+        this.reportDict = {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+        };
 
-      setTimeout(() => {
-        this.rendering = true;
-      }, 1);
+        axios
+          .get("http://k02a3031.p.ssafy.io:8080/report/findByWeek")
+          .then(response => {
+            this.reportList = response.data;
+            console.log("주간: " + this.reportList);
+            var j = 0;
+            var defaultDate = 0;
+            for (var report of this.reportList) {
+              j++;
+
+              var x = this.$moment(report.writeDate).format("DD");
+              x = Number(x);
+              console.log(x);
+
+              if (j == 1) {
+                defaultDate = x;
+              }
+
+              this.reportDict[x - defaultDate + 1] += 1;
+            }
+
+            console.log("dict: " + this.reportDict);
+            for (var key in this.reportDict) {
+              this.reportCnt.push(this.reportDict[key]);
+            }
+            console.log("dict: " + this.reportCnt);
+            this.propResult["label"] = this.weekLabels;
+            this.propResult["data"] = this.reportCnt;
+            console.log(this.propResult);
+
+            // setTimeout(() => {
+            this.rendering = true;
+            // }, 10);
+          });
+      }
     },
   },
 };
