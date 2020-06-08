@@ -9,7 +9,7 @@
       <v-flex style="padding-left: 30px;">
         <v-btn icon @click="selectAll()">
           <v-icon style="color:red">mdi-folder-multiple-outline</v-icon>
-          전체보기
+           &nbsp; 전체보기
         </v-btn>
       </v-flex>
       <v-tabs background-color="transparent" center-active height="auto">
@@ -134,7 +134,8 @@
                   }}</v-card-title>
                   <v-card-subtitle>{{ report.context }}</v-card-subtitle>
                   <v-card-subtitle
-                    >신고자: {{ report.writerEmail }} | &nbsp; &nbsp; 피신고자:
+                    >신고자: {{ report.writerEmail }} 
+                    <br/> 피신고자:
                     {{ report.reportedEmail }}</v-card-subtitle
                   >
                   <v-flex style="padding-left: 260px;">
@@ -153,7 +154,8 @@
                   }}</v-card-title>
                   <v-card-subtitle>{{ report.context }}</v-card-subtitle>
                   <v-card-subtitle
-                    >신고자: {{ report.writerEmail }} | &nbsp; &nbsp; 피신고자:
+                    >신고자: {{ report.writerEmail }} <br
+                    > 피신고자:
                     {{ report.reportedEmail }}</v-card-subtitle
                   >
                   <v-flex style="padding-left: 260px;">

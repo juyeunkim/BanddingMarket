@@ -22,10 +22,6 @@
             <v-card-title class="headline">검색 필터</v-card-title>
             <v-divider></v-divider>
 
-            <v-btn @click="deleteMarkers">
-              deleteMarkers
-            </v-btn>
-
             <!--카테고리 category-->
             <v-card-title class="pb-0">
               카테고리
@@ -553,6 +549,7 @@ export default {
       this.$router.push({ path: '/board', query: { id: id } })
     },
     enterBoardCard(index) {
+      console.log(index)
       this.markers[index].setImage(markerClickImage)
     },
     leaveBoardCard(index) {

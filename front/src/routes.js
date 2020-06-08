@@ -8,6 +8,7 @@ import SearchPage from './views/SearchPage'
 import MapSearhPage from './views/MapSearchPage'
 import Board from './views/Board'
 import BoardWrite from './views/BoardWrite'
+import BoardUpdate from './views/BoardUpdate'
 import Test from './views/Test'
 import Chat from './views/Chat'
 
@@ -69,6 +70,11 @@ export default [
         path: '/test',
         name: 'Test',
         component: Test
+    },
+    {
+        path: '/boardupdate',
+        name: 'BoardUpdate',
+        component: BoardUpdate
     },
     {
         path: '/chat',
