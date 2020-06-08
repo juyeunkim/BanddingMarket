@@ -125,10 +125,11 @@ public class UserController {
 	
 	public ResponseEntity<Map<String, Object>> checkToken(HttpServletRequest req) {
 		try {
-			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map = jwtService.get(req.getHeader("jwt-auth-token"));
+			
 			System.out.println(jwtService.get(req.getHeader("jwt-auth-token")));
 
-			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.ACCEPTED);
+			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
