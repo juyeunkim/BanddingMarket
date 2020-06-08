@@ -36,7 +36,6 @@
         </div>
       </v-flex>
 
-
       <!--태그-->
       <v-flex sm12 xs12>
         <h4>
@@ -128,10 +127,10 @@
             <v-col>
               <div style="font-size: 2rem; text-align: center;" class="fw800">
                 참여하기
-                <v-btn class="mx-2 " fab dark large color="pink">
+                <v-btn class="mx-2 " fab dark large color="pink" @click="joinBoard">
                   <v-icon dark>mdi-heart</v-icon>
                 </v-btn>
-                <v-btn class="mx-2" fab dark large color="grey">
+                <v-btn class="mx-2" fab dark large color="grey" @click="outBoard">
                   <v-icon dark>mdi-heart</v-icon>
                 </v-btn>
                 취소하기
@@ -162,10 +161,10 @@
           <v-row>
             <v-col>
               <div style=" text-align: center;" class="fw800">
-                <v-btn class="mx-2 " fab dark large color="pink">
+                <v-btn class="mx-2 " fab dark large color="pink" @click="joinBoard">
                   <v-icon dark>mdi-heart</v-icon>참여
                 </v-btn>
-                <v-btn class="mx-2" fab dark large color="grey">
+                <v-btn class="mx-2" fab dark large color="grey" @click="outBoard">
                   <v-icon dark>mdi-heart</v-icon>취소
                 </v-btn>
               </div>
@@ -297,6 +296,10 @@
       </v-container>
     </v-hover>
 
+    <v-btn @click="userInfoDailogFlag = !userInfoDailogFlag">
+      {{ userInfoDailogFlag }}</v-btn
+    >
+
     <UserInfoDailog
       v-if="userInfoDailogFlag"
       :user="clickUser"
@@ -316,13 +319,8 @@
         <v-divider></v-divider>
         <v-container>
           <v-row>
-            <v-col class="pt-0">
-              <b>신고 분류</b>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" class="py-0">
-              <v-radio-group v-model="category" column hide-details>
+            <v-col cols="12" sm="12" md="12">
+              <v-radio-group v-model="category" column>
                 <v-row>
                   <v-col cols="6" class="py-1">
                     <v-radio label="욕설" value="욕설"></v-radio>
@@ -342,30 +340,17 @@
               </v-radio-group>
             </v-col>
           </v-row>
-          <v-divider></v-divider>
 
-          <v-row>
-            <v-col class="pt-3">
-              <b>내용</b>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" class="py-0">
-              <v-textarea
-                solo
-                label="신고내용을 입력해주세요."
-                no-resize
-                v-model="reportContent"
-              ></v-textarea>
+          <v-row class="outer">
+            <v-col>
+              내용{{category}}
             </v-col>
           </v-row>
         </v-container>
 
+        <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="clickReportButton()" small>
-            신고하기</v-btn
-          >
           <v-btn
             color="blue darken-1"
             text
@@ -406,7 +391,6 @@ export default {
     reportDailogFlag: false,
     reported: { nickname: '', user_id: '' },
     category: '욕설',
-    reportContent: '',
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -663,40 +647,6 @@ export default {
       this.reported = reported
       this.reportDailogFlag = true
     },
-    clickReportButton() {
-      if (
-        this.$cookies.get('token') == null ||
-        this.$cookies.get('user_id') == null
-      ) {
-        alert('로그인부터 해주세요.')
-        return
-      }
-
-      console.log(this.category)
-      console.log(this.reported)
-      console.log(this.reportContent)
-
-      http
-      .post('/report/insert', {
-        category: this.category,
-        context: this.reportContent,
-        reported: {
-          user_id: this.reported.user_id,
-        },
-        writer: {
-          user_id: this.$cookies.get('user_id'),
-        },
-      })
-      .then((res) => {
-        console.log(res)
-        alert("신고가 접수되었습니다.")
-        this.reportDailogFlag = false
-      })
-      .catch((err) => {
-        err
-        alert("서버가 불안정 합니다.")
-      })
-    },
   },
 }
 </script>
@@ -739,10 +689,5 @@ export default {
   width: 100%;
   background: orange;
   color: white;
-}
-
-.v-input--selection-controls {
-  margin-top: 0px;
-  padding-top: 0px;
 }
 </style>
