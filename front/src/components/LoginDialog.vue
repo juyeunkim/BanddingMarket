@@ -73,7 +73,8 @@ export default {
           console.log(response.data)
           this.$cookies.set('token',response.data['jwt-auth-token']);
           this.$cookies.set('userName',response.data.user.name);
-          // window.location.reload()
+          this.$cookies.set('user_id',response.data.user.user_id);  
+          window.location.reload()
         })
         .catch((err) => {
           console.log('err')

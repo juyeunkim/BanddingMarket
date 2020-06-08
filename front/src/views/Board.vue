@@ -85,16 +85,16 @@
         <!-- <span class="mx-2"></span> -->
         <v-divider vertical></v-divider>
         <span>
-        <v-chip
-          v-for="(keyword, index) in board.keyword.split('#').slice(1)"
-          :key="board.board_id + ' ' + index + ' ' + keyword"
-          color="#f076b6"
-          class="mx-1"
-          style="color:white"
-          small
-        >
-          #{{ keyword }}
-        </v-chip>
+          <v-chip
+            v-for="(keyword, index) in board.keyword.split('#').slice(1)"
+            :key="board.board_id + ' ' + index + ' ' + keyword"
+            color="#f076b6"
+            class="mx-1"
+            style="color:white"
+            small
+          >
+            #{{ keyword }}
+          </v-chip>
         </span>
 
         <!-- <span class="mx-3 d-none d-sm-flex" style="cursor: pointer;" @click="test"
@@ -133,10 +133,24 @@
             <v-col>
               <div style="font-size: 2rem; text-align: center;" class="fw800">
                 참여하기
-                <v-btn class="mx-2 " fab dark large color="pink">
+                <v-btn
+                  class="mx-2 "
+                  fab
+                  dark
+                  large
+                  color="pink"
+                  @click="joinBoard"
+                >
                   <v-icon dark>mdi-heart</v-icon>
                 </v-btn>
-                <v-btn class="mx-2" fab dark large color="grey">
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  large
+                  color="grey"
+                  @click="outBoard"
+                >
                   <v-icon dark>mdi-heart</v-icon>
                 </v-btn>
                 취소하기
@@ -281,13 +295,13 @@
           <v-col class="py-1" style="text-align: right;">
             <span
               style="cursor: pointer; text-decoration: underline;"
-              v-on:click="test2(comment.comment_id)"
+              v-on:click="deleteComment(comment.comment_id)"
               class="mx-1"
               >수정</span
             >
             <span
               style="cursor: pointer; text-decoration: underline;"
-              @click="test2(comment.comment_id)"
+              @click="deleteComment(comment.comment_id)"
               class="mx-1"
               >삭제</span
             >
@@ -302,9 +316,16 @@
       </v-container>
     </v-hover>
 
-    <v-btn @click="userInfoDailogFlag = !userInfoDailogFlag">
-      {{ userInfoDailogFlag }}</v-btn
-    >
+    <v-container>
+      <v-row>
+        <v-col cols="12" style="text-align:end">
+          <v-btn @click="deleteBoard()">삭제</v-btn>
+          <v-btn @click="goToSearch">
+            목록으로 가기
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
 
     <UserInfoDailog
       v-if="userInfoDailogFlag"
@@ -318,6 +339,7 @@
 import UserInfoDailog from '../components/UserInfoDialog'
 import Constant from '../vuex/Constant'
 import { mapState } from 'vuex'
+import http from '../vuex/http-common'
 
 export default {
   name: 'Board',
@@ -343,19 +365,19 @@ export default {
     this.remainTimeFunction = setInterval(this.calRemainingTime, 1000)
 
     this.$store.dispatch(Constant.LOAD_COMMENTLIST, {
-      bid: this.$route.query.id
+      bid: this.$route.query.id,
     })
-    
+
     this.$store.dispatch(Constant.SEARCH_BOARD, {
       id: this.$route.query.id,
       callback: this.drawMap,
     })
 
-
+    this.$vuetify.goTo(0)
   },
   mounted() {},
   computed: {
-    ...mapState(['board','commentList']),
+    ...mapState(['board', 'commentList']),
   },
   beforeDestroy() {
     clearInterval(this.remainTimeFunction)
@@ -453,8 +475,133 @@ export default {
       this.userInfoDailogFlag = flag
     },
     writeComment() {
-      alert(this.contents)
+      http
+        .post('/board/comment', {
+          board: {
+            board_id: this.$route.query.id,
+          },
+          context: this.contents,
+          user: {
+            user_id: this.$cookies.get('user_id'),
+          },
+        })
+        .then((res) => {
+          console.log(res)
+          window.location.reload()
+        })
+        .catch((err) => {
+          alert('서버가 불안정합니다.')
+          console.log(err)
+        })
     },
+    joinBoard() {
+      console.log(this.$cookies.get('user_id'))
+      if (
+        this.$cookies.get('token') == '' ||
+        this.$cookies.get('user_id') == ''
+      ) {
+        alert('로그인 후 이용해주세요')
+        return
+      }
+      //  0 - 참가성공, 1 - 마감, 2 - 중복된유저 신청, 3 - 제한인원 초과
+      http
+        .get(
+          '/board/' + this.$route.query.id + '/' + this.$cookies.get('user_id')
+        )
+        .then((res) => {
+          // console.log(res.data.object)
+          var signal = res.data.object
+          if (signal == 0) {
+            alert('참가신청완료')
+            window.location.reload()
+          } else if (signal == 1) {
+            alert('마감된 게시물입니다.')
+          } else if (signal == 2) {
+            alert('이미 신청한 게시물입니다.')
+          } else {
+            alert('제한인원 초과')
+          }
+        })
+        .catch((err) => {
+          alert('서버와의 연결이 불안정합니다.')
+          console.log(err)
+        })
+    },
+    outBoard() {
+      console.log(this.$cookies.get('user_id'))
+      if (
+        this.$cookies.get('token') == '' ||
+        this.$cookies.get('user_id') == ''
+      ) {
+        alert('로그인 후 이용해주세요')
+        return
+      }
+      //  0 - 취소 성공, 1 - 마감, 2 - 없는 유저 취소, 3 - 호스트가 취소
+      http
+        .delete(
+          '/board/' + this.$route.query.id + '/' + this.$cookies.get('user_id')
+        )
+        .then((res) => {
+          // console.log(res.data.object)
+          var signal = res.data.object
+          console.log(signal)
+          if (signal == 0) {
+            alert('참여취소 성공했습니다.')
+            window.location.reload()
+          } else if (signal == 1) {
+            alert('마감된 게시물입니다.')
+          } else if (signal == 2) {
+            alert('신청하지 않은 유저입니다.')
+          } else {
+            alert('호스트는 참가취소가 불가능합니다.')
+          }
+        })
+        .catch((err) => {
+          alert('서버와의 연결이 불안정합니다.')
+          console.log(err)
+        })
+    },
+    deleteComment(cid) {
+      console.log(cid)
+      http
+        .delete('/board/comment/' + cid)
+        .then((res) => {
+          alert('삭제가 완료되었습니다..')
+          window.location.reload()
+          res
+        })
+        .catch((err) => {
+          alert('서버가 불안정합니다.')
+          console.log(err)
+        })
+    },
+    goToSearch() {
+      this.$router.push('/search')
+    },
+    updateBoard() {
+      console.log(this.board)
+      this.$router.push({
+        name: 'BoardUpdate',
+        params: { bid: this.$router.query.id, 
+        title: this.board.title, 
+        category: this.board.category == 1? "음식" : "상품"},
+      })
+    },
+    deleteBoard(){
+      http
+        .delete('/board/'+this.$route.query.id)
+        .then((res) => {
+          alert('삭제가 완료되었습니다..')
+          this.$router.push({path:"/search"})
+          res
+        })
+        .catch((err) => {
+          alert('서버가 불안정합니다.')
+          console.log(err)
+        })
+
+
+    }
   },
 }
 </script>

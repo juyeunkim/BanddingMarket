@@ -5,9 +5,6 @@ export default axios.create({
     headers: {
         "Content-type": "application/json",
         'Access-Control-Allow-Origin': '*',
-        'exposedHeaders': 'jwt-auth-token',
-        'jwt-auth-token': '',
-        'Access-Control-Expose-Headers': 'jwt-auth-token',
 
     }
 });

@@ -346,6 +346,7 @@ export default {
     category: '',
   }),
   created() {
+    console.log(this.$route.params.bid)
     if (this.$cookies.get('token') == '') {
       alert('잘못된 접근입니다.')
       this.$router.go(-1)
@@ -551,39 +552,6 @@ export default {
       })
 
       marker.setImage(markerImage)
-
-      // var remainTime = this.calDate(board.deadlineDate)
-
-      // var iwContent =
-      //   '<div style="width:200px;" @click="this.test">' +
-      //   '<span style="font-size:1.5rem">' +
-      //   board.title +
-      //   '</span>' +
-      //   '<span style="color:yellow">' +
-      //   '★' +
-      //   '</span>' +
-      //   '<span>' +
-      //   board.user.reputation +
-      //   '</span>' +
-      //   '<hr>' +
-      //   '<div style="text-align: right;">' +
-      //   '</div>' +
-      //   '</div>'
-      // // var iwContent =
-      // //   '<v-card> ' +
-      // //   ' <v-icon> ' +
-      // //   'mdi-map-marker' +
-      // //   ' </v-icon> ' +
-      // //   ' </v-card> '
-      // board
-      // var iwRemoveable = true // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-      // // 인포윈도우를 생성합니다
-      // var infowindow = new kakao.maps.InfoWindow({
-      //   content: iwContent,
-      //   removable: iwRemoveable,
-      //   clickable: true
-      // })
 
       // 마커에 mouseover 이벤트를 등록합니다
       kakao.maps.event.addListener(marker, 'mouseover', () => {})

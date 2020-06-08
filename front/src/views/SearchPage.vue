@@ -155,7 +155,7 @@ export default {
         obj.addTag()
       }
     },
-    calDistance(lat, lon) {
+    calDistance(lon, lat) {
       var curLat = this.curPosition[0]
       var curLon = this.curPosition[1]
       if (curLat == 0) {
