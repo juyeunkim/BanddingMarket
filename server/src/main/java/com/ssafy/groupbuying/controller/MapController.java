@@ -64,7 +64,7 @@ public class MapController {
 	}
 	
 	@PostMapping("/search/recoBoardsByDeadline")
-	@ApiOperation("위도, 경도, 거리(m단위), 카테고리(0:택배/1:음식) 순으로 입력 | 사용자 위치 기반으로 주변의 마감이 얼마 남지 않은 게시글 추천 | Board List 반환")
+	@ApiOperation("위도, 경도, 카테고리(0:택배/1:음식) 순으로 입력 | 사용자 위치 기반으로 주변(1km이내)의 마감이 얼마 남지 않은 게시글 추천 | Board List 반환")
 	public Object recoBoardsByDeadline(@RequestBody(required = true) DealInfo info) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
@@ -74,7 +74,7 @@ public class MapController {
 	}
 	
 	@PostMapping("/search/recoBoardsByParticipants")
-	@ApiOperation("위도, 경도, 거리(m단위), 카테고리(0:택배/1:음식) 순으로 입력 | 사용자 위치 기반으로 참가자가 많은 게시글 추천 | Board List 반환")
+	@ApiOperation("위도, 경도, 카테고리(0:택배/1:음식) 순으로 입력 | 사용자 위치 기반으로 주변(1km이내)의 참가자가 많은 게시글 추천 | Board List 반환")
 	public Object recoBoardsByParticipants(@RequestBody(required = true) DealInfo info) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
