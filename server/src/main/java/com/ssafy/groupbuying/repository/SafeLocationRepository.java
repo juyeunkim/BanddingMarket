@@ -18,7 +18,7 @@ public interface SafeLocationRepository extends JpaRepository<SafeLocation, Long
 			+ " WHERE round( 6371 * acos( cos( radians(:latitude) ) * cos( radians( latitude ) )"
 			+ " * cos( radians( longitude ) - radians(:longitude) )"
 			+ " + sin( radians(:latitude) ) * sin( radians( latitude ) ) ) * 1000) < :dist"
-			+ " and (latitude != :latitude and longitude != :longitude)"
+//			+ " and (latitude != :latitude and longitude != :longitude)"
 			+ " group by name)"
 			, nativeQuery = true)
 	List<SafeLocation> getSafeLocations(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("dist") int dist);
