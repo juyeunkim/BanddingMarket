@@ -85,9 +85,15 @@ public class ReportServiceImpl  implements ReportService{
 		Report report = reportRepository.findById(id).get();
 		long reportedId = report.getReported().getUser_id();
 		int reportedCnt = reportRepository.reportedCnt(reportedId);
+		//승인 목록만 카운트 , 
+		
+		// 
 		if(reportedCnt >= 5 ) {
 			User reportedUser = userRepository.findById(reportedId);
+			System.out.println("cnt >=5 ");
+			System.out.println(reportedUser);
 			reportedUser.setRole("bad");
+			System.out.println(reportedUser);
 			userRepository.save(reportedUser);
 		}
 		

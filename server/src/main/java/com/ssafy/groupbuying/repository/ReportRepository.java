@@ -26,6 +26,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 	
 	public List<Report> findByCategory(String category);
 	
-	@Query(value = "select count(*) from report r where r.reported = :reported   ", nativeQuery = true)
+	@Query(value = "select count(*) from report r where r.reported = :reported and status=1 ", nativeQuery = true)
 	public int reportedCnt(@Param("reported") long reported);
 }
