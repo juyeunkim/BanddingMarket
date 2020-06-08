@@ -71,7 +71,7 @@
                 ><span>유저정보보기</span></v-list-item-title
               >
             </v-list-item>
-            <v-list-item @click="test">
+            <v-list-item @click="clickReport(board.user)">
               <v-list-item-title
                 ><v-icon style="color: red;">mdi-alarm-light</v-icon
                 ><span>유저신고하기</span></v-list-item-title
@@ -98,14 +98,6 @@
           #{{ keyword }}
         </v-chip>
         </span>
-
-        <!-- <span class="mx-3 d-none d-sm-flex" style="cursor: pointer;" @click="test"
-          ><u>수정</u></span
-        >
-        <v-divider vertical></v-divider>
-        <span class="mx-3 d-none d-sm-flex" style="cursor: pointer;" @click="test"
-          ><u>삭제</u></span
-        > -->
       </v-flex>
 
       <!-- 선 -->
@@ -270,7 +262,7 @@
                     ><span>유저정보보기</span></v-list-item-title
                   >
                 </v-list-item>
-                <v-list-item @click="test">
+                <v-list-item @click="clickReport(comment.user)">
                   <v-list-item-title
                     ><v-icon style="color: red;">mdi-alarm-light</v-icon
                     ><span>유저신고하기</span></v-list-item-title
@@ -313,6 +305,63 @@
       :user="clickUser"
       v-on:updateUserDialogFlag="updateUserDialogFlag"
     ></UserInfoDailog>
+
+    <v-dialog
+      v-model="reportDailogFlag"
+      max-width="290"
+      class="noShadow"
+      persistent
+    >
+      <v-card>
+        <v-card-title style="font-size:2rem">
+          <span> 회원정보보기 </span>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-container>
+          <v-row>
+            <v-col cols="12" sm="12" md="12">
+              <v-radio-group v-model="category" column>
+                <v-row>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="욕설" value="욕설"></v-radio>
+                  </v-col>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="광고" value="광고"></v-radio>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="미참석" value="미참석"></v-radio>
+                  </v-col>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="기타" value="기타"></v-radio>
+                  </v-col>
+                </v-row>
+              </v-radio-group>
+            </v-col>
+          </v-row>
+
+          <v-row class="outer">
+            <v-col>
+              내용{{category}}
+            </v-col>
+          </v-row>
+        </v-container>
+
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="reportDailogFlag = false"
+            small
+          >
+            취소</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -338,6 +387,9 @@ export default {
     ],
     userInfoDailogFlag: false,
     contents: '',
+    reportDailogFlag: false,
+    reported: { nickname: '', user_id: '' },
+    category: '욕설',
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -455,7 +507,144 @@ export default {
       this.userInfoDailogFlag = flag
     },
     writeComment() {
-      alert(this.contents)
+      http
+        .post('/board/comment', {
+          board: {
+            board_id: this.$route.query.id,
+          },
+          context: this.contents,
+          user: {
+            user_id: this.$cookies.get('user_id'),
+          },
+        })
+        .then((res) => {
+          console.log(res)
+          window.location.reload()
+        })
+        .catch((err) => {
+          alert('서버가 불안정합니다.')
+          console.log(err)
+        })
+    },
+    joinBoard() {
+      console.log(this.$cookies.get('user_id'))
+      if (
+        this.$cookies.get('token') == '' ||
+        this.$cookies.get('user_id') == ''
+      ) {
+        alert('로그인 후 이용해주세요')
+        return
+      }
+      //  0 - 참가성공, 1 - 마감, 2 - 중복된유저 신청, 3 - 제한인원 초과
+      http
+        .get(
+          '/board/' + this.$route.query.id + '/' + this.$cookies.get('user_id')
+        )
+        .then((res) => {
+          // console.log(res.data.object)
+          var signal = res.data.object
+          if (signal == 0) {
+            alert('참가신청완료')
+            window.location.reload()
+          } else if (signal == 1) {
+            alert('마감된 게시물입니다.')
+          } else if (signal == 2) {
+            alert('이미 신청한 게시물입니다.')
+          } else {
+            alert('제한인원 초과')
+          }
+        })
+        .catch((err) => {
+          alert('서버와의 연결이 불안정합니다.')
+          console.log(err)
+        })
+    },
+    outBoard() {
+      console.log(this.$cookies.get('user_id'))
+      if (
+        this.$cookies.get('token') == '' ||
+        this.$cookies.get('user_id') == ''
+      ) {
+        alert('로그인 후 이용해주세요')
+        return
+      }
+      //  0 - 취소 성공, 1 - 마감, 2 - 없는 유저 취소, 3 - 호스트가 취소
+      http
+        .delete(
+          '/board/' + this.$route.query.id + '/' + this.$cookies.get('user_id')
+        )
+        .then((res) => {
+          // console.log(res.data.object)
+          var signal = res.data.object
+          console.log(signal)
+          if (signal == 0) {
+            alert('참여취소 성공했습니다.')
+            window.location.reload()
+          } else if (signal == 1) {
+            alert('마감된 게시물입니다.')
+          } else if (signal == 2) {
+            alert('신청하지 않은 유저입니다.')
+          } else {
+            alert('호스트는 참가취소가 불가능합니다.')
+          }
+        })
+        .catch((err) => {
+          alert('서버와의 연결이 불안정합니다.')
+          console.log(err)
+        })
+    },
+    deleteComment(cid) {
+      console.log(cid)
+      http
+        .delete('/board/comment/' + cid)
+        .then((res) => {
+          alert('삭제가 완료되었습니다..')
+          window.location.reload()
+          res
+        })
+        .catch((err) => {
+          alert('서버가 불안정합니다.')
+          console.log(err)
+        })
+    },
+    goToSearch() {
+      this.$router.push('/search')
+    },
+    updateBoard() {
+      console.log(this.board)
+      this.$router.push({
+        name: 'BoardUpdate',
+        params: {
+          bid: this.$router.query.id,
+          title: this.board.title,
+          category: this.board.category == 1 ? '음식' : '상품',
+        },
+      })
+    },
+    deleteBoard() {
+      http
+        .delete('/board/' + this.$route.query.id)
+        .then((res) => {
+          alert('삭제가 완료되었습니다..')
+          this.$router.push({ path: '/search' })
+          res
+        })
+        .catch((err) => {
+          alert('서버가 불안정합니다.')
+          console.log(err)
+        })
+    },
+    clickReport(reported) {
+      if (
+        this.$cookies.get('token') == null ||
+        this.$cookies.get('user_id') == null
+      ) {
+        alert('로그인부터 해주세요.')
+        return
+      }
+
+      this.reported = reported
+      this.reportDailogFlag = true
     },
   },
 }
