@@ -32,7 +32,7 @@ export default {
     [Constant.SEARCH_BYKEYWORD]: (store, payload) => {
         console.log(escape(payload.keyword))
 
-        http.get('/board/keyword/{keyword}?keyword=' + escape('안녕')).then((response) => {
+        http.post('/board/keyword', payload.keyword).then((response) => {
             store.commit(Constant.SET_SEARCHLIST, {
                 searchList: response.data.object
             });
