@@ -75,7 +75,7 @@ public class ReportController {
 
 	}
 
-	@PostMapping(value = "/report")
+	@GetMapping(value = "/findAll")
 	@ApiOperation(value = "모든 신고 ", notes = "")
 	public ResponseEntity<List<ReportCard>> reportAll() {
 
