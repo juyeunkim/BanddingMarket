@@ -19,6 +19,6 @@ public interface ReportService {
 	List<Report> findByYear();
 	List<Report> findByMonth();
 	List<Report> findByWeek();
-	List<Report> findByCategory(String category);
+	List<ReportCard> findByCategory(String category);
 	
 }
