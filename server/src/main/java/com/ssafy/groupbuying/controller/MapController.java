@@ -47,7 +47,7 @@ public class MapController {
 //		public Object getSafeLocations(@RequestBody(required = true) double latitude, @RequestBody(required = true) double longitude, @RequestBody(required = true) int dist) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
-		result.data = "사용자 위치 기반 게시글 검색"; 
+		result.data = "사용자 위치 기반 안전 거래 장소 리스트 조회"; 
 		result.object = service.getSafeLocations(info.getLatitude(), info.getLongitude(), info.getDist());
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
