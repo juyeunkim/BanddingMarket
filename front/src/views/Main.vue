@@ -21,16 +21,16 @@
                 ><span class="label">SearchMap</span></a
               >
             </li>
-            <li>
+            <!-- <li>
               <a href="#" class="icon solid fa-user-circle"
                 ><span class="label">user-circle</span></a
               >
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <a href="#" class="icon brands fa-github"
                 ><span class="label">Github</span></a
               >
-            </li>
+            </li> -->
             <!-- <li>
               <a href="#" class="icon solid fa-envelope"
                 ><span class="label">Email</span></a
@@ -625,7 +625,7 @@ input, select, textarea {
 		opacity: 0;
 		position: relative;
 		text-align: center;
-		top: -1em;
+		/* top: -1em; */
 		vertical-align: middle;
 		width: 90%;
 	}
@@ -645,7 +645,7 @@ input, select, textarea {
 		}
 
 		#header p {
-			font-size: 1.7em;
+			font-size: 1.8em;
 			font-weight: 300;
 			margin: 1em 0 0.25em 0;
 			opacity: 0.75;

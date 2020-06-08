@@ -215,7 +215,7 @@
       <v-flex sm1 xs12 style="text-align: right;">
         <v-btn
           @click="writeComment"
-          style="height: 100%;width: 100%;background: #82b1ff; color: white;"
+          style="width: 100%;background: #82b1ff; color: white;"
           class="fw700"
           >댓글입력</v-btn
         >
@@ -369,6 +369,7 @@
 import UserInfoDailog from '../components/UserInfoDialog'
 import Constant from '../vuex/Constant'
 import { mapState } from 'vuex'
+import http from '../vuex/http-common'
 
 export default {
   name: 'Board',
