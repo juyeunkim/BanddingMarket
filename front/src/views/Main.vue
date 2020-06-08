@@ -7,8 +7,7 @@
       <header id="header">
         <h1>반띵마켓</h1>
         <p>
-          어쩌구 &nbsp;&bull;&nbsp; 저쩌구 &nbsp;&bull;&nbsp; 어쩌구
-          저쩌구 
+          1인 가구를 위한 &nbsp;&nbsp; <b>위치 기반</b> &nbsp;&nbsp; 공유 서비스
         </p>
         <nav>
           <ul>
@@ -22,16 +21,16 @@
                 ><span class="label">SearchMap</span></a
               >
             </li>
-            <li>
+            <!-- <li>
               <a href="#" class="icon solid fa-user-circle"
                 ><span class="label">user-circle</span></a
               >
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <a href="#" class="icon brands fa-github"
                 ><span class="label">Github</span></a
               >
-            </li>
+            </li> -->
             <!-- <li>
               <a href="#" class="icon solid fa-envelope"
                 ><span class="label">Email</span></a
@@ -74,7 +73,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,900");
+/* @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,900"); */
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Gaegu:wght@300&family=Nanum+Pen+Script&family=Poor+Story&family=Sunflower:wght@300&family=Yeon+Sung&display=swap');
 @import url("../assets/fontawesome-all.min.css");
 
 /*
@@ -302,7 +302,8 @@ input, select, textarea {
 		transform: translate3d(0,0,0);
 	/* Set your background with this */
 
-		background: #348cb2 url("../assets/bg.jpg") bottom left;
+		background: #348cb2 url("../assets/back10.png") left;
+		background-size: 100% !important;
 		background-repeat: repeat-x;
 		height: 100%;
 		left: 0;
@@ -624,22 +625,31 @@ input, select, textarea {
 		opacity: 0;
 		position: relative;
 		text-align: center;
-		top: -1em;
+		/* top: -1em; */
 		vertical-align: middle;
 		width: 90%;
 	}
 
 		#header h1 {
-			font-size: 4.35em;
+			font-size: 4.75em;
 			font-weight: 900;
 			letter-spacing: -0.035em;
 			line-height: 1em;
+			/* font-family: 'Black Han Sans', sans-serif;
+			font-family: 'Do Hyeon', sans-serif;
+			font-family: 'Gaegu', cursive;
+			font-family: 'Nanum Pen Script', cursive; */
+			font-family: 'Poor Story', cursive;
+			/* font-family: 'Sunflower', sans-serif;
+			font-family: 'Yeon Sung', cursive; */
 		}
 
 		#header p {
-			font-size: 1.25em;
-			margin: 0.75em 0 0.25em 0;
+			font-size: 1.8em;
+			font-weight: 300;
+			margin: 1em 0 0.25em 0;
 			opacity: 0.75;
+			font-family: 'Sunflower';
 		}
 
 		#header nav {

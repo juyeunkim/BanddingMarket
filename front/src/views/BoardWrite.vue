@@ -137,7 +137,7 @@
                     :color="positionTypeButtonColor(0)"
                     style="width:100%"
                   >
-                    사용자 위치 사용하기
+                    사용자 위치
                   </v-btn>
                 </v-col>
                 <v-col cols="4">
@@ -146,7 +146,7 @@
                     :color="positionTypeButtonColor(1)"
                     style="width:100%"
                   >
-                    현재 위치 사용하기
+                    현재 위치
                   </v-btn>
                 </v-col>
                 <v-col cols="4">
@@ -155,26 +155,27 @@
                     :color="positionTypeButtonColor(2)"
                     style="width:100%"
                   >
-                    추천 위치 사용하기
+                    추천 위치
                   </v-btn>
                 </v-col>
               </v-row>
               <v-row v-show="positionType != 0">
-                <v-col cols="6">
+                <!-- <v-col xs="12" sm="6"> -->
                   <div
                     id="taeminMap"
                     style="height: 300px; width: 100%;"
                     class="my-2"
                   ></div>
-                </v-col>
+                <!-- </v-col> -->
+              </v-row>
+              <v-row>
                 <!-- 지도 행정명 -->
-                <v-col cols="6" v-if="positionType == 1">
+                <div v-if="positionType == 1">
                   <!-- {{ map != null ? map.getCenter().getLat() : '' }} -->
                   {{ centerMapName }}
-                </v-col>
+                </div>
                 <!-- list -->
-                <v-col
-                  cols="6"
+                <div
                   v-if="positionType == 2 && recommendList.length != 0"
                 >
                   <v-container
@@ -213,16 +214,15 @@
                       </v-list-item>
                     </v-list>
                   </v-container>
-                </v-col>
-                <v-col
-                  cols="6"
+                </div>
+                <div
                   v-if="positionType == 2 && recommendList.length == 0"
                 >
                   추천 장소가 없습니다.
-                </v-col>
+                </div>
               </v-row>
               <v-row v-if="positionType == 2">
-                <v-col>
+                <v-col cols="8">
                   {{
                     '현재위치 : ' +
                       (selectedPosition.type == undefined
