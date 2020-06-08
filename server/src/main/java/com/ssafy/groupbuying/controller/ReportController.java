@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,7 +76,7 @@ public class ReportController {
 
 	}
 
-	@PostMapping()
+	@GetMapping(value = "/findAll")
 	@ApiOperation(value = "모든 신고 ", notes = "")
 	public ResponseEntity<List<ReportCard>> reportAll() {
 
@@ -115,11 +116,11 @@ public class ReportController {
 
 	}
 	
-	@GetMapping(value = "/findByCategory")
+	@GetMapping(value = "/findByCategory/{category}")
 	@ApiOperation(value = "카테고리별 검색 ", notes = "")
-	public ResponseEntity<List<Report>> findByCategory(@RequestParam String category) {
+	public ResponseEntity<List<ReportCard>> findByCategory(@PathVariable String category) {
 		System.out.println("컨트롤러: "+category);
-		return new ResponseEntity<List<Report>>(reportService.findByCategory(category), HttpStatus.OK);
+		return new ResponseEntity<List<ReportCard>>(reportService.findByCategory(category), HttpStatus.OK);
 
 	}
 	

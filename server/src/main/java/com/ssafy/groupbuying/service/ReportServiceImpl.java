@@ -105,11 +105,31 @@ public class ReportServiceImpl  implements ReportService{
 	}
 
 	@Override
-	public List<Report> findByCategory(String category) {
-		// TODO Auto-generated method stub
-		System.out.println("service: "+category);
-
-		return reportRepository.findByCategory(category);
+	public List<ReportCard> findByCategory(String category) {
+		
+		List<Report> reportList =  reportRepository.findByCategory(category);
+		List<ReportCard> reportCardList = new ArrayList<ReportCard>();
+		
+		for(int i=0; i<reportList.size(); i++) {
+			Report report = reportList.get(i);
+			User writerUser = report.getWriter();
+			User reportedUser = report.getReported();
+			
+			ReportCard reportCard = new ReportCard();
+			reportCard.setReportId(report.getReportId());
+			reportCard.setCategory(report.getCategory());
+			reportCard.setContext(report.getContext());
+			reportCard.setStatus(report.getStatus());
+			reportCard.setWriteDate(report.getWriteDate());
+			
+			// 자식
+			reportCard.setWriterEmail(writerUser.getEmail());
+			reportCard.setReportedEmail(reportedUser.getEmail());
+			
+			reportCardList.add(reportCard);
+			
+		}
+		return reportCardList;
 	}
 
 }
