@@ -66,14 +66,15 @@ export default {
       http
         .post('/user/signIn', {
           password: '1234',
-          user_id: 2,
+          email: 'taeminkim23@gmail.com',
         })
         .then((response) => {
-            console.log("333")
-          console.log(response)
+          console.log('333')
+          console.log(response.headers)
+          // console.log(response.headers.get('jwt-auth-token'))
         })
         .catch((err) => {
-            console.log("err")
+          console.log('err')
           console.log(err)
         })
       //   http

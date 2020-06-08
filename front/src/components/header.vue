@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar id="app-toolbar" app flat color="blue lighten-1">
+  <v-app-bar id="app-toolbar" app flat color="blue lighten-1" v-if="$route.name != 'Main'" >
     <!-- <v-btn @click="test2" text>set</v-btn> -->
     <!-- <v-btn @click="test2" text>delete</v-btn> -->
     <v-btn dark icon @click.stop="onClickDrawer">
