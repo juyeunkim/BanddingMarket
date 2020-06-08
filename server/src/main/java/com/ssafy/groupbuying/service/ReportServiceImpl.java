@@ -83,6 +83,14 @@ public class ReportServiceImpl  implements ReportService{
 	public void approveById(long id) {
 		// TODO Auto-generated method stub
 		Report report = reportRepository.findById(id).get();
+		long reportedId = report.getReported().getUser_id();
+		int reportedCnt = reportRepository.reportedCnt(reportedId);
+		if(reportedCnt >= 5 ) {
+			User reportedUser = userRepository.findById(reportedId);
+			reportedUser.setRole("bad");
+			userRepository.save(reportedUser);
+		}
+		
 		report.setStatus(1);
 		reportRepository.save(report);
 	}

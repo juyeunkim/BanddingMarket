@@ -8,6 +8,7 @@ import lombok.Data;
 public class UserAndBoardCount extends User {
 	
 	private int boardCnt;
+	
 
 	
 	

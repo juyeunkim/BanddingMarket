@@ -46,7 +46,7 @@ public class ReportController {
 	@ApiOperation(value = "신고 승인", notes = "param=report_id ")
 	public ResponseEntity<Void> approveReport(@RequestBody Report report) {
 		reportService.approveById(report.getReportId());
-
+		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 
 	}
