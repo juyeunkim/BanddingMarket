@@ -34,4 +34,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Query(value = "select EXISTS(select * from user u where  u.email = :uEmail and u.password = :uPass)", nativeQuery = true)
 	int  checkPass(@Param("uEmail") String uEmail, @Param("uPass") String uPass);
+	
+	 @Query(value="select count(*) from user u,board b where u.user_id=b.writer group by user_id ", nativeQuery = true)
+		int signUp (@Param("uId") long uId);
 }

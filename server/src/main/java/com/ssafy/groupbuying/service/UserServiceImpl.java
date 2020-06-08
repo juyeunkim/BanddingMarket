@@ -1,5 +1,6 @@
 package com.ssafy.groupbuying.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Convert;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.groupbuying.dto.UserAndBoardCount;
 import com.ssafy.groupbuying.repository.BoardRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
 import com.ssafy.groupbuying.vo.Board;
@@ -76,6 +78,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> findTopUser() {
 		// TODO Auto-generated method stub
+		List<User> list = userRepository.findTopUser();;
+		List<UserAndBoardCount> uList = new ArrayList<UserAndBoardCount>() ;
+		
+		
+		
+		
+		for(int i=0; i<list.size(); i++) {
+			//user count repository 
+			
+			//uList 담기
+		}
+		
 		return userRepository.findTopUser();
 	}
 
