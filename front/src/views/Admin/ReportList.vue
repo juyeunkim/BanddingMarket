@@ -25,7 +25,7 @@
     <br />
     <!--user search result-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-      <v-icon style="color:black">mdi-information</v-icon> 검색 결과
+      <v-icon style="color:black">mdi-information</v-icon> 신고 관리
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">

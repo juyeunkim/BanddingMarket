@@ -19,12 +19,12 @@
             >
               <!-- <img src={{ episode.thumbnail }}> 실제할땐 요런식으로  -->
               <v-flex>
-                <v-img
+                <!-- <v-img
                   :src="user.img"
                   :aspect-ratio="1 / 1"
                   style="border-radius:50%;"
                   class="ma-3"
-                ></v-img>
+                ></v-img> -->
                 <tbody sm4 xs4 class="col">
                   <tr>
                     <td colspan="2" style="font-size: 1.3em;">
@@ -38,7 +38,7 @@
                     <td>평점: {{ user.reputation }}</td>
                   </tr>
                   <tr>
-                    <td>누적 게시글: {{ user.boardCnt }}</td>
+                    <td>누적 게시글: {{ user.sel }}</td>
                   </tr>
                 </tbody>
               </v-flex>
@@ -56,6 +56,7 @@
       <v-tabs background-color="transparent" center-active height="auto">
         <v-autocomplete
           :items="userList"
+          :filter="customFilter"
           color="white"
           item-text="email"
           label="User"
