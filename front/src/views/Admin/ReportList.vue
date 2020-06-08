@@ -154,7 +154,8 @@
                   }}</v-card-title>
                   <v-card-subtitle>{{ report.context }}</v-card-subtitle>
                   <v-card-subtitle
-                    >신고자: {{ report.writerEmail }} <br/> 피신고자:
+                    >신고자: {{ report.writerEmail }} <br
+                    > 피신고자:
                     {{ report.reportedEmail }}</v-card-subtitle
                   >
                   <v-flex style="padding-left: 260px;">
