@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@CrossOrigin(origins = { "*" }, maxAge = 6000)
+@CrossOrigin(origins = { "*" }, allowedHeaders = "*", maxAge = 6000)
 @RestController
 @RequestMapping("user")
 public class UserController {
