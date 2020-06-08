@@ -1,5 +1,6 @@
 package com.ssafy.groupbuying.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -229,11 +230,19 @@ public class BoardServiceImpl implements BoardService {
 
 	public List<Board> getKeywordSearch(String keyword) {
 		String[] str = new String[3];
-		String[] temp = keyword.substring(1).split("#");
+		String[] temp = keyword.substring(2, keyword.length() - 1).split("#");
+		System.out.println(keyword);
 		for (int i = 0; i < 3; i++) {
 			if (temp.length > i) str[i] = temp[i];
 			else str[i] = "검색불가";
 		}
+		System.out.println(Arrays.toString(str));
+		List<Board> list = repo.findByKeywordLike(str[0], str[1], str[2]);
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i).getKeyword());
+		}
+		
+		
 		return repo.findByKeywordLike(str[0], str[1], str[2]);
 
 	}

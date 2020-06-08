@@ -12,7 +12,7 @@ import com.ssafy.groupbuying.vo.User;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 	public Board findById(long id);
 	
-	@Query(value = "select * from bandding.board where is_deleted = false", nativeQuery = true)
+	@Query(value = "select * from bandding.board where is_deleted = false order by write_date desc", nativeQuery = true)
 	public List<Board> findbyIsDeleted();
 	
 	@Query(value = "SELECT b.board_id, b.user_id, b.title, b.context, b.board_locationX, b.board_locationY, b.write_date, b.deadline_date, b.limit_num, b.participants, b.is_Deleted, b.category, b.keyword FROM board b"
@@ -56,7 +56,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 //	@Query(value = "SELECT * FROM board b WHERE category like %:category1% or category like %:category2% or category like %:category3%", nativeQuery = true)
 //	public List<Board> findByCategoryLike(@Param("category1") String category1, @Param("category2") String category2, @Param("category3") String category3);
 
-	@Query(value = "SELECT * FROM board b WHERE keyword like %:keyword1% or keyword like %:keyword2% or keyword like %:keyword3%", nativeQuery = true)
+	@Query(value = "SELECT * FROM board b WHERE keyword like %:keyword1% or keyword like %:keyword2% or keyword like %:keyword3% ORDER BY write_date desc", nativeQuery = true)
 	public List<Board> findByKeywordLike(String keyword1, String keyword2, String keyword3);
 	
 	public List<Board> findByUser(User user);
