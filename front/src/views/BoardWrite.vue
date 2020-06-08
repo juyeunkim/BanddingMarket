@@ -613,20 +613,20 @@ export default {
       console.log(this.selectedPosition)
     },
     registerBoard() {
-      // if (this.category == '') {
-      //   alert('카테고리를 설정해주세요.')
-      //   this.$vuetify.goTo(0)
-      //   return
-      // } else if (this.timeCheck == false) {
-      //   alert('만남 시간을 작성해주세요.')
-      //   return
-      // } else if (this.personCheck == false) {
-      //   alert('참여인원수를 작성해주세요.')
-      //   return
-      // } else if (this.positionCheck == false) {
-      //   alert('만남 장소를 작성해주세요.')
-      //   return
-      // }
+      if (this.category == '') {
+        alert('카테고리를 설정해주세요.')
+        this.$vuetify.goTo(0)
+        return
+      } else if (this.timeCheck == false) {
+        alert('만남 시간을 작성해주세요.')
+        return
+      } else if (this.personCheck == false) {
+        alert('참여인원수를 작성해주세요.')
+        return
+      } else if (this.positionCheck == false) {
+        alert('만남 장소를 작성해주세요.')
+        return
+      }
 
       var keyword = ''
       for (let index = 0; index < this.tags.length; index++) {
