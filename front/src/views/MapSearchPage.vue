@@ -22,10 +22,6 @@
             <v-card-title class="headline">검색 필터</v-card-title>
             <v-divider></v-divider>
 
-            <v-btn @click="deleteMarkers">
-              deleteMarkers
-            </v-btn>
-
             <!--카테고리 category-->
             <v-card-title class="pb-0">
               카테고리
