@@ -31,7 +31,16 @@ public class MapServiceImpl implements MapService {
 	}
 	
 	@Override
-	public List<Board> getBoard(double latitude, double longitude, int dist, int category) {
+	public List<Board> boardInDist(double latitude, double longitude, int dist, int category) {
 		return boRepo.getBoardInDist(latitude, longitude, dist, category);
+	}
+
+	@Override
+	public List<Board> recoBoardsByDeadline(double latitude, double longitude, int dist, int category) {
+		return boRepo.recoBoardsByDeadline(latitude, longitude, category);
+	}
+	@Override
+	public List<Board> recoBoardsByParticipants(double latitude, double longitude, int dist, int category) {
+		return boRepo.recoBoardsByParticipants(latitude, longitude, category);
 	}
 }
