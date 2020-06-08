@@ -18,7 +18,7 @@
         <v-icon large v-on="on" style="cursor: pointer;">mdi-account</v-icon>
       </template>
       <v-list>
-        <v-list-item v-if="$cookies.get('token') != ''">
+        <v-list-item v-if="$cookies.get('token') != null">
           <v-list-item-title style="text-align: center">
             <v-container>
               <v-row class="outer">
@@ -38,17 +38,17 @@
             </v-container>
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="$cookies.get('token') == ''">
+        <v-list-item v-if="$cookies.get('token') == null">
           <v-list-item-title style="text-align: center">
             <loginDialog></loginDialog>
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="$cookies.get('token') == ''">
+        <v-list-item v-if="$cookies.get('token') == null">
           <v-list-item-title style="text-align: center">
             <joinDialog></joinDialog>
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="$cookies.get('token') != ''">
+        <v-list-item v-if="$cookies.get('token') != null">
           <v-list-item-title style="text-align: center">
             <v-btn @click="goToBoardWrite"><v-icon>mdi-pencil</v-icon>글쓰러가기</v-btn>
           </v-list-item-title>
@@ -72,7 +72,10 @@ export default {
   computed: {
     ...mapState(['drawer']),
   },
-  mounted() {},
+  mounted() {
+    console.log(this.$cookies.get('token'))
+    
+  },
   beforeDestroy() {},
   methods: {
     ...mapMutations(['setDrawer']),

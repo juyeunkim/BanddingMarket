@@ -70,7 +70,7 @@
                 ><span>유저정보보기</span></v-list-item-title
               >
             </v-list-item>
-            <v-list-item @click="test">
+            <v-list-item @click="clickReport(board.user)">
               <v-list-item-title
                 ><v-icon style="color: red;">mdi-alarm-light</v-icon
                 ><span>유저신고하기</span></v-list-item-title
@@ -96,14 +96,6 @@
             #{{ keyword }}
           </v-chip>
         </span>
-
-        <!-- <span class="mx-3 d-none d-sm-flex" style="cursor: pointer;" @click="test"
-          ><u>수정</u></span
-        >
-        <v-divider vertical></v-divider>
-        <span class="mx-3 d-none d-sm-flex" style="cursor: pointer;" @click="test"
-          ><u>삭제</u></span
-        > -->
       </v-flex>
 
       <!-- 선 -->
@@ -282,7 +274,7 @@
                     ><span>유저정보보기</span></v-list-item-title
                   >
                 </v-list-item>
-                <v-list-item @click="test">
+                <v-list-item @click="clickReport(comment.user)">
                   <v-list-item-title
                     ><v-icon style="color: red;">mdi-alarm-light</v-icon
                     ><span>유저신고하기</span></v-list-item-title
@@ -332,6 +324,63 @@
       :user="clickUser"
       v-on:updateUserDialogFlag="updateUserDialogFlag"
     ></UserInfoDailog>
+
+    <v-dialog
+      v-model="reportDailogFlag"
+      max-width="290"
+      class="noShadow"
+      persistent
+    >
+      <v-card>
+        <v-card-title style="font-size:2rem">
+          <span> 회원정보보기 </span>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-container>
+          <v-row>
+            <v-col cols="12" sm="12" md="12">
+              <v-radio-group v-model="category" column>
+                <v-row>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="욕설" value="욕설"></v-radio>
+                  </v-col>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="광고" value="광고"></v-radio>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="미참석" value="미참석"></v-radio>
+                  </v-col>
+                  <v-col cols="6" class="py-1">
+                    <v-radio label="기타" value="기타"></v-radio>
+                  </v-col>
+                </v-row>
+              </v-radio-group>
+            </v-col>
+          </v-row>
+
+          <v-row class="outer">
+            <v-col>
+              내용{{category}}
+            </v-col>
+          </v-row>
+        </v-container>
+
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="reportDailogFlag = false"
+            small
+          >
+            취소</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -358,6 +407,9 @@ export default {
     ],
     userInfoDailogFlag: false,
     contents: '',
+    reportDailogFlag: false,
+    reported: { nickname: '', user_id: '' },
+    category: '욕설',
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -582,26 +634,38 @@ export default {
       console.log(this.board)
       this.$router.push({
         name: 'BoardUpdate',
-        params: { bid: this.$router.query.id, 
-        title: this.board.title, 
-        category: this.board.category == 1? "음식" : "상품"},
+        params: {
+          bid: this.$router.query.id,
+          title: this.board.title,
+          category: this.board.category == 1 ? '음식' : '상품',
+        },
       })
     },
-    deleteBoard(){
+    deleteBoard() {
       http
-        .delete('/board/'+this.$route.query.id)
+        .delete('/board/' + this.$route.query.id)
         .then((res) => {
           alert('삭제가 완료되었습니다..')
-          this.$router.push({path:"/search"})
+          this.$router.push({ path: '/search' })
           res
         })
         .catch((err) => {
           alert('서버가 불안정합니다.')
           console.log(err)
         })
+    },
+    clickReport(reported) {
+      if (
+        this.$cookies.get('token') == null ||
+        this.$cookies.get('user_id') == null
+      ) {
+        alert('로그인부터 해주세요.')
+        return
+      }
 
-
-    }
+      this.reported = reported
+      this.reportDailogFlag = true
+    },
   },
 }
 </script>
