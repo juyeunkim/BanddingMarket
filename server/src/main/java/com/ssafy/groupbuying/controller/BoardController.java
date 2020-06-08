@@ -37,7 +37,7 @@ public class BoardController {
 	
 	@GetMapping("/board/{id}")
 	@ApiOperation(value = " 게시판 ID | 게시판 조회 | Board ")
-	public Object getBoard(@PathVariable(required = true) final int id) {
+	public Object getBoard(@PathVariable(required = true) final long id) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "게시판 조회"; 
@@ -117,7 +117,7 @@ public class BoardController {
 	
 	@DeleteMapping("/board/{id}")
 	@ApiOperation(value = "params = board_id | 게시판 삭제 | 삭제된 Board")
-	public Object delete(@PathVariable(required = true) final int id) {
+	public Object delete(@PathVariable(required = true) final long id) {
 		final BasicResponse result = new BasicResponse();
     	Board board= service.getBoard(id);
 		result.status = service.delete(id);
@@ -128,8 +128,8 @@ public class BoardController {
 	
 	@GetMapping("/board/{bid}/{uid}")
 	@ApiOperation(value = "params = board_id, user_id  | 참가 신청 | 0 - 참가성공, 1 - 마감, 2 - 중복된유저 신청, 3 - 제한인원 초과 ")
-	public Object apply(@PathVariable(required = true) final int bid,
-			@PathVariable(required = true) final int uid) {
+	public Object apply(@PathVariable(required = true) final long bid,
+			@PathVariable(required = true) final long uid) {
 		
 		final BasicResponse result = new BasicResponse();
 		int val = service.apply(bid, uid);
@@ -143,8 +143,8 @@ public class BoardController {
 	
 	@DeleteMapping("/board/{bid}/{uid}")
 	@ApiOperation(value = "params = board_id, user_id  | 참가 취소 | 0 - 취소 성공, 1 - 마감, 2 - 없는 유저 취소, 3 - 호스트가 취소")
-	public Object cancel(@PathVariable(required = true) final int bid,
-			@PathVariable(required = true) final int uid) {
+	public Object cancel(@PathVariable(required = true) final long bid,
+			@PathVariable(required = true) final long uid) {
 		
 		final BasicResponse result = new BasicResponse();
 		int val = service.cancel(bid, uid);
@@ -156,9 +156,9 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@GetMapping("/board/comment/{id}")
+	@GetMapping("/board/comment/{bid}")
 	@ApiOperation(value = " board_id | 댓글 조회 | Board에 달린 댓글들 조회")
-	public Object getComment(@PathVariable(required = true) final int bid) {
+	public Object getComment(@PathVariable(required = true) final long bid) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "댓글 조회"; 
@@ -186,9 +186,9 @@ public class BoardController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/board/comment/{id}")
+	@DeleteMapping("/board/comment/{cid}")
 	@ApiOperation(value = "comment_id | 댓글 삭제 | 삭제된 Comment")
-	public Object deleteComment(@PathVariable(required = true) final int cid) {
+	public Object deleteComment(@PathVariable(required = true) final long cid) {
 		final BasicResponse result = new BasicResponse();
     	result.status = true;
 		result.data = "댓글 삭제"; 
