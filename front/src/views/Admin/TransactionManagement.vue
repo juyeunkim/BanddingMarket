@@ -178,7 +178,7 @@ export default {
       var mapContainer = document.getElementById("map"); // 지도를 표시할 div
       var mapOption = {
         center: new kakao.maps.LatLng(37.5542135, 127.0016985), // 지도의 중심좌표 북위 37.5642135° 동경 127.0016985°
-        level: 9, // 지도의 확대 레벨
+        level: 10, // 지도의 확대 레벨
       };
 
       this.map = new kakao.maps.Map(mapContainer, mapOption);
