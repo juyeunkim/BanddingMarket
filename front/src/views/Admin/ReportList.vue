@@ -8,7 +8,7 @@
     <v-flex sm12 xs12 class="mt-4 outerFlex">
       <v-flex style="padding-left: 30px;">
         <v-btn icon @click="selectAll()">
-          <v-icon style="color:red">mdi-folder-multiple-outline</v-icon>
+          <v-icon style="color:black">mdi-folder-multiple-outline</v-icon>
            &nbsp; 전체보기
         </v-btn>
       </v-flex>
