@@ -33,8 +33,8 @@ public class GroupBuyingApplication implements WebMvcConfigurer {
 
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(jwtInterceptor).addPathPatterns("/**")
-		.excludePathPatterns(EXCLUDE_PATHS);
-				 //.excludePathPatterns(Arrays.asList("/**"));
+		//.excludePathPatterns(EXCLUDE_PATHS);
+				 .excludePathPatterns(Arrays.asList("/**"));
 				//.excludePathPatterns(EXCLUDE_PATHS);
 		// 나중에 토큰 체크할 부분a
 
