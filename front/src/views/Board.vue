@@ -23,7 +23,7 @@
           "
         >
           <v-icon color="white" style="font-size: 2rem;">mdi-timer</v-icon>
-          <span class="mx-1">공구가 마감됬습니다 </span>
+          <span class="mx-1">공구가 마감되었습니다 </span>
         </div>
         <div v-else class="fw700">
           <v-icon color="white" style="font-size: 2rem;">mdi-timer</v-icon>
@@ -37,9 +37,9 @@
 
       <!--태그-->
       <v-flex sm12 xs12>
-        <span>
-          <u>#{{ board.category == 0 ? '배달' : '상품' }}</u>
-        </span>
+        <h3>
+          [{{ board.category == 0 ? '배달 음식' : '공동구매' }} 게시판]
+        </h3>
       </v-flex>
 
       <!--제목-->
@@ -88,9 +88,9 @@
         <v-chip
           v-for="(keyword, index) in board.keyword.split('#').slice(1)"
           :key="board.board_id + ' ' + index + ' ' + keyword"
-          color="#f076b6"
+          color="#14d3ff"
           class="mx-1"
-          style="color:white"
+          style="color:white; font-weight: bold; border-radius: 6px !important"
           small
         >
           #{{ keyword }}

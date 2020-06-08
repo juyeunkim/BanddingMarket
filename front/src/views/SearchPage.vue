@@ -31,7 +31,7 @@
           <v-container
             class="my-3 boardCard"
             v-bind:style="{
-              background: index % 2 == 0 ? '#e4e4e4' : '#f7f7f7',
+              background: index % 2 == 0 ? '#e7e7e7' : '#f7f7f7',
               'box-shadow':hover ? '3px 3px #5a5a5a':'none',
               cursor:'pointer'
             }"
@@ -40,11 +40,12 @@
           >
             <v-row>
               <v-col cols="9" class="pr-0">
-                <v-icon>mdi-map-marker</v-icon>내위치로부터
+                <v-icon>mdi-map-marker-radius-outline</v-icon>내 위치로부터
                 {{
                   calDistance(board.board_locationX, board.board_locationY)
                 }}
-                / 평점 {{ board.user == undefined ? "" : board.user.reputation }}
+                |
+                <v-icon color="orange">mdi-star</v-icon>평점 {{ board.user == undefined ? "" : board.user.reputation }}
               </v-col>
               <v-col
                 v-bind:style="{
@@ -65,9 +66,9 @@
                 <v-chip
                   v-for="(keyword, index) in board.keyword.split('#').slice(1)"
                   :key="board.board_id + ' ' + index + ' ' + keyword"
-                  color="#f076b6"
+                  color="#14d3ff"
                   class="mx-1"
-                  style="color:white"
+                  style="color:white; font-weight: bold; border-radius: 6px !important"
                 >
                   #{{ keyword }}
                 </v-chip>
