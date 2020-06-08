@@ -48,7 +48,7 @@ export default {
     [Constant.SEARCH_BOARD]: (store, payload) => {
         console.log(escape(payload.id))
 
-        http.get('/board/{id}?id=' + payload.id).then((response) => {
+        http.get('/board/' + payload.id).then((response) => {
             // payload.callback()
 
             store.commit(Constant.SET_BOARD, {
@@ -61,7 +61,7 @@ export default {
     [Constant.LOAD_COMMENTLIST]: (store, payload) => {
         console.log(payload.bid)
 
-        http.get('/board/comment/{id}?bid=' + payload.bid).then((response) => {
+        http.get('/board/comment/' + payload.bid).then((response) => {
 
             store.commit(Constant.SET_COMMENTLIST, {
                 commentList: response.data.object
