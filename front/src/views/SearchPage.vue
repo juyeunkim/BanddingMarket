@@ -1,262 +1,213 @@
 <template>
   <v-container class="fullpage-container">
-    <v-layout wrap mt-5 class="mx-3" sm12 justify-center>
-      <!--Search-->
-      <v-flex sm10 xs12>
-        <v-text-field
-          label="검색어를 입력하세요."
-          single-line
-          outlined
-          prepend-inner-icon="mdi-magnify"
-          autofocus
-          @keydown.enter="search"
-          v-model="keyword"
-        ></v-text-field>
+    <v-layout>
+      <v-flex sm11 xs11 class="my-3">
+        <vue-tags-input
+          v-model="tag"
+          :tags="tags"
+          @tags-changed="(newTags) => (tags = newTags)"
+          placeholder="키워드를 입력해주세요"
+          @before-adding-tag="checkTag"
+        />
       </v-flex>
-
-      <!-- 인기 검색어 -->
-      <v-flex sm9 xs12 v-if="!searchList">
-        <v-card color="" class="my-2">
-          <v-card-title> 인기검색어</v-card-title>
-
-          <v-card-text>
-            <v-chip
-              v-for="(word, index) in popularSearchList"
-              :key="'popular' + index"
-              class="mx-1"
-              @click="clickPopularChip(word)"
-            >
-              {{ word }}
-            </v-chip>
-          </v-card-text>
-          <!-- <v-card-subtitle>인기 검색어</v-card-subtitle> -->
-
-          <!-- <v-card-actions></v-card-actions> -->
-        </v-card>
-        <v-divider class="my-2"></v-divider>
-      </v-flex>
-
-      <!-- 음식 베스트 -->
-      <v-flex sm9 xs12 v-if="!searchList">
-        <v-card color="" class="my-2">
-          <v-card-title> 음식 실시간 BEST5</v-card-title>
-
-          <v-card-text>
-            <p v-for="(food, index) in bestFoodList" :key="'bestFood' + index">
-              {{ food[0] }}
-              <v-chip
-                @click="clickPopularChip(food[1])"
-                small
-                class="mx-1"
-                color="#d3f9fa"
-              >
-                <b>#{{ food[1] }}</b>
-              </v-chip>
-            </p>
-          </v-card-text>
-
-          <!-- <v-card-actions></v-card-actions> -->
-        </v-card>
-        <v-divider class="my-2"></v-divider>
+      <v-flex sm1 xs1 class="my-3">
+        <v-btn @click="searchByKeyword" style="width:100%;height:100%">
+          검색
+        </v-btn>
       </v-flex>
     </v-layout>
 
-    <!-- filter button -->
-    <v-layout justify-center>
-      <v-flex sm12 xs12>
-        <v-btn text @click.stop="filterDialog = true"
-          ><v-icon>mdi-filter-variant</v-icon> 검색 필터</v-btn
-        >
-        <v-divider class="mb-3"></v-divider>
-      </v-flex>
+    <v-layout>
+      
     </v-layout>
 
-    <!-- 스크롤 -->
-    <v-layout sm12 xs12 style="position: relative;height:80%;overflow: hidden;">
-      <v-flex>
-        <scroller
-          :on-refresh="refresh"
-          :on-infinite="infinite"
-          refreshText="새로고침"
-          class="page"
-          style="position: absolute"
+    <v-layout>
+      <v-flex sm12 xs12 class="my-3">
+        <v-hover
+          v-slot:default="{ hover }"
+          v-for="(board, index) in searchList"
+          :key="'board' + index"
         >
-          <v-card
-            v-for="(word, index) in searchList"
-            :key="'searchList' + index"
-            class="pa-1 ma-2"
-            :class="{ 'grey-bg': index % 2 == 0 }"
+          <v-container
+            class="my-3 boardCard"
+            v-bind:style="{
+              background: index % 2 == 0 ? '#e4e4e4' : '#f7f7f7',
+              'box-shadow':hover ? '3px 3px #5a5a5a':'none',
+              cursor:'pointer'
+            }"
+            @click="goToBoardDetail(board.board_id)"
+            
           >
-            {{ word }}
-          </v-card>
-        </scroller>
+            <v-row>
+              <v-col cols="9" class="pr-0">
+                <v-icon>mdi-map-marker</v-icon>내위치로부터
+                {{
+                  calDistance(board.board_locationX, board.board_locationY)
+                }}
+                / 평점 {{ board.user == undefined ? "" : board.user.reputation }}
+              </v-col>
+              <v-col
+                v-bind:style="{
+                  color:
+                    calDate(board.deadlineDate) == '마감'
+                      ? '#999999'
+                      : '#ff0000',
+                }"
+                style="text-align: right; font-size:15px"
+                cols="3"
+                class="pl-0"
+              >
+                {{ calDate(board.deadlineDate) }}
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="py-0" >
+                <v-chip
+                  v-for="(keyword, index) in board.keyword.split('#').slice(1)"
+                  :key="board.board_id + ' ' + index + ' ' + keyword"
+                  color="#f076b6"
+                  class="mx-1"
+                  style="color:white"
+                >
+                  #{{ keyword }}
+                </v-chip>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <b style="font-size:1.5rem">{{board.title}}</b>
+              </v-col>
+            </v-row>
+            <v-row> </v-row>
+
+            <!-- <v-card-actions></v-card-actions> -->
+            <!-- <v-divider></v-divider> -->
+          </v-container>
+        </v-hover>
       </v-flex>
     </v-layout>
-
-    <!-- 필터 dialog -->
-    <v-dialog v-model="filterDialog" max-width="290">
-      <v-card>
-        <v-card-title class="headline">검색 필터</v-card-title>
-        <v-divider></v-divider>
-
-        <!--카테고리 category-->
-        <v-card-title style="">
-          카테고리
-        </v-card-title>
-        <v-card-title class="py-0">
-          <v-row justify-center>
-            <v-col cols="6" class="selectButtonArea pa-1">
-              <v-btn
-                style="width: -webkit-fill-available;"
-                @click="categoryButtonClicked('food')"
-                :color="categoryButtonColor('food')"
-                >음식</v-btn
-              >
-            </v-col>
-            <v-col cols="6" class="selectButtonArea pa-1">
-              <v-btn
-                style="width: -webkit-fill-available;"
-                @click="categoryButtonClicked('delivery')"
-                :color="categoryButtonColor('delivery')"
-                >택배</v-btn
-              >
-            </v-col>
-          </v-row>
-        </v-card-title>
-        <v-divider></v-divider>
-
-        <!--거리 distance-->
-        <v-card-title style="">
-          거리
-        </v-card-title>
-        <v-card-title class="py-0">
-          <v-row justify-center>
-            <v-col
-              cols="4"
-              class="selectButtonArea pa-1"
-              v-for="(dis, index) in distances"
-              :key="'distance' + index"
-            >
-              <v-btn
-                style="width: -webkit-fill-available;"
-                @click="distanceButtonClicked(dis)"
-                :color="distanceButtonColor(dis)"
-                >{{ dis }}M</v-btn
-              >
-            </v-col>
-          </v-row>
-        </v-card-title>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn color="primary" text @click="filterDialog = false">
-            닫기
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
 <script>
-import Constant from '../vuex/Constant'
+import VueTagsInput from '@johmun/vue-tags-input'
 import { mapState } from 'vuex'
-
+import Constant from '../vuex/Constant'
 // import axios from 'axios'
 
 export default {
   name: 'SearchPage',
-  components: {},
+  components: {
+    VueTagsInput,
+  },
   data: () => ({
-    keyword: '',
-    popularSearchList: ['떡볶이', '하이'],
-    bestFoodList: [
-      ['어쩌구저쩌꾸', '떡볶이'],
-      ['따뜻한저쩌꾸', '해장국'],
-    ],
-    refreshFlag: false,
-    filterDialog: false,
-    categoryFood: true,
-    categoryDelivery: true,
-    distance: 100,
-    distances: [100, 200, 300],
+    tags: [],
+    tag: '',
+    curPosition: [],
+    curDate: '',
   }),
   created() {
-    //   console.log(this.$store.getters.searchList)
+    this.getCurPosition()
+    this.$store.dispatch(Constant.SET_SEARCHALLLIST)
   },
   methods: {
-    search() {
-      console.log('serach Function')
-      this.$store.dispatch(Constant.SET_SEARCHLIST, {
-        searchList: ['aaa', 'bbbb'],
-      })
+    goToBoardDetail(id){
+      this.$router.push({ path: "/board", query: { id: id } });
     },
-    clickPopularChip(word) {
-      this.keyword = word
-      this.search()
-    },
-    refresh(done) {
-      //   console.log('re')
-      //   axios
-      //     .get(
-      //       'https://raw.githubusercontent.com/joshua1988/doit-vuejs/master/data/demo.json'
-      //     )
-      //     .then((response) => {
-      //       // console.log(response.data)
-      //       // var list = []
-      //       // response.data.forEach(element => list.push(element.store_name))
-      //       this.search()
-      //       console.log(response.data)
-      //       done()
-      //       this.refreshFlag = true
-      //     })
-      done()
-    },
-    infinite(done) {
-      setTimeout(() => {
-        this.$store.dispatch(Constant.SET_SEARCHLIST, {
-          searchList: ['aaa', 'bbbb'],
+    searchByKeyword(){
+      if(this.tags.length == 0){
+        alert("검색어를 입력해주세요")
+      }else{
+        var keyword = ""
+        for (let index = 0; index < this.tags.length; index++) {
+          keyword += "#"+this.tags[index].text;
+          // console.log(this.tags[index].text)
+        }
+        console.log(keyword)
+        this.$store.dispatch(Constant.SEARCH_BYKEYWORD,{
+          keyword: keyword
         })
-        console.log('ddd')
-        done()
-      }, 1000)
-      //   this.search()
-      //   this.search()
+      }
     },
-    test() {
-      this.$store.dispatch(Constant.SET_SEARCHLIST, {
-        searchList: ['aaa', 'bbbb'],
-      })
+    test(){
+      alert("ddd")
     },
-    categoryButtonColor(category) {
-      if (category == 'food' && this.categoryFood) {
-        return 'primary'
-      } else if (category == 'delivery' && this.categoryDelivery) {
-        return 'primary'
+    getCurPosition() {
+      if (navigator.geolocation) {
+        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+        navigator.geolocation.getCurrentPosition((position) => {
+          var lat = position.coords.latitude // 위도
+          var lon = position.coords.longitude // 경도
+          this.curPosition = [lat, lon]
+          console.log(lat + ' ' + lon)
+        })
       } else {
-        return 'white'
+        this.curPosition = [0, 0]
+        console.log(0 + ' ' + 0)
       }
     },
-    categoryButtonClicked(category) {
-      if (category == 'food' && this.categoryFood && !this.categoryDelivery)
-        return
-      if (category == 'delivery' && !this.categoryFood && this.categoryDelivery)
-        return
+    checkTag(obj) {
+      console.log(obj)
+      if (this.tags.length >= 3) {
+        alert('태그는 최대 3개까지 가능합니다.')
+        this.tag = ''
+      } else {
+        obj.addTag()
+      }
+    },
+    calDistance(lat, lon) {
+      var curLat = this.curPosition[0]
+      var curLon = this.curPosition[1]
+      if (curLat == 0) {
+        return '현재위치를 설정해주세요.'
+      }
+      var X =
+        ((Math.cos(curLat) * 6400 * 2 * 3.14) / 360) * Math.abs(curLon - lon)
+      var Y = 111 * Math.abs(curLat - lat)
+      var D = Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2))
 
-      if (category == 'food') {
-        this.categoryFood = !this.categoryFood
-      } else if (category == 'delivery') {
-        this.categoryDelivery = !this.categoryDelivery
+      // console.log(Math.floor(D))
+
+      if (Math.floor(D) == 0) {
+        //m단위일때
+        return D.toFixed(3) * 1000 + 'm'
+      } else {
+        //km 일때
+        return Math.floor(D) + 'km'
       }
     },
-    distanceButtonColor(distance) {
-      // console.log(distance)
-      if (this.distance == distance) return 'primary'
-      else return 'white'
-    },
-    distanceButtonClicked(distance) {
-      this.distance = distance
+    calDate(date) {
+      let today = new Date()
+
+      var diff = Math.floor((Date.parse(date) - Date.parse(today)) / 1000)
+
+      if (diff <= 0) {
+        this.remainTime = {
+          day: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        }
+
+        clearInterval(this.remainTimeFunction)
+        return '마감'
+      } else {
+        var day = Math.floor(diff / (3600 * 24))
+        var hours = Math.floor((diff - day * 3600 * 24) / 3600)
+        var minutes = Math.floor((diff - day * 3600 * 24 - hours * 3600) / 60)
+        var seconds = diff - day * 3600 * 24 - hours * 3600 - minutes * 60
+
+        // console.log(day + ' ' + hours + ' ' + minutes + ' ' + seconds)
+        if (day > 0) {
+          return '마감 ' + day + '일전'
+        } else if (hours > 0) {
+          return '마감 ' + hours + '시전'
+        } else if (minutes > 0) {
+          return '마감 ' + minutes + '분전'
+        } else {
+          return '마감 ' + seconds + '초전'
+        }
+      }
     },
   },
   computed: {
@@ -265,31 +216,30 @@ export default {
 }
 </script>
 
-<style scoped>
-/* .image-container {
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+<style lang="css">
+/* style the background and the text color of the input ... */
+.vue-tags-input {
+  background: #fd9696;
+  max-width: 100%;
+  min-width: 100%;
 }
-.page {
-  display: block;
-  text-align: center;
-  color: #eee;
-} */
-.fullpage-container {
-  /* width: 100%; */
-  /* height: 100%; */
-  position: absolute; 
-  top:0; 
-  bottom:0; 
-  left:0; 
-  right:0;
+.ti-input {
+  height: 55px;
+  font-size: 2rem;
 }
-.grey-bg {
-  background: #eee;
+.vue-tags-input .ti-input {
+  border: 3px solid #ccc;
+  border-radius: 10px;
 }
-.selectButtonArea {
-  text-align: center;
+/* default styles for all the tags */
+.vue-tags-input .ti-tag {
+  position: relative;
+  background: #20cbff;
+  color: #ffffff;
+  border-radius: 10px;
+}
+
+.boardCard {
+  border-radius: 10px;
 }
 </style>

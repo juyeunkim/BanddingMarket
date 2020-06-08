@@ -6,9 +6,11 @@ import routes from './routes'
 import Vuex from 'vuex'
 import store from "./vuex/store";
 import VueScroller from 'vue-scroller'
+import VueCookies from 'vue-cookies'
 
 Vue.config.productionTip = false
 
+Vue.use(VueCookies)
 Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(VueScroller)

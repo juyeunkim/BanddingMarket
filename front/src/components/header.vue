@@ -1,60 +1,68 @@
 <template>
   <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    id="app-toolbar"
+    app
+    flat
+    color="blue lighten-1"
+    v-if="$route.name != 'Main'"
+  >
+    <!-- <v-btn @click="test2" text>set</v-btn> -->
+    <!-- <v-btn @click="test2" text>delete</v-btn> -->
+    <v-btn dark icon @click.stop="onClickDrawer">
+      <v-icon>mdi-view-list</v-icon>
+    </v-btn>
 
-        <!-- <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        /> -->
-      </div>
-
-      <v-spacer></v-spacer>
-      
-      <v-btn
-        :to="{ name: 'Sub'}"
-        text
-      >
-        <span class="mr-2">Subpage로 가기</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-      <v-btn
-        :to="{ name: 'Admin'}"
-        text
-      >
-        <span class="mr-2">Admin 가기</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-
-      <v-btn
-        :to="{ name: 'UserList'}"
-        text
-      >
-        <span class="mr-2">사용자 목록 가기</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <v-spacer></v-spacer>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        <v-icon large v-on="on" style="cursor: pointer;">mdi-account</v-icon>
+      </template>
+      <v-list>
+        <v-list-item v-if="$cookies.get('token') != ''">
+          <v-list-item-title style="text-align: center">
+            로그인됨
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-if="$cookies.get('token') == ''">
+          <v-list-item-title style="text-align: center">
+            <loginDialog></loginDialog>
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-title style="text-align: center">
+            <joinDialog></joinDialog>
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+  </v-app-bar>
 </template>
 
 <script>
-  export default {
-    name: 'Header',
-    data: () => ({
-    }),
-  }
+import { mapMutations, mapState } from 'vuex'
+import loginDialog from './LoginDialog'
+import joinDialog from './JoinDialog'
+
+export default {
+  components: {
+    loginDialog,
+    joinDialog,
+  },
+  data: () => ({}),
+  computed: {
+    ...mapState(['drawer']),
+  },
+  mounted() {},
+  beforeDestroy() {},
+  methods: {
+    ...mapMutations(['setDrawer']),
+    onClickDrawer() {
+      this.setDrawer(!this.drawer)
+    },
+    test() {
+      alert('dd')
+    },
+  },
+}
 </script>
+<style scoped></style>
