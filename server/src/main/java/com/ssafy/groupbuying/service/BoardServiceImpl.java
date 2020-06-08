@@ -230,7 +230,7 @@ public class BoardServiceImpl implements BoardService {
 
 	public List<Board> getKeywordSearch(String keyword) {
 		String[] str = new String[3];
-		String[] temp = keyword.substring(2, keyword.length() - 1).split("#");
+		String[] temp = keyword.substring(1).split("#");
 		System.out.println(keyword);
 		for (int i = 0; i < 3; i++) {
 			if (temp.length > i) str[i] = temp[i];
@@ -242,9 +242,7 @@ public class BoardServiceImpl implements BoardService {
 			System.out.println(list.get(i).getKeyword());
 		}
 		
-		
 		return repo.findByKeywordLike(str[0], str[1], str[2]);
-
 	}
 
 	@Override
