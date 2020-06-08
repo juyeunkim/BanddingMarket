@@ -56,7 +56,6 @@
       <v-tabs background-color="transparent" center-active height="auto">
         <v-autocomplete
           :items="userList"
-          :filter="customFilter"
           color="white"
           item-text="email"
           label="User"

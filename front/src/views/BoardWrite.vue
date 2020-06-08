@@ -127,32 +127,110 @@
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-radio-group v-model="position[0]">
-              <v-radio label="프로필 위치 사용하기" value="none"></v-radio>
-              <v-radio
-                label="사용자 지정 위치 사용하기"
-                value="position"
-                @click="test"
-              ></v-radio>
-              <v-container>
-                <v-row>
-                  <v-col cols="6">
-                    <div
-                      id="taeminMap"
-                      style="height: 300px; width: 100%;"
-                      class="my-2"
-                    ></div>
-                  </v-col>
-                  <v-col cols="6">
-                    <!-- {{ map != null ? map.getCenter().getLat() : '' }} -->
-                    {{ centerMapName }}
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-radio-group>
+            <!-- <v-img src="@/assets/logo.png"></v-img> -->
+            <v-container>
+              <v-row>
+                <v-col cols="4">
+                  <v-btn
+                    @click="clickPositionType(0)"
+                    :color="positionTypeButtonColor(0)"
+                    style="width:100%"
+                  >
+                    사용자 위치 사용하기
+                  </v-btn>
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    @click="clickPositionType(1)"
+                    :color="positionTypeButtonColor(1)"
+                    style="width:100%"
+                  >
+                    현재 위치 사용하기
+                  </v-btn>
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    @click="clickPositionType(2)"
+                    :color="positionTypeButtonColor(2)"
+                    style="width:100%"
+                  >
+                    추천 위치 사용하기
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-row v-show="positionType != 0">
+                <v-col cols="6">
+                  <div
+                    id="taeminMap"
+                    style="height: 300px; width: 100%;"
+                    class="my-2"
+                  ></div>
+                </v-col>
+                <!-- 지도 행정명 -->
+                <v-col cols="6" v-if="positionType == 1">
+                  <!-- {{ map != null ? map.getCenter().getLat() : '' }} -->
+                  {{ centerMapName }}
+                </v-col>
+                <!-- list -->
+                <v-col cols="6" v-if="positionType == 2 && recommendList.length != 0">
+                  <v-container
+                    class="pa-0 mt-3"
+                    v-bind:style="{
+                      overflow: 'auto',
+                      height: '300px',
+                    }"
+                  >
+                    <v-list style="width:100%">
+                      <v-list-item
+                        v-for="(place, index) in recommendList"
+                        :key="index + 'recommand'"
+                        class="pa-0"
+                      >
+                        <v-hover v-slot:default="{ hover }">
+                          <v-container
+                            v-bind:style="{
+                              background:
+                                index % 2 == 0 ? '#e4e4e4' : '#f7f7f7',
+                              'box-shadow': hover ? '3px 3px #5a5a5a' : 'none',
+                              cursor: 'pointer',
+                            }"
+                            @click="selectPlace(place)"
+                            @mouseenter="enterCard(index)"
+                            @mouseleave="leaveCard(index)"
+                          >
+                            <v-row>
+                              {{
+                                place.type == 1 ? 'cctv' : place.name + '역'
+                              }}</v-row
+                            >
+                            <v-row> {{ place.address }}</v-row>
+                          </v-container>
+                        </v-hover>
+                      </v-list-item>
+                    </v-list>
+                  </v-container>
+                </v-col>
+                <v-col cols="6" v-if="positionType == 2 && recommendList.length == 0">
+                  추천 장소가 없습니다.
+                </v-col>
+              </v-row>
+              <v-row v-if="positionType == 2">
+                <v-col>
+                  {{ '현재위치 : '+
+                    (selectedPosition.type == undefined
+                      ? '선택된 위치 없음'
+                      : selectedPosition.type == 1
+                      ? '(cctv)' + selectedPosition.address
+                      : "(" +selectedPosition.name + '역)' + selectedPosition.address
+                    )
+                  }}
+                </v-col>
+              </v-row>
+            </v-container>
           </v-expansion-panel-content>
         </v-expansion-panel>
 
+        <!--모집 인원 -->
         <v-expansion-panel>
           <v-expansion-panel-header
             disable-icon-rotate
@@ -171,9 +249,6 @@
               v-model="person"
               :min="2"
               :max="10"
-              :disabled="disabled"
-              :readonly="readonly"
-              :vertical="vertical"
               thumb-label="always"
               label="모집인원"
             ></v-slider>
@@ -202,11 +277,30 @@
       <!-- 위치고르기 -->
       <v-flex sm12 xs12> </v-flex>
     </v-layout>
+
+    <v-btn @click="loadrecommandList">
+      ??D?SD?Fs?DF?SDf?SDf?
+    </v-btn>
   </v-container>
 </template>
 
 <script>
 import VueTagsInput from '@johmun/vue-tags-input'
+import http from '../vuex/http-common'
+
+var imageSrcStar =
+  'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'
+var imageSrc = 'https://i1.daumcdn.net/dmaps/apis/n_local_blit_04.png'
+var imageSize = new kakao.maps.Size(31, 35)
+var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize)
+var imageSizeStar = new kakao.maps.Size(25, 35)
+var markerClickImage = new kakao.maps.MarkerImage(imageSrcStar, imageSizeStar)
+
+// var markerImage = new kakao.maps.MarkerImage(
+//     '../assets/logo.jpg',
+//     // 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+//     new kakao.maps.Size(31, 35));
+
 export default {
   name: 'BoardWrite',
   components: {
@@ -219,11 +313,8 @@ export default {
     contents: '',
     tag: '',
     tags: [],
-    deadlineTime: null,
-    timeMenu: false,
     time: new Date().getHours() + ':' + new Date().getMinutes(),
     dateMenu: false,
-    deadlineDate: null,
     menu: false,
     menu2: false,
     date: new Date().toISOString().substr(0, 10),
@@ -233,8 +324,13 @@ export default {
     map: null,
     centerMapName: '',
     mapMarker: '',
-    personCheck : false,
-    person : 2,
+    personCheck: false,
+    person: 2,
+    positionType: 1,
+    timer: null,
+    recommendList: [],
+    markers: [],
+    selectedPosition: {},
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -270,7 +366,7 @@ export default {
       console.log(mapContainer)
       var mapOption = {
         center: new kakao.maps.LatLng(33.450701, 127.1), // 지도의 중심좌표
-        level: 4, // 지도의 확대 레벨
+        level: 7, // 지도의 확대 레벨
       }
 
       this.map = new kakao.maps.Map(mapContainer, mapOption) // 지도를 생성합니다
@@ -290,7 +386,7 @@ export default {
           var lon = position.coords.longitude // 경도
 
           var locPosition = new kakao.maps.LatLng(lat, lon) // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-
+          this.selectedPosition = { lat: lat, lon: lon }
           // var message = '<div style="padding:5px;">여기에 계신가요?!</div>' // 인포윈도우에 표시될 내용입니다
           this.map.setCenter(locPosition)
           this.displayCircle(locPosition)
@@ -314,9 +410,20 @@ export default {
         this.mapMarker = new kakao.maps.Marker({
           map: this.map,
           position: latlng,
+          // image :markerImage
         })
 
+        // this.mapMarker.setImage(markerImage)
+
         this.position[1] = [lon, lat]
+
+        if (this.positionType == 2) {
+          // console.log('Ddddddd')
+          clearTimeout(this.timer)
+          this.timer = setTimeout(() => {
+            this.loadrecommandList()
+          }, 300)
+        }
 
         // marker.setMap(this.map)
 
@@ -374,6 +481,119 @@ export default {
         this.drawMap()
       }, 1000)
       // this.drawMap()
+    },
+    clickPositionType(type) {
+      if (this.positionType != type && type == 2) {
+        this.loadrecommandList()
+        console.log('Dd')
+      } else if (this.positionType != type && type == 1) {
+        this.deleteMarker()
+      }
+      this.positionType = type
+    },
+    positionTypeButtonColor(type) {
+      if (this.positionType == type) {
+        return 'blue'
+      }
+    },
+    loadrecommandList() {
+      var lon = this.position[1][0]
+      var lat = this.position[1][1]
+
+      console.log('loadrecommandList')
+
+      http
+        .post('/map/search/safeLocation', {
+          category: 0,
+          dist: 1000,
+          latitude: lat,
+          longitude: lon,
+        })
+        .then((response) => {
+          console.log(response.data.object)
+          this.recommendList = response.data.object
+          this.createmarkers()
+        })
+    },
+    createmarkers() {
+      this.deleteMarker()
+      for (var i = 0, len = this.recommendList.length; i < len; i++) {
+        // 마커를 생성하고 지도위에 표시합니다
+        this.addMarker(this.recommendList[i])
+      }
+    },
+    addMarker(place) {
+      var position = new kakao.maps.LatLng(place.latitude, place.longitude)
+      // 기본 마커이미지, 오버 마커이미지, 클릭 마커이미지를 생성합니다
+
+      // 마커를 생성하고 이미지는 기본 마커 이미지를 사용합니다
+      var marker = new kakao.maps.Marker({
+        map: this.map,
+        position: position,
+        clickable: true,
+      })
+
+      marker.setImage(markerImage)
+
+      // var remainTime = this.calDate(board.deadlineDate)
+
+      // var iwContent =
+      //   '<div style="width:200px;" @click="this.test">' +
+      //   '<span style="font-size:1.5rem">' +
+      //   board.title +
+      //   '</span>' +
+      //   '<span style="color:yellow">' +
+      //   '★' +
+      //   '</span>' +
+      //   '<span>' +
+      //   board.user.reputation +
+      //   '</span>' +
+      //   '<hr>' +
+      //   '<div style="text-align: right;">' +
+      //   '</div>' +
+      //   '</div>'
+      // // var iwContent =
+      // //   '<v-card> ' +
+      // //   ' <v-icon> ' +
+      // //   'mdi-map-marker' +
+      // //   ' </v-icon> ' +
+      // //   ' </v-card> '
+      // board
+      // var iwRemoveable = true // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+      // // 인포윈도우를 생성합니다
+      // var infowindow = new kakao.maps.InfoWindow({
+      //   content: iwContent,
+      //   removable: iwRemoveable,
+      //   clickable: true
+      // })
+
+      // 마커에 mouseover 이벤트를 등록합니다
+      kakao.maps.event.addListener(marker, 'mouseover', () => {})
+
+      // 마커에 mouseout 이벤트를 등록합니다
+      kakao.maps.event.addListener(marker, 'mouseout', () => {})
+
+      // 마커에 클릭이벤트를 등록합니다
+      kakao.maps.event.addListener(marker, 'click', () => {})
+
+      this.markers.push(marker)
+    },
+    deleteMarker() {
+      for (var i = 0; i < this.markers.length; i++) {
+        this.markers[i].setMap(null)
+      }
+      this.markers = []
+    },
+    enterCard(index) {
+      this.markers[index].setImage(markerClickImage)
+    },
+    leaveCard(index) {
+      this.markers[index].setImage(markerImage)
+    },
+    selectPlace(place) {
+      this.selectedPosition = place
+      console.log(this.selectedPosition)
     },
   },
 }

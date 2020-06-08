@@ -6,12 +6,17 @@
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
+      <v-flex style="padding-left: 30px;">
+        <v-btn icon @click="selectAll()">
+          <v-icon style="color:red">mdi-folder-multiple-outline</v-icon>
+          전체보기
+        </v-btn>
+      </v-flex>
       <v-tabs background-color="transparent" center-active height="auto">
         <v-autocomplete
           :items="userList"
-          :filter="customFilter"
           color="white"
-          item-text="nickName"
+          item-text="email"
           label="User"
           :search-input.sync="search"
         ></v-autocomplete>
@@ -25,40 +30,38 @@
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
       <span>
-        <b style="color:orange">{{ result.nickName }}</b
+        <b style="color:orange">{{ userEmail }}</b
         >님의 신고목록입니다.
       </span>
       <v-divider class="mb-5 mt-1"></v-divider>
+
+      <v-flex cols="6">
+        <v-col cols="5" sm="5">
+          <v-select
+            :items="dropdown_edit"
+            menu-props="auto"
+            label="신고 카테고리"
+            hide-details
+            v-model="categoryOpt"
+            @change="categoryChange()"
+          ></v-select>
+        </v-col>
+      </v-flex>
+      <div class="col justify-between row">
+        <v-flex cols="6">
+          <p class="ma-0 font-weight-light Do" style="color:orange">
+            처리할 목록
+          </p>
+        </v-flex>
+        <v-flex cols="6">
+          <p class="ma-0 font-weight-light Do" style="color:orange">
+            완료된 목록
+          </p>
+        </v-flex>
+      </div>
+
       <div class="col justify-between row">
         <!-- 원본 -->
-        <v-flex cols="6">
-          <v-col cols="6" sm="6">
-            <p class="ma-0 font-weight-light Do" style="color:orange">
-              처리할 목록
-            </p>
-
-            <v-select
-              :items="dropdown_edit"
-              menu-props="auto"
-              label="신고 카테고리"
-              hide-details
-            ></v-select>
-          </v-col>
-        </v-flex>
-        <v-flex cols="6">
-          <v-col cols="6" sm="6" style="margin-left:30px;">
-            <p class="ma-0 font-weight-light Do" style="color:#F97F51">
-              처리 완료
-            </p>
-
-            <v-select
-              :items="dropdown_edit"
-              menu-props="auto"
-              label="신고 카테고리"
-              hide-details
-            ></v-select>
-          </v-col>
-        </v-flex>
 
         <v-flex sm6 xs12 style="overflow:auto; height:500px;">
           <v-flex
@@ -66,26 +69,52 @@
             :key="report.id"
             style="margin-top:15px; margin-right:20px;"
           >
-            <div v-if="report.status == 0">
-              <v-card color="#f7f1e3">
-                <v-card-title class="headline">{{
-                  report.category
-                }}</v-card-title>
-                <v-card-subtitle>{{ report.context }}</v-card-subtitle>
-                <v-card-subtitle
-                  >신고자: {{ report.writer }} | &nbsp; &nbsp; 피신고자:
-                  {{ report.reported }}</v-card-subtitle
-                >
-                <v-flex style="padding-left: 240px;">
-                  <v-btn icon @click="checkReport(report)">
-                    <v-icon style="color:green">mdi-check-bold</v-icon>
-                  </v-btn>
+            <div v-if="userEmail == null">
+              <div v-if="report.status == 0">
+                <v-card color="#f7f1e3">
+                  <v-card-title class="headline">{{
+                    report.category
+                  }}</v-card-title>
+                  <v-card-subtitle>{{ report.context }}</v-card-subtitle>
+                  <v-card-subtitle
+                    >신고자: {{ report.writerEmail }} <br />
+                    피신고자: {{ report.reportedEmail }}</v-card-subtitle
+                  >
+                  <v-flex style="padding-left: 240px;">
+                    <v-btn icon @click="checkReport(report)">
+                      <v-icon style="color:green">mdi-check-bold</v-icon>
+                    </v-btn>
 
-                  <v-btn icon @click="deleteReport(report)">
-                    <v-icon style="color:red">mdi-close-circle</v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-card>
+                    <v-btn icon @click="deleteReport(report)">
+                      <v-icon style="color:red">mdi-close-circle</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-card>
+              </div>
+            </div>
+
+            <div v-if="userEmail == report.writerEmail">
+              <div v-if="report.status == 0">
+                <v-card color="#f7f1e3">
+                  <v-card-title class="headline">{{
+                    report.category
+                  }}</v-card-title>
+                  <v-card-subtitle>{{ report.context }}</v-card-subtitle>
+                  <v-card-subtitle
+                    >신고자: {{ report.writerEmail }} <br />
+                    피신고자: {{ report.reportedEmail }}</v-card-subtitle
+                  >
+                  <v-flex style="padding-left: 240px;">
+                    <v-btn icon @click="checkReport(report)">
+                      <v-icon style="color:green">mdi-check-bold</v-icon>
+                    </v-btn>
+
+                    <v-btn icon @click="deleteReport(report)">
+                      <v-icon style="color:red">mdi-close-circle</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-card>
+              </div>
             </div>
           </v-flex>
         </v-flex>
@@ -97,22 +126,43 @@
             :key="report.id"
             style="margin-top:15px; margin-right:20px; margin-left:20px;"
           >
-            <div v-if="report.status == 1">
-              <v-card color="#F8EFBA">
-                <v-card-title class="headline">{{
-                  report.category
-                }}</v-card-title>
-                <v-card-subtitle>{{ report.context }}</v-card-subtitle>
-                <v-card-subtitle
-                  >신고자: {{ report.writer }} | &nbsp; &nbsp; 피신고자:
-                  {{ report.reported }}</v-card-subtitle
-                >
-                <v-flex style="padding-left: 260px;">
-                  <v-btn icon @click="cancelReport(report)">
-                    <v-icon style="color:red">mdi-cancel</v-icon>
-                  </v-btn>
-                </v-flex>
-              </v-card>
+            <div v-if="userEmail == null">
+              <div v-if="report.status == 1">
+                <v-card color="#F8EFBA">
+                  <v-card-title class="headline">{{
+                    report.category
+                  }}</v-card-title>
+                  <v-card-subtitle>{{ report.context }}</v-card-subtitle>
+                  <v-card-subtitle
+                    >신고자: {{ report.writerEmail }} | &nbsp; &nbsp; 피신고자:
+                    {{ report.reportedEmail }}</v-card-subtitle
+                  >
+                  <v-flex style="padding-left: 260px;">
+                    <v-btn icon @click="cancelReport(report)">
+                      <v-icon style="color:red">mdi-cancel</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-card>
+              </div>
+            </div>
+            <div v-if="userEmail == report.writerEmail">
+              <div v-if="report.status == 1">
+                <v-card color="#F8EFBA">
+                  <v-card-title class="headline">{{
+                    report.category
+                  }}</v-card-title>
+                  <v-card-subtitle>{{ report.context }}</v-card-subtitle>
+                  <v-card-subtitle
+                    >신고자: {{ report.writerEmail }} | &nbsp; &nbsp; 피신고자:
+                    {{ report.reportedEmail }}</v-card-subtitle
+                  >
+                  <v-flex style="padding-left: 260px;">
+                    <v-btn icon @click="cancelReport(report)">
+                      <v-icon style="color:red">mdi-cancel</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-card>
+              </div>
             </div>
           </v-flex>
         </v-flex>
@@ -122,6 +172,8 @@
 </template>
 
 <script>
+import axios from "../../vuex/http-common";
+
 // import HelloWorld from '../../components/HelloWorld.vue';
 
 export default {
@@ -137,6 +189,8 @@ export default {
     isEditing: null,
     model: null,
     search: null,
+    categoryOpt: null,
+    userEmail: null,
     dropdown_edit: [
       { text: "전체보기" },
       { text: "욕설" },
@@ -144,149 +198,12 @@ export default {
       { text: "미참석" },
       { text: "기타" },
     ],
-    topUserList: [
-      {
-        nickName: "jason07999",
-        name: "이재혁",
-        addr: "용인시",
-        sel: 1,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82810300-0c49ce00-9ec9-11ea-9b1d-114c80a200d4.jpg",
-      },
-      {
-        nickName: "wjg",
-        name: "김주연",
-        addr: "서울대입구",
-        sel: 2,
-        reputation: 2.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png",
-      },
-      {
-        nickName: "juheeekim",
-        name: "김주희",
-        addr: "사당",
-        sel: 3,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
-    ],
-    userList: [
-      {
-        nickName: "jason07999",
-        name: "이재혁",
-        addr: "용인시",
-        id: 1,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82810300-0c49ce00-9ec9-11ea-9b1d-114c80a200d4.jpg",
-      },
-      {
-        nickName: "wjg",
-        name: "김주연",
-        addr: "서울대입구",
-        id: 2,
-        reputation: 2.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821509-37d7b300-9edf-11ea-95c2-535856a38f6f.png",
-      },
-      {
-        nickName: "juheeekim",
-        name: "김주희",
-        addr: "사당",
-        id: 3,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
-      {
-        nickName: "taemin",
-        name: "김태민",
-        addr: "역삼역",
-        id: 4,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
-      {
-        nickName: "hun0202",
-        name: "이훈",
-        addr: "서울시",
-        id: 5,
-        reputation: 4.5,
-        img:
-          "https://user-images.githubusercontent.com/38865267/82821457-1ecf0200-9edf-11ea-966c-ec42d2771291.png",
-      },
-    ],
-    reportList: [
-      {
-        category: "욕설",
-        context: "갑자기 부모욕하고 나갔어요",
-        id: 8,
-        writer: "jason07999",
-        reported: "wjg",
-        status: 1,
-      },
-      {
-        category: "욕설",
-        context: "X발이라고 욕을..",
-        id: 1,
-        writer: "jason07999",
-        reported: "wjg",
-        status: 0,
-      },
-      {
-        category: "미참석",
-        context: "이 사용자.. 참석하지 않았어요",
-        id: 3,
-        writer: "jason07999",
-        reported: "wjg",
-        status: 0,
-      },
-      {
-        category: "욕설",
-        context: "욕설 신고입니다.",
-        id: 4,
-        writer: "jason07999",
-        reported: "wjg",
-        status: 0,
-      },
-      {
-        category: "광고",
-        context: "자기 가게홍보였네요",
-        id: 5,
-        writer: "jason07999",
-        reported: "wjg",
-        status: 1,
-      },
-      {
-        category: "광고",
-        context: "알고보니 작성자가 음식점 주인입니다.",
-        writer: "jason07999",
-        reported: "wjg",
-        id: 6,
-        status: 1,
-      },
-      {
-        category: "미참석",
-        context: "돈을 입금안하고 도망갔습니다.",
-        writer: "jason07999",
-        reported: "wjg",
-        id: 7,
-        status: 1,
-      },
-      {
-        category: "욕설",
-        context: "갑자기 욕을 하네요",
-        id: 2,
-        writer: "jason07999",
-        reported: "wjg",
-        status: 1,
-      },
-    ],
+    userList: [],
+    reportList: [],
   }),
+  created() {
+    this.loadData();
+  },
   methods: {
     customFilter(item, queryText) {
       const textOne = item.nickName.toLowerCase();
@@ -296,20 +213,103 @@ export default {
         textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
       );
     },
+    loadData() {
+      console.log("Loading....");
+      axios.get("/user/allUser").then(response => {
+        // console.log(response);
+        this.userList = response.data;
+      });
+
+      axios.get("/report/findAll").then(response => {
+        console.log(response);
+        this.reportList = response.data;
+        console.log(this.reportList);
+      });
+    },
+
     checkReport(obj) {
-      console.log("check event");
-      console.log(obj);
-      obj.status = 1;
+      axios
+        .put("/report/approve", { reportId: obj.reportId })
+        .then(response => {
+          console.log(response);
+          if (this.categoryOpt == "전체보기" || this.categoryOpt == null) {
+            axios.get("/report/findAll").then(response => {
+              console.log(response);
+              this.reportList = response.data;
+              console.log(this.reportList);
+            });
+          } else {
+            axios
+              .get("/report/findByCategory/" + this.categoryOpt)
+              .then(response => {
+                console.log(response);
+                this.reportList = response.data;
+                console.log(this.reportList);
+              });
+          }
+        });
     },
     deleteReport(obj) {
-      console.log("delete event");
-      console.log(obj);
-      obj.status = 2;
+      axios.put("/report/deny", { reportId: obj.reportId }).then(response => {
+        console.log(response);
+        if (this.categoryOpt == "전체보기" || this.categoryOpt == null) {
+          axios.get("/report/findAll").then(response => {
+            console.log(response);
+            this.reportList = response.data;
+            console.log(this.reportList);
+          });
+        } else {
+          axios
+            .get("/report/findByCategory/" + this.categoryOpt)
+            .then(response => {
+              console.log(response);
+              this.reportList = response.data;
+              console.log(this.reportList);
+            });
+        }
+      });
     },
     cancelReport(obj) {
-      console.log("cancel event");
-      console.log(obj);
-      obj.status = 0;
+      axios.put("/report/cancle", { reportId: obj.reportId }).then(response => {
+        console.log(response);
+        if (this.categoryOpt == "전체보기" || this.categoryOpt == null) {
+          axios.get("/report/findAll").then(response => {
+            console.log(response);
+            this.reportList = response.data;
+            console.log(this.reportList);
+          });
+        } else {
+          axios
+            .get("/report/findByCategory/" + this.categoryOpt)
+            .then(response => {
+              console.log(response);
+              this.reportList = response.data;
+              console.log(this.reportList);
+            });
+        }
+      });
+    },
+    selectAll() {
+      this.userEmail = null;
+      this.search = null;
+    },
+    categoryChange() {
+      console.log(this.categoryOpt);
+      if (this.categoryOpt == "전체보기") {
+        axios.get("/report/findAll").then(response => {
+          console.log(response);
+          this.reportList = response.data;
+          console.log(this.reportList);
+        });
+      } else {
+        axios
+          .get("/report/findByCategory/" + this.categoryOpt)
+          .then(response => {
+            console.log(response);
+            this.reportList = response.data;
+            console.log(this.reportList);
+          });
+      }
     },
   },
   watch: {
@@ -317,8 +317,8 @@ export default {
       // console.log(this.states)
       for (var user of this.userList) {
         //  console.log(state)
-        if (user.nickName == val) {
-          this.result = user;
+        if (user.email == val) {
+          this.userEmail = user.email;
         }
       }
     },

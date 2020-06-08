@@ -11,10 +11,10 @@
             <v-row>
               <v-col cols="12" class="px-0">
                 <v-text-field
-                  placeholder="ID"
+                  placeholder="email"
                   solo
                   hide-details
-                  v-model="id"
+                  v-model="email"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -50,7 +50,7 @@ import http from '../vuex/http-common'
 export default {
   data: () => ({
     loginDialog: false,
-    id: '',
+    email: '',
     password: '',
   }),
   computed: {},
@@ -65,13 +65,15 @@ export default {
 
       http
         .post('/user/signIn', {
-          password: '1234',
-          email: 'taeminkim23@gmail.com',
+          password: this.password,
+          email: this.email,
         })
         .then((response) => {
-          console.log('333')
-          console.log(response.headers)
-          // console.log(response.headers.get('jwt-auth-token'))
+          // console.log('333')
+          console.log(response.data)
+          this.$cookies.set('token',response.data['jwt-auth-token']);
+          this.$cookies.set('userName',response.data.user.name);
+          // window.location.reload()
         })
         .catch((err) => {
           console.log('err')
