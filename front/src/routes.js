@@ -9,6 +9,7 @@ import MapSearhPage from './views/MapSearchPage'
 import Board from './views/Board'
 import BoardWrite from './views/BoardWrite'
 import Test from './views/Test'
+import Chat from './views/Chat'
 
 
 export default [
@@ -68,5 +69,10 @@ export default [
         path: '/test',
         name: 'Test',
         component: Test
+    },
+    {
+        path: '/chat',
+        name: 'Chat',
+        component: Chat
     },
 ]
