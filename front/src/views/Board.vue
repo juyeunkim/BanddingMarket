@@ -296,10 +296,6 @@
       </v-container>
     </v-hover>
 
-    <v-btn @click="userInfoDailogFlag = !userInfoDailogFlag">
-      {{ userInfoDailogFlag }}</v-btn
-    >
-
     <UserInfoDailog
       v-if="userInfoDailogFlag"
       :user="clickUser"
