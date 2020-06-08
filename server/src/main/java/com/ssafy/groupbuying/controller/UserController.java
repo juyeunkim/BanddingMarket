@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@CrossOrigin(origins = { "*" }, maxAge = 6000)
+@CrossOrigin(origins = { "*" }, allowedHeaders = "*", maxAge = 6000)
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -85,17 +85,20 @@ public class UserController {
 	@ApiOperation(value = "로그인", notes = "param=user_id, password / return user , token ")
 	@ApiResponses({ @ApiResponse(code = 200, message = "로그인 성공"),
 			@ApiResponse(code = 409, message = "아이디 또는 비밀번호가 틀립니다") })
-	public ResponseEntity<User> signIn(@RequestBody User user, HttpServletResponse res) {
+	public ResponseEntity<Map<String, Object>> signIn(@RequestBody User user, HttpServletResponse res) {
 
+		Map<String,Object> map = new HashMap<String, Object>();
 		HttpStatus status = HttpStatus.CONFLICT;
 
 		if (userService.checkPass(user)) {
 			user = userService.findByMail(user.getEmail());
-			res.setHeader("jwt-auth-token", jwtService.create(user));
+			//res.setHeader("jwt-auth-token", jwtService.create(user));
 			status = HttpStatus.OK;
+			map.put("jwt-auth-token", jwtService.create(user));
+			map.put("user", user);
 		}
 
-		return new ResponseEntity<User>(user, status);
+		return new ResponseEntity<Map<String, Object>>(map, status);
 
 	}
 

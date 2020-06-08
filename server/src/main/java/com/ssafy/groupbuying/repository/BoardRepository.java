@@ -18,12 +18,36 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	@Query(value = "SELECT b.board_id, b.user_id, b.title, b.context, b.board_locationX, b.board_locationY, b.write_date, b.deadline_date, b.limit_num, b.participants, b.is_Deleted, b.category, b.keyword FROM board b"
 			+ " JOIN (SELECT board_id, ( 6371 * acos( cos( radians( :latitude) ) * cos( radians( board_locationy ) )"
 			+ " * cos( radians( board_locationx ) - radians(:longitude) )"
-			+ " + sin( radians(:latitude) ) * sin( radians( board_locationy ) ) ) ) AS distance"
+			+ " + sin( radians(:latitude) ) * sin( radians( board_locationy ) ) ) ) * 1000 AS distance"
 			+ " FROM board WHERE category = :category ORDER BY distance LIMIT 0 , 20) d USING (board_id)"
-			+ " WHERE d.distance < (:dist / 1000)"
+			+ " WHERE d.distance < :dist"
 			+ " and b.is_deleted != 1 and now() < b.deadline_date and b.participants < b.limit_num"
 			, nativeQuery = true)
 	public List<Board> getBoardInDist(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("dist") int dist, @Param("category") int category);
+
+	@Query(value = "SELECT b.board_id, b.user_id, b.title, b.context, b.board_locationX, b.board_locationY, b.write_date, b.deadline_date, b.limit_num, b.participants, b.is_Deleted, b.category, b.keyword FROM board b"
+			+ " JOIN (SELECT board_id, ( 6371 * acos( cos( radians( :latitude) ) * cos( radians( board_locationy ) )"
+			+ " * cos( radians( board_locationx ) - radians(:longitude) )"
+			+ " + sin( radians(:latitude) ) * sin( radians( board_locationy ) ) ) ) * 1000 AS distance"
+			+ " FROM board WHERE category = :category ORDER BY distance LIMIT 0 , 20) d USING (board_id)"
+			+ " WHERE d.distance < 1000"
+			+ " and b.is_deleted != 1 and now() < b.deadline_date and b.participants < b.limit_num"
+			+ " order by b.deadline_date, b.participants desc"
+			+ " limit 5"
+			, nativeQuery = true)
+	public List<Board> recoBoardsByDeadline(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("category") int category);
+
+	@Query(value = "SELECT b.board_id, b.user_id, b.title, b.context, b.board_locationX, b.board_locationY, b.write_date, b.deadline_date, b.limit_num, b.participants, b.is_Deleted, b.category, b.keyword FROM board b"
+			+ " JOIN (SELECT board_id, ( 6371 * acos( cos( radians( :latitude) ) * cos( radians( board_locationy ) )"
+			+ " * cos( radians( board_locationx ) - radians(:longitude) )"
+			+ " + sin( radians(:latitude) ) * sin( radians( board_locationy ) ) ) ) * 1000 AS distance"
+			+ " FROM board WHERE category = :category ORDER BY distance LIMIT 0 , 20) d USING (board_id)"
+			+ " WHERE d.distance < 1000"
+			+ " and b.is_deleted != 1 and now() < b.deadline_date and b.participants < b.limit_num"
+			+ " order by b.participants desc, b.deadline_date"
+			+ " limit 5"
+			, nativeQuery = true)
+	public List<Board> recoBoardsByParticipants(@Param("latitude") double latitude, @Param("longitude") double longitude, @Param("category") int category);
 
 	
 //	public List<Board> findByType(int type);
