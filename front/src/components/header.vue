@@ -20,7 +20,22 @@
       <v-list>
         <v-list-item v-if="$cookies.get('token') != ''">
           <v-list-item-title style="text-align: center">
-            로그인됨
+            <v-container>
+              <v-row class="outer">
+                <v-col cols="12" style="align:'right'">
+                  <v-icon style="font-size:100px">
+                    mdi-account
+                  </v-icon>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col ols="12" style="align:'right'">
+                  <div>
+                    <span>{{ $cookies.get('userName') }}님 안녕하세요?</span>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-container>
           </v-list-item-title>
         </v-list-item>
         <v-list-item v-if="$cookies.get('token') == ''">
@@ -28,9 +43,14 @@
             <loginDialog></loginDialog>
           </v-list-item-title>
         </v-list-item>
-        <v-list-item>
+        <v-list-item v-if="$cookies.get('token') == ''">
           <v-list-item-title style="text-align: center">
             <joinDialog></joinDialog>
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-if="$cookies.get('token') != ''">
+          <v-list-item-title style="text-align: center">
+            <v-btn @click="goToBoardWrite"><v-icon>mdi-pencil</v-icon>글쓰러가기</v-btn>
           </v-list-item-title>
         </v-list-item>
       </v-list>
@@ -62,6 +82,9 @@ export default {
     test() {
       alert('dd')
     },
+    goToBoardWrite() {
+      this.$router.push({ path: "/boardwrite" });
+    }
   },
 }
 </script>

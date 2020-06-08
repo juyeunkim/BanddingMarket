@@ -7,9 +7,10 @@
           label="카테고리"
           solo
           style="max-width: 15rem;"
-          :items="['택배', '음식']"
+          :items="['상품', '음식']"
           hide-details
           dense
+          v-model="category"
         ></v-select>
       </v-flex>
 
@@ -172,7 +173,10 @@
                   {{ centerMapName }}
                 </v-col>
                 <!-- list -->
-                <v-col cols="6" v-if="positionType == 2 && recommendList.length != 0">
+                <v-col
+                  cols="6"
+                  v-if="positionType == 2 && recommendList.length != 0"
+                >
                   <v-container
                     class="pa-0 mt-3"
                     v-bind:style="{
@@ -210,19 +214,25 @@
                     </v-list>
                   </v-container>
                 </v-col>
-                <v-col cols="6" v-if="positionType == 2 && recommendList.length == 0">
+                <v-col
+                  cols="6"
+                  v-if="positionType == 2 && recommendList.length == 0"
+                >
                   추천 장소가 없습니다.
                 </v-col>
               </v-row>
               <v-row v-if="positionType == 2">
                 <v-col>
-                  {{ '현재위치 : '+
-                    (selectedPosition.type == undefined
-                      ? '선택된 위치 없음'
-                      : selectedPosition.type == 1
-                      ? '(cctv)' + selectedPosition.address
-                      : "(" +selectedPosition.name + '역)' + selectedPosition.address
-                    )
+                  {{
+                    '현재위치 : ' +
+                      (selectedPosition.type == undefined
+                        ? '선택된 위치 없음'
+                        : selectedPosition.type == 1
+                        ? '(cctv)' + selectedPosition.address
+                        : '(' +
+                          selectedPosition.name +
+                          '역)' +
+                          selectedPosition.address)
                   }}
                 </v-col>
               </v-row>
@@ -248,7 +258,7 @@
             <v-slider
               v-model="person"
               :min="2"
-              :max="10"
+              :max="5"
               thumb-label="always"
               label="모집인원"
             ></v-slider>
@@ -278,9 +288,11 @@
       <v-flex sm12 xs12> </v-flex>
     </v-layout>
 
-    <v-btn @click="loadrecommandList">
-      ??D?SD?Fs?DF?SDf?SDf?
-    </v-btn>
+    <v-layout>
+      <v-flex sm12 xs12 style="text-align: end;">
+        <v-btn @click="registerBoard">등록하기</v-btn>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -331,8 +343,13 @@ export default {
     recommendList: [],
     markers: [],
     selectedPosition: {},
+    category: '',
   }),
   created() {
+    if (this.$cookies.get('token') == '') {
+      alert('잘못된 접근입니다.')
+      this.$router.go(-1)
+    }
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
       this.addMapScript()
     // this.remainTimeFunction = setInterval(this.calRemainingTime, 1000)
@@ -387,6 +404,7 @@ export default {
 
           var locPosition = new kakao.maps.LatLng(lat, lon) // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
           this.selectedPosition = { lat: lat, lon: lon }
+          this.position[1] = [lon, lat]
           // var message = '<div style="padding:5px;">여기에 계신가요?!</div>' // 인포윈도우에 표시될 내용입니다
           this.map.setCenter(locPosition)
           this.displayCircle(locPosition)
@@ -501,7 +519,6 @@ export default {
       var lat = this.position[1][1]
 
       console.log('loadrecommandList')
-
       http
         .post('/map/search/safeLocation', {
           category: 0,
@@ -594,6 +611,63 @@ export default {
     selectPlace(place) {
       this.selectedPosition = place
       console.log(this.selectedPosition)
+    },
+    registerBoard() {
+      // if (this.category == '') {
+      //   alert('카테고리를 설정해주세요.')
+      //   this.$vuetify.goTo(0)
+      //   return
+      // } else if (this.timeCheck == false) {
+      //   alert('만남 시간을 작성해주세요.')
+      //   return
+      // } else if (this.personCheck == false) {
+      //   alert('참여인원수를 작성해주세요.')
+      //   return
+      // } else if (this.positionCheck == false) {
+      //   alert('만남 장소를 작성해주세요.')
+      //   return
+      // }
+
+      var keyword = ''
+      for (let index = 0; index < this.tags.length; index++) {
+        keyword += '#' + this.tags[index].text
+        // console.log(this.tags[index].text)
+      }
+
+      var tmp = {
+        category: this.category == '상품' ? 0 : 1,
+        context: this.contents,
+        deadlineDate: this.date + 'T' + this.time + ':00.000Z',
+        keyword: keyword,
+        limit_num: this.person,
+        title: this.title,
+        user: { user_id: Number(this.$cookies.get('user_id')) },
+      }
+
+      if (this.positionType == 1) {
+        tmp['board_locationX'] = this.position[1][0] + ''
+        tmp['board_locationY'] = this.position[1][1] + ''
+      } else if (this.positionType == 2) {
+        console.log(this.selectedPosition)
+        if (this.selectedPosition == {}) {
+          alert('모임장소를 선택해주세요!')
+          return
+        }
+        tmp['board_locationX'] = this.selectedPosition.longitude + ''
+        tmp['board_locationY'] = this.selectedPosition.latitude + ''
+      }
+
+      http
+        .post('/board', tmp)
+        .then((res) => {
+          console.log(res)
+          this.$router.push({ path: '/board', query: { id: res.data.object.board_id } })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+
+      // console.log(parm)
     },
   },
 }
