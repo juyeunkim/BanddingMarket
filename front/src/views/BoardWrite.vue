@@ -154,17 +154,29 @@
         </v-expansion-panel>
 
         <v-expansion-panel>
-          <v-expansion-panel-header disable-icon-rotate>
-            Item
+          <v-expansion-panel-header
+            disable-icon-rotate
+            @click="personCheck = true"
+          >
+            모집인원
             <template v-slot:actions>
-              <v-icon color="error">mdi-alert-circle</v-icon>
+              <v-icon color="error" v-if="personCheck == false"
+                >mdi-alert-circle</v-icon
+              >
+              <v-icon color="primary" v-else>mdi-check</v-icon>
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            <v-slider
+              v-model="person"
+              :min="2"
+              :max="10"
+              :disabled="disabled"
+              :readonly="readonly"
+              :vertical="vertical"
+              thumb-label="always"
+              label="모집인원"
+            ></v-slider>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -217,10 +229,12 @@ export default {
     date: new Date().toISOString().substr(0, 10),
     timeCheck: false,
     positionCheck: false,
-    position: ['position',""],
+    position: ['position', ''],
     map: null,
     centerMapName: '',
     mapMarker: '',
+    personCheck : false,
+    person : 2,
   }),
   created() {
     if (!(window.kakao && window.kakao.maps && window.kakao.services))
@@ -264,7 +278,6 @@ export default {
       // 지도에 원을 표시합니다
 
       // 마커를 생성합니다
-      
 
       // 마커가 지도 위에 표시되도록 설정합니다
       // marker.setMap(map)
@@ -290,23 +303,20 @@ export default {
         this.displayCircle(locPosition)
       }
 
-      
-
       kakao.maps.event.addListener(this.map, 'center_changed', () => {
         // 지도의 중심좌표를 얻어옵니다
         var latlng = this.map.getCenter()
         var lon = latlng.getLng()
         var lat = latlng.getLat()
 
-        if(this.mapMarker != "")
-          this.mapMarker.setMap(null)
+        if (this.mapMarker != '') this.mapMarker.setMap(null)
 
         this.mapMarker = new kakao.maps.Marker({
-            map:this.map,
-            position: latlng,
+          map: this.map,
+          position: latlng,
         })
 
-        this.position[1]=[lon,lat]
+        this.position[1] = [lon, lat]
 
         // marker.setMap(this.map)
 
@@ -324,7 +334,6 @@ export default {
             this.centerMapName = ''
           }
         })
-
       })
     },
     displayCircle(locPosition) {
@@ -349,7 +358,7 @@ export default {
       console.log(obj)
       if (this.tags.length >= 3) {
         alert('태그는 최대 3개까지 가능합니다.')
-        this.tag = ""
+        this.tag = ''
       } else {
         obj.addTag()
       }

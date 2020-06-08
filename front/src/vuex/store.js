@@ -37,7 +37,8 @@ const state = {
         },
         writeDate: "2020-06-06T12:59:32.798207"
     },
-    commentList: {}
+    commentList: {},
+    drawer: false
 
     // searchList: ["aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", "aaaa", "bbbbb", "CCCCCCCC", "dddd", "ee", "ff", "gg", "h", "i", "jj", ],
 };
