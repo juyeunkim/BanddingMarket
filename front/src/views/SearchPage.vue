@@ -202,7 +202,7 @@ export default {
         if (day > 0) {
           return '마감 ' + day + '일전'
         } else if (hours > 0) {
-          return '마감 ' + hours + '시전'
+          return '마감 ' + hours + '시간전'
         } else if (minutes > 0) {
           return '마감 ' + minutes + '분전'
         } else {

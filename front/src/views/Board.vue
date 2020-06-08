@@ -1,9 +1,9 @@
 <template>
   <v-container class="Nanum">
-    <v-layout wrap class="ma-0">
+    <v-layout wrap class="ma-0" align-center>
       <!-- 남은 시간 -->
       <v-flex
-        sm12
+        sm4
         xs12
         class="my-1"
         v-bind:style="{
@@ -13,6 +13,7 @@
           color: 'white',
           'font-size': '1.4rem',
         }"
+        mb-3
       >
         <div
           v-if="
@@ -28,7 +29,7 @@
         <div v-else class="fw700">
           <v-icon color="white" style="font-size: 2rem;">mdi-timer</v-icon>
           <span class="mx-1">{{ remainTime.day }}일 </span>
-          <span class="mx-1">{{ remainTime.hours }}시 </span>
+          <span class="mx-1">{{ remainTime.hours }}시간 </span>
           <span class="mx-1">{{ remainTime.minutes }}분 </span>
           <span class="mx-1">{{ remainTime.seconds }}초 </span>
           <!-- <span class="d-none d-sm-flex">남았습니다</span> -->
