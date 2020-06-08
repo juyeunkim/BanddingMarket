@@ -2,6 +2,7 @@ package com.ssafy.groupbuying.service;
 
 import java.util.List;
 
+import com.ssafy.groupbuying.dto.UserAndBoardCount;
 import com.ssafy.groupbuying.vo.Board;
 import com.ssafy.groupbuying.vo.User;
 
@@ -22,7 +23,7 @@ public interface UserService {
 
 	Boolean checkPass(User user);
 	List<Board> findBoardByUser(User user);
-	List<User> findTopUser();
+	List<UserAndBoardCount> findTopUser();
 	List<User> findAlluser();
 
 }

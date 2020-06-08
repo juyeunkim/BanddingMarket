@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.groupbuying.dto.UserAndBoardCount;
 import com.ssafy.groupbuying.service.JwtService;
 import com.ssafy.groupbuying.service.UserService;
 import com.ssafy.groupbuying.vo.User;
@@ -157,17 +158,10 @@ public class UserController {
 	
 	@ApiOperation(value = "top 유저 검색", notes = "")
 	@GetMapping(value = "/topUser")
-	public ResponseEntity<List<User>> topUser() {
-		return new ResponseEntity<List<User>>(userService.findTopUser(),HttpStatus.OK);
+	public ResponseEntity<List<UserAndBoardCount>> topUser() {
+		return new ResponseEntity<List<UserAndBoardCount>>(userService.findTopUser(),HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "모든 유저 검색", notes = "")
-	@PostMapping(value = "/allUser")
-	public ResponseEntity<List<User>> AllUser() {
-		
-		return new ResponseEntity<List<User>>(userService.findTopUser(),HttpStatus.OK);
-
-	}
 
 	//juheekim 추가 
 	@ApiOperation(value = "전체 유저 검색", notes = "")

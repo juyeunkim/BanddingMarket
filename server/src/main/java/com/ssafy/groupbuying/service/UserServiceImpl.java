@@ -1,5 +1,6 @@
 package com.ssafy.groupbuying.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Convert;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.groupbuying.dto.UserAndBoardCount;
 import com.ssafy.groupbuying.repository.BoardRepository;
 import com.ssafy.groupbuying.repository.UserRepository;
 import com.ssafy.groupbuying.vo.Board;
@@ -74,9 +76,34 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> findTopUser() {
+	public List<UserAndBoardCount> findTopUser() {
 		// TODO Auto-generated method stub
-		return userRepository.findTopUser();
+				List<User> list = userRepository.findTopUser();;
+				List<UserAndBoardCount> uList = new ArrayList<UserAndBoardCount>() ;
+				
+				
+				
+				
+				for(int i=0; i<list.size(); i++) {
+					//user count repository 
+					//userRepository.userBoardCount(list.get(i).getUser_id());
+					System.out.println(userRepository.userBoardCount(list.get(i).getUser_id()));
+					User user = list.get(i);
+					UserAndBoardCount userCount = new UserAndBoardCount();
+					userCount.setEmail(user.getEmail());
+					userCount.setName(user.getName());
+					userCount.setNickname(user.getNickname());
+					userCount.setReputation(user.getReputation());
+					userCount.setUser_id(user.getUser_id());
+					userCount.setBoardCnt(userRepository.userBoardCount(user.getUser_id()));
+					
+					
+					uList.add(i, userCount);
+					
+					//uList 담기
+				}
+				
+				return uList;
 	}
 
 	@Override
