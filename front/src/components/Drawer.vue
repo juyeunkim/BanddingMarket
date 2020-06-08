@@ -13,16 +13,16 @@
         >
           <v-list-item>
             <v-list-item-icon>
-              <v-icon>mdi-mdi-magnify</v-icon>
+              <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>검색</v-list-item-title>
+            <v-list-item-title>Home</v-list-item-title>
           </v-list-item>
 
           <v-list-item>
             <v-list-item-icon>
-              <v-icon>mdi-map</v-icon>
+              <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>지도검색</v-list-item-title>
+            <v-list-item-title>Account</v-list-item-title>
           </v-list-item>
 
         </v-list-item-group>

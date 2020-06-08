@@ -553,6 +553,7 @@ export default {
       this.$router.push({ path: '/board', query: { id: id } })
     },
     enterBoardCard(index) {
+      console.log(index)
       this.markers[index].setImage(markerClickImage)
     },
     leaveBoardCard(index) {

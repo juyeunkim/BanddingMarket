@@ -8,6 +8,7 @@ import SearchPage from './views/SearchPage'
 import MapSearhPage from './views/MapSearchPage'
 import Board from './views/Board'
 import BoardWrite from './views/BoardWrite'
+import BoardUpdate from './views/BoardUpdate'
 import Test from './views/Test'
 
 
@@ -69,4 +70,10 @@ export default [
         name: 'Test',
         component: Test
     },
+    {
+        path: '/boardupdate',
+        name: 'BoardUpdate',
+        component: BoardUpdate
+    },
+
 ]

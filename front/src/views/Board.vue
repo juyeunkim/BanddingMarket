@@ -319,6 +319,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" style="text-align:end">
+          <v-btn @click="deleteBoard()">삭제</v-btn>
           <v-btn @click="goToSearch">
             목록으로 가기
           </v-btn>
@@ -371,6 +372,8 @@ export default {
       id: this.$route.query.id,
       callback: this.drawMap,
     })
+
+    this.$vuetify.goTo(0)
   },
   mounted() {},
   computed: {
@@ -492,6 +495,7 @@ export default {
         })
     },
     joinBoard() {
+      console.log(this.$cookies.get('user_id'))
       if (
         this.$cookies.get('token') == '' ||
         this.$cookies.get('user_id') == ''
@@ -524,6 +528,7 @@ export default {
         })
     },
     outBoard() {
+      console.log(this.$cookies.get('user_id'))
       if (
         this.$cookies.get('token') == '' ||
         this.$cookies.get('user_id') == ''
@@ -573,6 +578,30 @@ export default {
     goToSearch() {
       this.$router.push('/search')
     },
+    updateBoard() {
+      console.log(this.board)
+      this.$router.push({
+        name: 'BoardUpdate',
+        params: { bid: this.$router.query.id, 
+        title: this.board.title, 
+        category: this.board.category == 1? "음식" : "상품"},
+      })
+    },
+    deleteBoard(){
+      http
+        .delete('/board/'+this.$route.query.id)
+        .then((res) => {
+          alert('삭제가 완료되었습니다..')
+          this.$router.push({path:"/search"})
+          res
+        })
+        .catch((err) => {
+          alert('서버가 불안정합니다.')
+          console.log(err)
+        })
+
+
+    }
   },
 }
 </script>
