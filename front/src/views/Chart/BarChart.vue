@@ -11,7 +11,7 @@ export default {
 
       datacollection: {
         //Data to be represented on x-axis
-        labels: this.ds 
+        labels: this.ds.label 
         ,
         datasets: [
           {
@@ -21,7 +21,7 @@ export default {
             borderWidth: 1,
             pointBorderColor: "#249EBF",
             //Data to be represented on y-axis
-            data: [40, 20, 30, 50, 90, 10, 20, 40, 50, 70, 90, 100],
+            data: this.ds.data
           },
         ],
       },
