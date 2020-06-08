@@ -18,11 +18,9 @@
           </v-list-item-title>
         </v-list-item>
         <v-list-item>
-          <div
-            style="color: #1976d2; text-decoration: underline; font-size:13px"
-          >
-            아이디가 없으세요? 회원가입하러 가기
-          </div>
+          <v-list-item-title style="text-align: center">
+            <joinDialog></joinDialog>
+          </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -33,10 +31,12 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 import loginDialog from './LoginDialog'
+import joinDialog from './JoinDialog'
 
 export default {
   components: {
     loginDialog,
+    joinDialog
   },
   data: () => ({}),
   computed: {
