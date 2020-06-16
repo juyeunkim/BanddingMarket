@@ -45,8 +45,25 @@
 - 아이디어 후보 선정 **[0508(금)](document/200508_아이디어회의_반띵마켓.md)**
 - 명세서 작성 **0512(화)**
 - 와이어프레임 작성 **0513(수)**
-- 아이디어 보완해야할 부분 **[0514(목)](document/200514_아이디어보완해야할부분.md)**
+- 아이디어 보완해야할 부분 **[0514(금)](document/200514_아이디어보완해야할부분.md)**
+- DB설계 **0518(월)**
 
+
+
+## GroundRule
+
+### branch
+~~~
+master 	-> dev/front	-> feature/frontUser
+		-> dev/server	-> feature/serverUser
+~~~
+
+### commit
+
+~~~
+동사 + 목적어
+ex) add README.md 
+~~~
 
 
 
