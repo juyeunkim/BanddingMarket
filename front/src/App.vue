@@ -2,6 +2,7 @@
   <v-app id="App">
     
     <Header></Header>
+    <Drawer></Drawer>
 
     <v-content>
       <router-view/>
@@ -14,6 +15,7 @@
 
 <script>
 import Header from "./components/Header"
+import Drawer from "@/components/Drawer";
 // import Footer from "./components/Footer"
 
 
@@ -21,6 +23,8 @@ export default {
   name: 'App',
   components: {
     Header,
+    Drawer
+
     // Footer
   },
 

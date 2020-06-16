@@ -2,7 +2,7 @@
   <v-container>
     <!--user search-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-      <v-icon style="color:black">mdi-align-vertical-bottom</v-icon> 거래현황
+      <v-icon style="color: black;">mdi-align-vertical-bottom</v-icon> 거래현황
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
@@ -10,20 +10,22 @@
         지역별 거래현황 입니다.
       </span>
       <v-divider class="mb-5 mt-1"></v-divider>
-      <v-col sm="4" xs="5" style="margin-left:5px;">
+      <v-col sm="4" xs="5" style="margin-left: 5px;">
         <v-select
           :items="dropdown_date"
           menu-props="auto"
           label="기간별로 보기"
           hide-details
+          v-model="mapTermOpt"
+          @change="dateChangeMap()"
         ></v-select>
       </v-col>
-      <div id="map" style="max-width: 100%; height:400px;"></div>
+      <div id="map" style="max-width: 100%; height: 400px;"></div>
     </v-flex>
     <br />
     <!--user search result-->
     <span class="ma-0 font-weight-light Do" style="font-size: 1.8em;">
-      <v-icon style="color:black">mdi-information</v-icon> 신고현황
+      <v-icon style="color: black;">mdi-information</v-icon> 신고현황
     </span>
 
     <v-flex sm12 xs12 class="mt-4 outerFlex">
@@ -33,9 +35,9 @@
       <v-divider class="mb-5 mt-1"></v-divider>
 
       <div class="col justify-between row">
-        <v-col sm="3" xs="4" style="margin-left:5px;">
+        <v-col sm="3" xs="4" style="margin-left: 5px;">
           <v-select
-            :items="dropdown_date"
+            :items="dropdown_date2"
             menu-props="auto"
             label="기간별로 보기"
             hide-details
@@ -43,30 +45,13 @@
             @change="dateChange()"
           ></v-select>
         </v-col>
-        <v-col sm="3" xs="4" style="margin-left:5px;">
-          <v-select
-            :items="dropdown_edit"
-            menu-props="auto"
-            label="카테고리별로 보기"
-            hide-details
-            v-model="categoryopt"
-          ></v-select>
-        </v-col>
+        <v-col sm="3" xs="4" style="margin-left: 5px;"> </v-col>
       </div>
 
-      <div sm="10" xs="10" style="height:400px">
+      <div sm="10" xs="10" style="height: 400px;">
         <template v-if="rendering">
-          <template v-if="propmsg == 'default'">
-            <line-chart :ds="defaultlabels"></line-chart>
-          </template>
-          <template v-if="propmsg == 'month'">
-            <line-chart :ds="monthLabels"></line-chart>
-          </template>
-          <template v-if="propmsg == 'week'">
-            <line-chart :ds="weekLabels"></line-chart>
-          </template>
+          <line-chart :ds="propResult"></line-chart>
         </template>
-        
       </div>
     </v-flex>
   </v-container>
@@ -74,6 +59,13 @@
 
 <script>
 import LineChart from "../../views/Chart/BarChart";
+import axios from "../../vuex/http-common";
+
+import Vue from "vue";
+import moment from "moment";
+import VueMomentJS from "vue-momentjs";
+
+Vue.use(VueMomentJS, moment);
 
 // import * as kakao from require( 'http://dapi.kakao.com/v2/maps/sdk.js?appkey=053dd3145f395e73cbb5211bedf3e97f&libraries=services,clusterer')
 export default {
@@ -85,15 +77,20 @@ export default {
 
   data: () => ({
     termopt: "",
-    categoryopt: "",
+    mapTermOpt: "",
     result: "",
     hasSaved: false,
     isEditing: null,
     model: null,
     search: null,
-    rendering: true,
+    rendering: false,
     map: "",
     propmsg: "default",
+    propdata: "",
+    reportList: [],
+    reportDict: {},
+    reportCnt: [],
+    propResult: { label: "", data: "" },
     defaultlabels: [
       "January",
       "February",
@@ -108,545 +105,80 @@ export default {
       "November",
       "December",
     ],
-    monthLabels: ["1st week", "2nd week", "3rd week", "4th week", "5th week"],
-    weekLabels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    positions: [
-      {
-        lat: 37.27943075229118,
-        lng: 127.01763998406159,
-      },
-      {
-        lat: 37.55915668706214,
-        lng: 126.92536526611102,
-      },
-      {
-        lat: 35.13854258261161,
-        lng: 129.1014781294671,
-      },
-      {
-        lat: 37.55518388656961,
-        lng: 126.92926237742505,
-      },
-      {
-        lat: 35.20618517638034,
-        lng: 129.07944301057026,
-      },
-      {
-        lat: 37.561110808242056,
-        lng: 126.9831268386891,
-      },
-      {
-        lat: 37.86187129655063,
-        lng: 127.7410250820423,
-      },
-      {
-        lat: 37.47160156778542,
-        lng: 126.62818064142286,
-      },
-      {
-        lat: 35.10233410927457,
-        lng: 129.02611815856181,
-      },
-      {
-        lat: 35.10215562270429,
-        lng: 129.02579793018205,
-      },
-      {
-        lat: 35.475423012251106,
-        lng: 128.76666923366042,
-      },
-      {
-        lat: 35.93282824693927,
-        lng: 126.95307628834287,
-      },
-      {
-        lat: 36.33884892276137,
-        lng: 127.393666019664,
-      },
-      {
-        lat: 37.520412849636,
-        lng: 126.9742764161581,
-      },
-      {
-        lat: 35.155139675209675,
-        lng: 129.06154773758374,
-      },
-      {
-        lat: 35.816041994696576,
-        lng: 127.11046706211324,
-      },
-      {
-        lat: 38.20441110638504,
-        lng: 128.59038671285234,
-      },
-      {
-        lat: 37.586112739308916,
-        lng: 127.02949148517999,
-      },
-      {
-        lat: 37.50380641844987,
-        lng: 127.02130716617751,
-      },
-      {
-        lat: 37.55155704387368,
-        lng: 126.92161115892036,
-      },
-      {
-        lat: 37.55413060051369,
-        lng: 126.92207472929526,
-      },
-      {
-        lat: 36.362321615174835,
-        lng: 127.35000483225389,
-      },
-      {
-        lat: 37.55227862908755,
-        lng: 126.92280546294998,
-      },
-      {
-        lat: 37.490413948014606,
-        lng: 127.02079678472444,
-      },
-      {
-        lat: 35.172358507549596,
-        lng: 126.90545394866643,
-      },
-      {
-        lat: 35.15474103200252,
-        lng: 129.11827889154455,
-      },
-      {
-        lat: 37.516081250973485,
-        lng: 127.02369057166361,
-      },
-      {
-        lat: 36.80711722863776,
-        lng: 127.14020346037576,
-      },
-      {
-        lat: 37.28957415752673,
-        lng: 127.00103752005424,
-      },
-      {
-        lat: 35.83953896766896,
-        lng: 128.7566880321854,
-      },
-      {
-        lat: 37.51027412948879,
-        lng: 127.08227718124704,
-      },
-      {
-        lat: 37.493581783270294,
-        lng: 126.72541955660554,
-      },
-      {
-        lat: 35.135291862962795,
-        lng: 129.10060911448775,
-      },
-      {
-        lat: 35.174574933144065,
-        lng: 126.91389980787773,
-      },
-      {
-        lat: 37.795887691878654,
-        lng: 127.10660416587146,
-      },
-      {
-        lat: 37.59288687521181,
-        lng: 126.96560524627377,
-      },
-      {
-        lat: 37.45076411130452,
-        lng: 127.14593003749792,
-      },
-      {
-        lat: 35.86008337557079,
-        lng: 127.1263912488061,
-      },
-      {
-        lat: 35.23773491330953,
-        lng: 129.08371037429578,
-      },
-      {
-        lat: 37.524297321304886,
-        lng: 127.05018281937049,
-      },
-      {
-        lat: 36.33386658021849,
-        lng: 127.4461721466889,
-      },
-      {
-        lat: 35.72963747546802,
-        lng: 128.27079056365005,
-      },
-      {
-        lat: 36.02726828142973,
-        lng: 129.37257233594056,
-      },
-      {
-        lat: 35.0708030360945,
-        lng: 129.0593185494088,
-      },
-      {
-        lat: 35.86835862950247,
-        lng: 128.59755089175871,
-      },
-      {
-        lat: 33.51133264696746,
-        lng: 126.51852347452322,
-      },
-      {
-        lat: 37.61284289586752,
-        lng: 127.03120547238589,
-      },
-      {
-        lat: 35.851696038722466,
-        lng: 128.59092937125666,
-      },
-      {
-        lat: 37.59084695083232,
-        lng: 127.01872773588882,
-      },
-      {
-        lat: 35.52114874288784,
-        lng: 129.33573629945764,
-      },
-      {
-        lat: 36.362326407439845,
-        lng: 127.33577420148076,
-      },
-      {
-        lat: 37.28941189110747,
-        lng: 127.00446132665141,
-      },
-      {
-        lat: 35.32049801117398,
-        lng: 129.1810343576788,
-      },
-      {
-        lat: 37.53338631541601,
-        lng: 127.00615481678061,
-      },
-      {
-        lat: 37.413461468258156,
-        lng: 126.67735680840826,
-      },
-      {
-        lat: 35.920390371093205,
-        lng: 128.54411720249956,
-      },
-      {
-        lat: 36.65489374054824,
-        lng: 127.48374816871991,
-      },
-      {
-        lat: 37.49491987110441,
-        lng: 127.01493134206048,
-      },
-      {
-        lat: 37.64985695608336,
-        lng: 127.14496345268074,
-      },
-      {
-        lat: 37.55686770317417,
-        lng: 127.16927880543041,
-      },
-      {
-        lat: 37.37014007589146,
-        lng: 127.10614330185591,
-      },
-      {
-        lat: 37.5350236507627,
-        lng: 126.96157681184789,
-      },
-      {
-        lat: 37.40549630594667,
-        lng: 126.8980581820004,
-      },
-      {
-        lat: 34.867950544005744,
-        lng: 128.69069690081176,
-      },
-      {
-        lat: 35.16317059543225,
-        lng: 128.98452978748048,
-      },
-      {
-        lat: 36.607484825953186,
-        lng: 127.48520451195111,
-      },
-      {
-        lat: 37.651724785213986,
-        lng: 126.58306748337554,
-      },
-      {
-        lat: 35.86059690063427,
-        lng: 128.59193087665244,
-      },
-      {
-        lat: 35.25685847585025,
-        lng: 128.59912605060455,
-      },
-      {
-        lat: 33.509258155694496,
-        lng: 126.5109451464813,
-      },
-      {
-        lat: 37.64366155701157,
-        lng: 126.63255039247507,
-      },
-      {
-        lat: 35.82667262227336,
-        lng: 127.1030670574823,
-      },
-      {
-        lat: 35.82003554991111,
-        lng: 127.14810974062483,
-      },
-      {
-        lat: 35.097485195649455,
-        lng: 128.99486181862338,
-      },
-      {
-        lat: 37.32204249590605,
-        lng: 127.95591893585816,
-      },
-      {
-        lat: 37.50535127272031,
-        lng: 127.1047465440526,
-      },
-      {
-        lat: 36.99081407156533,
-        lng: 127.09338324956647,
-      },
-      {
-        lat: 37.323486640444834,
-        lng: 127.12285239871076,
-      },
-      {
-        lat: 35.78973089440451,
-        lng: 127.13644319545601,
-      },
-      {
-        lat: 35.641373953578196,
-        lng: 129.35463220719618,
-      },
-      {
-        lat: 37.47423127310911,
-        lng: 126.97625029161996,
-      },
-      {
-        lat: 35.84357192991226,
-        lng: 128.61143720719716,
-      },
-      {
-        lat: 37.180974984085736,
-        lng: 128.20294526341132,
-      },
-      {
-        lat: 37.57895718642583,
-        lng: 126.9316897337244,
-      },
-      {
-        lat: 33.49077253755052,
-        lng: 126.49314817000993,
-      },
-      {
-        lat: 36.42175925330255,
-        lng: 128.67409133225766,
-      },
-      {
-        lat: 37.46405540570109,
-        lng: 126.7153544119173,
-      },
-      {
-        lat: 37.594758776232126,
-        lng: 127.10099917489818,
-      },
-      {
-        lat: 37.7239966558994,
-        lng: 127.0478671731854,
-      },
-      {
-        lat: 35.86680171505329,
-        lng: 128.5923738376741,
-      },
-      {
-        lat: 37.560573727266785,
-        lng: 126.81239107485251,
-      },
-      {
-        lat: 37.78692224857484,
-        lng: 126.98966010341789,
-      },
-      {
-        lat: 35.10368644802913,
-        lng: 129.0206862606022,
-      },
-      {
-        lat: 37.063839948992644,
-        lng: 127.06856523030079,
-      },
-      {
-        lat: 37.34344643728643,
-        lng: 127.94382181350932,
-      },
-      {
-        lat: 37.512521267219064,
-        lng: 127.40054805648133,
-      },
-      {
-        lat: 35.15286653837983,
-        lng: 126.90419903971498,
-      },
-      {
-        lat: 35.173238445546296,
-        lng: 129.176082844468,
-      },
-      {
-        lat: 36.082394201323524,
-        lng: 129.40330471725923,
-      },
-      {
-        lat: 37.51043665598106,
-        lng: 127.03974070036524,
-      },
-      {
-        lat: 36.627816673285054,
-        lng: 127.44969866021904,
-      },
-      {
-        lat: 37.59194624756919,
-        lng: 127.01817545576053,
-      },
-      {
-        lat: 37.387147045560866,
-        lng: 127.1253365438929,
-      },
-      {
-        lat: 35.89948383848115,
-        lng: 128.60809550730653,
-      },
-      {
-        lat: 37.555316235235324,
-        lng: 127.14038447894715,
-      },
-      {
-        lat: 36.09622092762977,
-        lng: 128.43314679004078,
-      },
-      {
-        lat: 37.582855922985544,
-        lng: 126.91907857008522,
-      },
-      {
-        lat: 37.516000983841586,
-        lng: 128.72798872032757,
-      },
-      {
-        lat: 37.48429363675198,
-        lng: 127.0379630203579,
-      },
-      {
-        lat: 37.54502575965604,
-        lng: 126.95429338245707,
-      },
-      {
-        lat: 35.236247173046394,
-        lng: 128.8677618015292,
-      },
-      {
-        lat: 37.40157536691968,
-        lng: 127.11717457214067,
-      },
-      {
-        lat: 36.95191038001258,
-        lng: 127.91064040877527,
-      },
-      {
-        lat: 37.491526492971346,
-        lng: 126.85463749525812,
-      },
-      {
-        lat: 36.124356479753196,
-        lng: 128.09517052346138,
-      },
-      {
-        lat: 37.15715169307048,
-        lng: 128.15853461363773,
-      },
-      {
-        lat: 37.5808156608605,
-        lng: 126.95109705510639,
-      },
-      {
-        lat: 37.46931787249714,
-        lng: 126.89904775044873,
-      },
-      {
-        lat: 35.52195614910054,
-        lng: 129.3209904841746,
-      },
-      {
-        lat: 37.58625703195563,
-        lng: 126.9496035206742,
-      },
-      {
-        lat: 37.28463639199199,
-        lng: 126.85984474757359,
-      },
-      {
-        lat: 35.534169458631226,
-        lng: 129.31169021536095,
-      },
-      {
-        lat: 37.553341234194285,
-        lng: 127.15481222237025,
-      },
-      {
-        lat: 37.62293367990081,
-        lng: 126.83445005122417,
-      },
-      {
-        lat: 35.5272027005698,
-        lng: 127.72953798950101,
-      },
-      {
-        lat: 35.180032285898854,
-        lng: 128.06954509175367,
-      },
-    ],
+    monthLabels: [],
+    weekLabels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    positions: [],
     dropdown_date: [
+      { text: "전체보기" },
       { text: "연간" },
       { text: "월간" },
       { text: "주간" },
     ],
-    dropdown_edit: [
-      { text: "전체보기" },
-      { text: "욕설" },
-      { text: "광고" },
-      { text: "미참석" },
-      { text: "기타" },
-    ],
+    dropdown_date2: [{ text: "연간" }, { text: "월간" }, { text: "주간" }],
   }),
-  created() {},
+  created() {
+    this.loadData();
+  },
   mounted() {
     if (!(window.kakao && window.kakao.maps)) this.addMapScript();
-
-    this.drawMap();
-
-    // this.propmsg=this.defaultlabels;
-    //filterAreaHeight
-    // this.filterAreaHeight = document.getElementById('filterArea').offsetHeight
-    // console.log(this.filterAreaHeight)
   },
 
   methods: {
+    loadData() {
+      console.log("Loading....");
+
+      axios.get("/board").then(response => {
+        console.log(response);
+        this.positions = response.data.object;
+        this.drawMap();
+        this.initGraph();
+      });
+    },
+    initGraph() {
+      this.propResult = { label: "", data: "" };
+      this.propmsg = "default";
+      this.reportCnt = [];
+      this.reportDict = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0,
+      };
+      axios
+        .get("http://k02a3031.p.ssafy.io:8080/report/findByYear")
+        .then(response => {
+          this.reportList = response.data;
+          for (var report of this.reportList) {
+            var x = this.$moment(report.writeDate).format("MM");
+            x = Number(x);
+            this.reportDict[x] += 1;
+          }
+
+          for (var key in this.reportDict) {
+            this.reportCnt.push(this.reportDict[key]);
+          }
+          console.log("dict: " + this.reportCnt);
+          this.propResult["label"] = this.defaultlabels;
+          this.propResult["data"] = this.reportCnt;
+
+          // setTimeout(() => {
+          this.rendering = true;
+          // }, 10);
+        });
+    },
     drawMap() {
       var mapContainer = document.getElementById("map"); // 지도를 표시할 div
       var mapOption = {
-        center: new kakao.maps.LatLng(37.5642135, 127.0016985), // 지도의 중심좌표 북위 37.5642135° 동경 127.0016985°
-        level: 9, // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(37.5542135, 127.0016985), // 지도의 중심좌표 북위 37.5642135° 동경 127.0016985°
+        level: 10, // 지도의 확대 레벨
       };
 
       this.map = new kakao.maps.Map(mapContainer, mapOption);
@@ -658,23 +190,63 @@ export default {
         disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정한다
       });
       var markers = [];
-      // console.log(this.positions);
+      console.log("positions 객체 출력");
+      console.log(this.positions);
       for (var position of this.positions) {
-        // console.log(position.lat + " " + position.lng);
-        markers.push(
-          new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(position.lat, position.lng),
-          })
-        );
+        console.log(position.board_locationX + " " + position.board_locationY);
+        if (
+          position.board_locationX != null &&
+          position.board_locationY != null
+        ) {
+          markers.push(
+            new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(
+                Number(position.board_locationY),
+                Number(position.board_locationX)
+              ),
+            })
+          );
+        }
       }
       clusterer.addMarkers(markers);
+    },
+    dateChangeMap() {
+      if (this.mapTermOpt == "연간") {
+        console.log("map 연간");
+        axios.get("/board/searchByYear").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      } else if (this.mapTermOpt == "월간") {
+        console.log("map 월");
+        axios.get("/board/searchByMonth").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      } else if (this.mapTermOpt == "주간") {
+        console.log("map 주간");
+        axios.get("/board/searchByWeek").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      }else if(this.mapTermOpt=="전체보기"){
+        console.log("map 전체보기");
+        axios.get("/board").then(response => {
+          console.log(response);
+          this.positions = response.data.object;
+          this.drawMap();
+        });
+      }
     },
     addMapScript() {
       const script = document.createElement("script"); /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?appkey=053dd3145f395e73cbb5211bedf3e97f&libraries=services,clusterer,drawing";
-      document.head.appendChild(script);
+        // "//dapi.kakao.com/v2/maps/sdk.js?appkey=053dd3145f395e73cbb5211bedf3e97f&libraries=services,clusterer,drawing";
+        document.head.appendChild(script);
     },
     customFilter(item, queryText) {
       const textOne = item.nickName.toLowerCase();
@@ -684,25 +256,167 @@ export default {
         textOne.indexOf(searchText) > -1 || textTwo.indexOf(searchText) > -1
       );
     },
-     dateChange() {
+
+    dateChange() {
       console.log("check event - dateChange() ");
       console.log(this.termopt);
-      this.rendering=false;
-      console.log("check: "+this.rendering);
+      this.rendering = false;
+      console.log("check: " + this.rendering);
 
-      if(this.termopt=="연간"){
-        this.propmsg = 'default';
-      }else if(this.termopt=="월간"){
-        this.propmsg = 'month';
-      }else if(this.termopt=="주간"){
-        this.propmsg = 'week';
+      if (this.termopt == "연간") {
+        this.propResult = { label: "", data: "" };
+        this.propmsg = "default";
+        this.reportCnt = [];
+        this.reportDict = {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+          8: 0,
+          9: 0,
+          10: 0,
+          11: 0,
+          12: 0,
+        };
+        axios
+          .get("http://k02a3031.p.ssafy.io:8080/report/findByYear")
+          .then(response => {
+            this.reportList = response.data;
+            for (var report of this.reportList) {
+              var x = this.$moment(report.writeDate).format("MM");
+              x = Number(x);
+              this.reportDict[x] += 1;
+            }
+
+            for (var key in this.reportDict) {
+              this.reportCnt.push(this.reportDict[key]);
+            }
+            this.propResult["label"] = this.defaultlabels;
+            this.propResult["data"] = this.reportCnt;
+
+            // setTimeout(() => {
+            this.rendering = true;
+            // }, 10);
+          });
+      } else if (this.termopt == "월간") {
+        this.propmsg = "month";
+        this.propResult = { label: "", data: "" };
+        this.monthLabels = [];
+        for (var i = 1; i <= 31; i++) {
+          this.monthLabels.push(i);
+        }
+
+        this.reportCnt = [];
+        this.reportDict = {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+          8: 0,
+          9: 0,
+          10: 0,
+          11: 0,
+          12: 0,
+          13: 0,
+          14: 0,
+          15: 0,
+          16: 0,
+          17: 0,
+          18: 0,
+          19: 0,
+          20: 0,
+          21: 0,
+          22: 0,
+          23: 0,
+          24: 0,
+          25: 0,
+          26: 0,
+          27: 0,
+          28: 0,
+          29: 0,
+          30: 0,
+          31: 0,
+        };
+        axios
+          .get("http://k02a3031.p.ssafy.io:8080/report/findByMonth")
+          .then(response => {
+            // console.log(response);
+            this.reportList = response.data;
+            // console.log(this.reportList);
+            for (var report of this.reportList) {
+              var x = this.$moment(report.writeDate).format("DD");
+              x = Number(x);
+              this.reportDict[x] += 1;
+            }
+
+            console.log("dict: " + this.reportDict);
+            for (var key in this.reportDict) {
+              this.reportCnt.push(this.reportDict[key]);
+            }
+            console.log("dict: " + this.reportCnt);
+            this.propResult["label"] = this.monthLabels;
+            this.propResult["data"] = this.reportCnt;
+            console.log(this.propResult);
+
+            // setTimeout(() => {
+            this.rendering = true;
+            // }, 10);
+          });
+      } else if (this.termopt == "주간") {
+        this.propmsg = "week";
+        this.propResult = { label: "", data: "" };
+        this.reportCnt = [];
+        this.reportDict = {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+        };
+
+        axios
+          .get("http://k02a3031.p.ssafy.io:8080/report/findByWeek")
+          .then(response => {
+            this.reportList = response.data;
+            console.log("주간: " + this.reportList);
+            var j = 0;
+            var defaultDate = 0;
+            for (var report of this.reportList) {
+              j++;
+
+              var x = this.$moment(report.writeDate).format("DD");
+              x = Number(x);
+              console.log(x);
+
+              if (j == 1) {
+                defaultDate = x;
+              }
+
+              this.reportDict[x - defaultDate + 1] += 1;
+            }
+
+            console.log("dict: " + this.reportDict);
+            for (var key in this.reportDict) {
+              this.reportCnt.push(this.reportDict[key]);
+            }
+            console.log("dict: " + this.reportCnt);
+            this.propResult["label"] = this.weekLabels;
+            this.propResult["data"] = this.reportCnt;
+            console.log(this.propResult);
+
+            // setTimeout(() => {
+            this.rendering = true;
+            // }, 10);
+          });
       }
-
-       setTimeout(() => {
-      this.rendering=true;
-      }, 1);
-      
-      
     },
   },
 };
